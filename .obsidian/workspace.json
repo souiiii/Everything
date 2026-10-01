@@ -1,0 +1,233 @@
+{
+  "main": {
+    "id": "fefbae6680fd2773",
+    "type": "split",
+    "children": [
+      {
+        "id": "da27af04d48d9983",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "daa130643a73af38",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "Placement/Core/Node_Backend.md",
+                "mode": "preview",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "Node_Backend"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "6b7e962be4bf6892",
+    "type": "split",
+    "children": [
+      {
+        "id": "65892ec21a44d2c9",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "3c9fac07a85abaf4",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical",
+                "autoReveal": false,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-folder-closed",
+              "title": "Files"
+            }
+          },
+          {
+            "id": "76e5798446d128fc",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              },
+              "icon": "lucide-search",
+              "title": "Search"
+            }
+          },
+          {
+            "id": "0ae0f8b30da949ab",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-bookmark",
+              "title": "Bookmarks"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "right": {
+    "id": "4fb25bd958256246",
+    "type": "split",
+    "children": [
+      {
+        "id": "896edd8e1557cd86",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "620bd6f453b22fee",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "Placement/Core/Node_Backend.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-coming-in",
+              "title": "Backlinks"
+            }
+          },
+          {
+            "id": "b8d973de16a2db5c",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "Placement/Core/Node_Backend.md",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-going-out",
+              "title": "Outgoing links"
+            }
+          },
+          {
+            "id": "55c931209c5572dd",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-tags",
+              "title": "Tags"
+            }
+          },
+          {
+            "id": "90a34cad8c1732f0",
+            "type": "leaf",
+            "state": {
+              "type": "all-properties",
+              "state": {
+                "sortOrder": "frequency",
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-archive",
+              "title": "All properties"
+            }
+          },
+          {
+            "id": "dde186bec83ac97a",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "Placement/Core/Node_Backend.md",
+                "followCursor": false,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-list",
+              "title": "Outline"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:Open quick switcher": false,
+      "graph:Open graph view": false,
+      "canvas:Create new canvas": false,
+      "daily-notes:Open today's daily note": false,
+      "templates:Insert template": false,
+      "command-palette:Open command palette": false,
+      "bases:Create new base": false
+    }
+  },
+  "active": "daa130643a73af38",
+  "lastOpenFiles": [
+    "Midsem/RecSys/numericals.md",
+    "Midsem/RecSys/final_revision.md",
+    "Midsem/RecSys/unit3_codex.md",
+    "Midsem/RecSys/unit3_chatgpt.md",
+    "Midsem/RecSys/unit2_codex.md",
+    "Midsem/RecSys/unit2_chatgpt.md",
+    "Midsem/RecSys/unit1_chatgpt.md",
+    "Midsem/RecSys/unit1_codex.md",
+    "Placement/Core/CN.md",
+    "Placement/Core/System_Design.md",
+    "Placement/Tech/TypeScript.md",
+    "Placement/Tech/React.md",
+    "Placement/Tech/Python.md",
+    "Placement/Tech/NextJS.md",
+    "Placement/Tech/JavaScript_Placement_Notes.md",
+    "Placement/Tech/Git_GitHub.md",
+    "Placement/Supporting/Java_Collections.md",
+    "Placement/Supporting/Extra_Fundamentals.md",
+    "Placement/Supporting/DSA_practice_questions_key.md",
+    "Placement/Supporting/DSA_practice_questions.md",
+    "Placement/Core/Java_OOP.md",
+    "LSEG/OA/Minor/Task_7_Classification_Evaluation_Multiple_Select.md",
+    "Placement/Tech/AI_Fundamentals.md",
+    "Placement/Core/DBMS.md",
+    "Placement/Core/OS.md",
+    "Midsem/CV/CV Quick Revision.md",
+    "LSEG/job_description.pdf",
+    "PYQs",
+    "Placement_Prep.zip",
+    "zi54paZZ",
+    "Placement 1/Tech/React_Screenshot_2025-03-18_171010.png",
+    "Placement 1/Tech/React_Screenshot_2025-03-18_170012.png",
+    "Placement 1/Supporting/Java_Collections_image.png",
+    "Placement 1/Supporting/JSON_image.png",
+    "Placement 1/Tech",
+    "Placement 1/Supporting",
+    "Placement 1/Core",
+    "Placement 1"
+  ]
+}
