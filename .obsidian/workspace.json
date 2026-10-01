@@ -83,8 +83,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 300,
-    "collapsed": true
+    "width": 300
   },
   "right": {
     "id": "4fb25bd958256246",
@@ -191,6 +190,17 @@
   },
   "active": "daa130643a73af38",
   "lastOpenFiles": [
+    "GATE/Resources/Syllabus/GATE_2027_CS_Syllabus.pdf",
+    "GATE/Resources/Syllabus",
+    "GATE/Resources/README.md",
+    "GATE/Resources/Past_Papers/2026/GATE_2026_CS2_Question_Paper.pdf",
+    "GATE/Resources/Past_Papers/2026/GATE_2026_CS2_Answer_Key.pdf",
+    "GATE/Resources/Past_Papers/2026/GATE_2026_CS1_Question_Paper.pdf",
+    "GATE/Resources/Past_Papers/2026/GATE_2026_CS1_Answer_Key.pdf",
+    "GATE/Resources/Past_Papers/2026",
+    "GATE/Resources/Past_Papers",
+    "GATE/Resources",
+    "GATE",
     "Midsem/RecSys/numericals.md",
     "Midsem/RecSys/final_revision.md",
     "Midsem/RecSys/unit3_codex.md",
@@ -215,19 +225,10 @@
     "LSEG/OA/Minor/Task_7_Classification_Evaluation_Multiple_Select.md",
     "Placement/Tech/AI_Fundamentals.md",
     "Placement/Core/DBMS.md",
-    "Placement/Core/OS.md",
-    "Midsem/CV/CV Quick Revision.md",
     "LSEG/job_description.pdf",
-    "PYQs",
-    "Placement_Prep.zip",
-    "zi54paZZ",
     "Placement 1/Tech/React_Screenshot_2025-03-18_171010.png",
     "Placement 1/Tech/React_Screenshot_2025-03-18_170012.png",
     "Placement 1/Supporting/Java_Collections_image.png",
-    "Placement 1/Supporting/JSON_image.png",
-    "Placement 1/Tech",
-    "Placement 1/Supporting",
-    "Placement 1/Core",
-    "Placement 1"
+    "Placement 1/Supporting/JSON_image.png"
   ]
 }
