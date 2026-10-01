@@ -39,9 +39,11 @@ CF 2232C1: packing A vs opening a table -> # non-empty tables differs -> try E n
 | Detected periodicity but generalized it before handling the leftover operations correctly. | Split the process into `fullRounds = k / n` and `leftover = k % n`. First derive the exact state after full rounds, then apply only the leftover prefix. |
 | Spent ~80 minutes on one OA problem because it felt almost solved, leaving the final question untouched. | OA rule: if ~25–30 minutes pass without a stable algorithm/invariant, park the problem and move on. Revisit only after every question has been attempted. |
 | Used `int` for a problem allowing `n < 2^60`. | Read numeric bounds before coding. Anything approaching `2^31` needs `long`; for powers of two in Java prefer exact bit operations such as `1L << p` / `Long.highestOneBit(n)` over `Math.pow()`. |
+| LC 1851 — Minimum Interval to Include Each Query: after sorting the queries, kept falling back to rescanning intervals for every query and could not independently turn the observation into an efficient active-set process. | When queries can be processed in sorted order, ask what information can be carried forward instead of restarting. Separate intervals into not-yet-eligible, currently active, and permanently expired. If the answer repeatedly asks for the smallest item among active candidates, consider a min-heap / priority queue. Store enough metadata to remove candidates once they can no longer answer future queries. |
 
 ## Unsolved
 
+- LC 1851 — Minimum Interval to Include Each Query — Recognized sorting queries and intervals, but initially stayed in per-query scanning/brute-force thinking. Reached the active-set + length-priority-queue direction after prompting; implementation not completed. Revisit later as a sweep-line / heap combination problem. [UNSOLVED]
 - CF 2232C1 — Greedy without proof → locally valid A placement reduced future capacity. Test greedy with a counterexample before coding. [UNSOLVED]
 - 2406 - intervals grouping leetcode
 - LC 2115 — Find All Possible Recipes from Given Supplies — Topological sort / dependency unlocking practice. [UNSOLVED]
