@@ -1,0 +1,69 @@
+name: Fetch official GATE CS resources
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/fetch-gate-cs-resources.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download official PDFs
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          mkdir -p GATE/Resources/Syllabus
+          mkdir -p GATE/Resources/Past_Papers/2026
+
+          curl --fail --location --retry 3 \
+            "https://gate2027.iitm.ac.in/static/doc/GATE2027_Syllabus/CS_GATE2027_Syllabus.pdf" \
+            -o GATE/Resources/Syllabus/GATE_2027_CS_Syllabus.pdf
+
+          curl --fail --location --retry 3 \
+            "https://gate2026.iitg.ac.in/doc/download/2026/QPs/CS1.pdf" \
+            -o GATE/Resources/Past_Papers/2026/GATE_2026_CS1_Question_Paper.pdf
+
+          curl --fail --location --retry 3 \
+            "https://gate2026.iitg.ac.in/doc/download/2026/Keys/CS1_Keys.pdf" \
+            -o GATE/Resources/Past_Papers/2026/GATE_2026_CS1_Answer_Key.pdf
+
+          curl --fail --location --retry 3 \
+            "https://gate2026.iitg.ac.in/doc/download/2026/QPs/CS2.pdf" \
+            -o GATE/Resources/Past_Papers/2026/GATE_2026_CS2_Question_Paper.pdf
+
+          curl --fail --location --retry 3 \
+            "https://gate2026.iitg.ac.in/doc/download/2026/Keys/CS2_Keys.pdf" \
+            -o GATE/Resources/Past_Papers/2026/GATE_2026_CS2_Answer_Key.pdf
+
+          for pdf in \
+            GATE/Resources/Syllabus/GATE_2027_CS_Syllabus.pdf \
+            GATE/Resources/Past_Papers/2026/GATE_2026_CS1_Question_Paper.pdf \
+            GATE/Resources/Past_Papers/2026/GATE_2026_CS1_Answer_Key.pdf \
+            GATE/Resources/Past_Papers/2026/GATE_2026_CS2_Question_Paper.pdf \
+            GATE/Resources/Past_Papers/2026/GATE_2026_CS2_Answer_Key.pdf
+          do
+            test "$(file --brief --mime-type "$pdf")" = "application/pdf"
+          done
+
+      - name: Commit fetched resources
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add GATE/Resources
+          if git diff --cached --quiet; then
+            exit 0
+          fi
+          git commit -m "Add official GATE CS syllabus and 2026 papers"
+          git push
