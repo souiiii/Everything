@@ -391,7 +391,6 @@ Its limitation is that a single machine has a hardware ceiling and remains a lar
 Horizontal scaling works best when requests or jobs can be handled relatively independently. It becomes harder when workers require shared mutable state, frequent coordination, or very low-latency communication with one another. Once the application spans machines, communication crosses a network, which introduces serialization, latency, timeouts, retries, and partial failures.
 
 > **Interview framing:** Vertical scaling gives one machine more power. Horizontal scaling adds more machines and distributes work. Horizontal scaling usually offers a higher long-term ceiling, but it introduces distributed-system complexity.
-> 
 
 ---
 
@@ -459,7 +458,6 @@ Some workloads contain a large sequential component. If later work fundamentally
 If every worker needs the same lock, file, row, or critical section, adding workers can increase contention rather than throughput. Before scaling out, identify whether the work can proceed independently.
 
 > **Strong interview answer:** “I would not assume horizontal scaling automatically improves throughput. I would first locate the bottleneck. Scale-out gives poor returns when the bottleneck is a shared dependency, when the workload is strongly sequential, or when nodes require heavy coordination or shared mutable state.”
-> 
 
 ---
 
@@ -480,25 +478,24 @@ For placements at this stage, remembering the problem it solves is enough. Virtu
 You should be able to answer these without notes:
 
 1. **Why do we need a load balancer after horizontal scaling?**
-    
-    Because clients need a stable entry point that can distribute requests among multiple backend instances. The load balancer also enables health-aware routing and lets servers join or leave the pool without exposing that topology to clients.
-    
+
+   Because clients need a stable entry point that can distribute requests among multiple backend instances. The load balancer also enables health-aware routing and lets servers join or leave the pool without exposing that topology to clients.
+
 2. **What is the difference between vertical and horizontal scaling?**
-    
-    Vertical scaling increases the resources of one machine. Horizontal scaling adds machines and divides work among them. Scale-out has a larger potential ceiling and better redundancy, but introduces network and distributed-state complexity.
-    
+
+   Vertical scaling increases the resources of one machine. Horizontal scaling adds machines and divides work among them. Scale-out has a larger potential ceiling and better redundancy, but introduces network and distributed-state complexity.
+
 3. **L4 or L7: when would you choose L7?**
-    
-    Choose L7 when routing needs knowledge of the application protocol, such as sending requests to different services based on HTTP path, hostname, header, or cookie. If connection-level routing is enough, L4 can be simpler.
-    
 
-Because frequent coordination moves from cheap local communication to network communication, adding latency, serialization, retries, synchronization, and partial-failure handling.
+   Choose L7 when routing needs knowledge of the application protocol, such as sending requests to different services based on HTTP path, hostname, header, or cookie. If connection-level routing is enough, L4 can be simpler.
 
-1. **Why might adding application servers fail to improve performance?**
-    
-    Because the application tier may not be the bottleneck. If all instances wait on the same overloaded database, external service, shared lock, or network resource, adding application servers does not remove the limiting factor.
-    
-2. **Why can tightly coupled workloads scale poorly across machines?**
+4. **Why might adding application servers fail to improve performance?**
+
+   Because the application tier may not be the bottleneck. If all instances wait on the same overloaded database, external service, shared lock, or network resource, adding application servers does not remove the limiting factor.
+
+5. **Why can tightly coupled workloads scale poorly across machines?**
+
+   Because frequent coordination moves from cheap local communication to network communication, adding latency, serialization, retries, synchronization, and partial-failure handling.
 
 ---
 
@@ -532,7 +529,6 @@ A useful analogy is the index at the back of a textbook. If you want the section
 Indexes improve many reads, but they consume additional storage and must be updated when indexed data is inserted, deleted, or changed. A table with many unnecessary indexes can therefore make writes more expensive.
 
 > **Interview framing:** “I would add an index when an important query repeatedly searches, filters, joins, or sorts using particular fields. I would not index every field blindly because each index has storage and write-maintenance cost.”
-> 
 
 ## 8. Why B+ trees are useful for database indexes
 
@@ -560,7 +556,6 @@ but it generally cannot provide the same efficient lookup for **`b` alone**. The
 This is the practical meaning of the **leftmost-prefix rule**. Column order in a composite index is part of the design decision; `(a, b)` and `(b, a)` are not interchangeable.
 
 > **Placement answer:** “A composite index on `(a, b)` is primarily sorted by `a`, and only then by `b` within each `a` group. Therefore the database can efficiently use the index for `a` or `a + b`, but a query on `b` alone usually cannot jump directly to the matching region.”
-> 
 
 ## 10. Indexes should follow the query pattern
 
@@ -611,7 +606,6 @@ This means pool sizing is a trade-off:
 A connection pool therefore acts as both a **performance optimization and a pressure valve** between the application tier and the database.
 
 > **Interview framing:** “Connection pooling keeps a bounded set of reusable database connections. It avoids repeatedly paying connection-establishment cost and prevents the application from creating an uncontrolled number of simultaneous database connections.”
-> 
 
 ## 13. How indexing and pooling solve different problems
 
@@ -627,29 +621,28 @@ A slow query is not automatically fixed by increasing the connection pool, and a
 ## 14. Interview-ready checkpoints from this session
 
 1. **Why does an index speed up a query?**
-    
-    Because it gives the database an organized structure it can search instead of scanning the entire dataset. The exact benefit depends on whether the query can actually use that index.
-    
+
+   Because it gives the database an organized structure it can search instead of scanning the entire dataset. The exact benefit depends on whether the query can actually use that index.
+
 2. **Why not create an index on every column?**
-    
-    Because indexes consume storage and every relevant insert, update, or delete may also require index maintenance. Faster reads can come at the cost of slower writes and more storage.
-    
+
+   Because indexes consume storage and every relevant insert, update, or delete may also require index maintenance. Faster reads can come at the cost of slower writes and more storage.
+
 3. **Why does a composite index on `(a, b)` not usually help with `b` alone?**
-    
-    Because the index is ordered primarily by `a`. Values of `b` are only ordered inside each `a` group, so matching `b` values are scattered across the index when `a` is unknown.
-    
+
+   Because the index is ordered primarily by `a`. Values of `b` are only ordered inside each `a` group, so matching `b` values are scattered across the index when `a` is unknown.
+
 4. **Why are B+ trees useful for indexes?**
-    
-    They stay balanced, have a high branching factor, and keep ordered entries at the leaves, which allows efficient lookups and range scans while keeping the tree shallow.
-    
+
+   They stay balanced, have a high branching factor, and keep ordered entries at the leaves, which allows efficient lookups and range scans while keeping the tree shallow.
+
 5. **What problem does connection pooling solve?**
-    
-    It avoids repeatedly creating and destroying expensive database connections and limits how many connections the application can use concurrently.
-    
+
+   It avoids repeatedly creating and destroying expensive database connections and limits how many connections the application can use concurrently.
+
 6. **How is a connection pool similar to a thread pool?**
-    
-    Both maintain a bounded set of expensive reusable resources and hand them out temporarily as work arrives instead of constantly creating new ones.
-    
+
+   Both maintain a bounded set of expensive reusable resources and hand them out temporarily as work arrives instead of constantly creating new ones.
 
 ## Resources from Session 2
 
@@ -711,7 +704,6 @@ The key idea is that **the database is updated first and the stale cache entry i
 **Write-around** sends writes directly to the database without populating the cache. It is useful for data that is written frequently but rarely read, because immediately caching such values would waste memory. If the value is later requested, the normal read path can load it into the cache.
 
 > **Interview framing:** Cache-aside is usually the easiest pattern to explain and reason about: read from Redis first, fill it on a miss, and invalidate the cached copy after a successful database write.
-> 
 
 ## TTL, invalidation, and eviction solve different problems
 
@@ -786,3 +778,158 @@ Current progression state:
 **LEARN framework → GUIDED URL shortener complete → INDEPENDENT redesign next.**
 
 Do not count the guided design as independent proof yet.
+
+---
+
+# Session 4 — From Requirements to Defensible Architecture Decisions
+
+<aside>
+🧭
+
+This session is not about learning another infrastructure primitive. It is about learning the reasoning that makes later primitives justified. The HtmlSanityCheck example is useful because it is small enough to inspect end to end: a concrete product goal becomes quality priorities and constraints, those become decision criteria, and those criteria are then used to choose between alternatives.
+
+</aside>
+
+## Why this worked example matters
+
+The earlier sections on this page introduced the general interview flow: clarify the problem, separate requirements from constraints and assumptions, turn important qualities into design pressure, and only then choose architecture. HtmlSanityCheck shows what that process looks like in a real, modestly sized system rather than in an abstract interview template.
+
+The central lesson is that architecture should be **traceable**. A component, library, deployment choice, or pattern should have a visible reason for existing. If the reason disappears, the decision should be open to change. This is more important for placement interviews than memorizing one particular architecture because interviewers can change a single assumption and expect the design to change with it.
+
+## Requirements tell us what must be achieved
+
+HtmlSanityCheck exists to inspect generated HTML and report semantic problems such as broken links, missing images, missing local resources, malformed targets, and similar issues. Its basic usage also requires it to accept configured input files, perform the checks, and produce results through the console or an HTML report. The source additionally describes integration through build tools and command-line usage.
+
+The important interview habit is not to copy a long requirement list. Instead, identify the **few requirements that can change architecture**. “Find broken internal links” matters because the system needs a reliable representation of HTML structure. “Support several input files in one run” matters because reporting and processing need to combine results. “Be configurable” matters because hard-coded paths, timeouts, or link behavior would violate the product contract.
+
+A requirement should describe an outcome before it describes a solution. “Use jsoup” is therefore not a requirement. “Programmatically inspect links, images, and targets in HTML” is the requirement; jsoup is one possible way to satisfy it.
+
+## Quality requirements describe how well the system must behave
+
+The HtmlSanityCheck example gives correctness the strongest emphasis. It wants broken internal links and other semantic errors to be detected reliably, input files to remain untouched, the checking logic to be testable, the system to remain extensible, and a 100 kB HTML file to be processed within a ten-second target.
+
+This is a useful contrast with vague interview phrases such as “the system should be fast and reliable.” A quality only becomes architecturally useful when it can influence a decision. “Fast” does not tell us much. “Complete the important check within an agreed latency bound for a defined input size” can rule out approaches that are too slow. “Reliable” is vague; “never modify the source files being inspected” gives us a concrete correctness and integrity rule.
+
+A practical quality scenario can be thought of as:
+
+**situation or stimulus → expected response → measurable boundary**
+
+For example, instead of saying “the checker should be extensible,” a stronger version would be: **adding a new checking rule should not require changing existing checker implementations, and the existing automated test suite should continue to pass.** If delivery effort itself matters, the team could add a time or change-size target, but that number should be treated as an explicit assumption unless it comes from a real requirement.
+
+### Priorities must create real trade-offs
+
+The arc42 review note points out an important weakness in the example: several quality goals receive the same highest priority. That makes the ranking less informative because a priority system only helps when it tells us what should win during a conflict. The review also notes that the “safety” goal is really about preserving the integrity of the checked files.
+
+This is directly useful in interviews. Do not say that latency, availability, consistency, security, durability, flexibility, and cost are all equally critical. If everything is non-negotiable, there is no basis for choosing between alternatives. Pick the few qualities that actually dominate the problem and explain what you are willing to compromise elsewhere.
+
+## Constraints reduce the set of valid solutions
+
+The example gives a short constraint list: the tool should remain platform-independent, integrate with Gradle, run from the command line, and use a liberal open-source license.
+
+A constraint is different from a quality requirement because it limits **how** the solution may be built rather than describing how well the system should perform. If a library works only on one operating system, it may be rejected even if it is technically excellent in every other respect. If a dependency has an incompatible license, its performance may not matter because the option is already outside the allowed solution space.
+
+Some statements can look like both features and constraints depending on why they exist. “Must run as a Gradle plugin” is visible functionality to a user, but once that requirement is fixed it also constrains implementation and packaging choices. The useful interview question is therefore not “which label is universally correct?” but **“does this fact describe the desired outcome, or does it restrict the design freedom I have?”**
+
+## Requirement, quality, constraint, preference, and assumption are not interchangeable
+
+These categories are easy to blur during an interview, so it helps to keep a clean mental model.
+
+| Category | Meaning | Example |
+| --- | --- | --- |
+| Feature requirement | Behavior the product must provide. | A URL shortener must create a short link and resolve it back to the destination. |
+| Quality requirement | How well an important behavior must work. | Most redirects should complete within an agreed latency target under normal load. |
+| Constraint | A fixed boundary that removes some otherwise valid design choices. | The service must use the company’s existing PostgreSQL platform because that platform is mandated. |
+| Preference | A desirable choice that may be overridden by stronger evidence. | The team prefers TypeScript because it already operates that stack comfortably. |
+| Assumption | A provisional belief used because the prompt does not provide the fact. | Redirect reads are assumed to be roughly two orders of magnitude more frequent than link creation. |
+
+The distinction matters because the strength of each statement is different. A hard constraint can eliminate an option. A preference can be challenged. An assumption should be revisited as soon as evidence appears.
+
+## A good assumption must be falsifiable
+
+An assumption is useful only when you know what evidence could prove it wrong. If you assume a URL shortener is extremely read-heavy, production telemetry could later show that creation traffic is much larger than expected. That evidence should change the caching, database, or scaling discussion rather than being ignored because the original design already exists.
+
+A strong interview formulation is: **“I am assuming X because the prompt does not specify it. I would validate that with Y, and if the result is different, this part of the design changes.”** This keeps the architecture adaptable and shows that you understand the difference between a fact and a convenient guess.
+
+## Worked decision: why HtmlSanityCheck chose jsoup
+
+The parsing decision is the clearest example of requirements turning into a concrete technology choice. HtmlSanityCheck needs to inspect HTML programmatically, so it first needs a structured, DOM-like representation of the document. The documented criteria then narrow the choice further: the parser should keep dependency weight low and should make it easy to find links, images, and link targets in the parsed tree.
+
+The decision compares two alternatives. HTTPUnit is described as a broader web-testing framework with a relatively large dependency footprint, while jsoup is a focused HTML parser with no external dependencies and a convenient element-access API. Against the stated criteria, jsoup fits the problem more directly, so the project chooses it.
+
+The reasoning chain is therefore:
+
+**Need semantic HTML checks → need a structured representation of the document → prefer a focused parser with easy element lookup and low dependency weight → compare available alternatives → choose jsoup.**
+
+That chain is much stronger than saying “jsoup is popular” or “jsoup is fast.” Popularity was not the documented criterion, and performance was not actually demonstrated by the decision record.
+
+## Separate source facts from your own inference
+
+A mature design discussion distinguishes what the evidence actually says from what seems plausible.
+
+| Supported directly by the decision record | Reasonable inference, but not proven there |
+| --- | --- |
+| The chosen parser should keep dependency count low. | Fewer transitive dependencies may reduce maintenance and update burden. |
+| The parser should provide convenient access to links, images, targets, and other elements. | A richer API may reduce implementation effort and custom parsing code. |
+| HTTPUnit carries more dependencies and has a broader testing focus. | A broader framework would probably increase binary size and operational surface more than a focused parser. |
+| jsoup is a focused HTML parser without external dependencies. | It is therefore the better long-term choice under every future workload. |
+
+The last inference is deliberately too strong. A decision is only justified under the criteria and evidence available at the time. If the workload, language, security requirements, parser behavior, or integration constraints change, the decision should be revisited.
+
+## What evidence is still missing?
+
+The jsoup decision is understandable, but it is not exhaustive. The record does not show a parser benchmark against the stated performance target, quantify the binary-size difference, demonstrate behavior on malformed or unusual HTML, compare security history, or discuss maintenance cadence and version compatibility in depth. Those omissions do not automatically make the decision poor; they tell us **how confident we are and what risks remain unverified**.
+
+This is an important placement habit. You do not need complete proof for every choice, but you should know when you are moving from evidence into inference. A strong answer can say, “These criteria make option A the better fit so far; before production adoption I would validate malformed-input behavior and performance because those are not established by the current evidence.”
+
+## A compact placement example: applying the same reasoning to a URL shortener
+
+Suppose the prompt is “design a URL shortener.” The feature requirement is to create a short URL and resolve it later. A useful quality requirement might be that redirect latency remains low under the expected read workload. A real constraint could be that the company already mandates a particular database platform. A preference could be that the team would rather remain in its existing Node.js stack. An assumption might be that redirects are around 100 times more common than creations.
+
+Those statements produce design pressure. The read-heavy assumption and latency target make a cache worth considering, but they do not automatically prove Redis is required. The mandated database constrains the durable source of truth. The Node.js preference matters for delivery and operations, but it should not override a hard correctness requirement. If telemetry later shows the workload is not read-heavy, the cache may no longer justify its complexity.
+
+This is exactly the kind of reasoning an interviewer wants to hear: **the architecture changes because the facts change.**
+
+## When more architecture documentation is not useful
+
+Documentation has value when it preserves reasoning that would otherwise be expensive to rediscover. It is especially worthwhile for decisions that affect several components, change important quality properties, introduce a long-lived dependency, create operational consequences, or are expensive to reverse.
+
+It is less useful to create a formal decision record for every small, local, easily reversible coding choice. A short-lived experiment may only need an experiment note. A trivial naming decision does not need an ADR. Documentation also becomes harmful when it is written mechanically, never maintained, or records a large amount of detail without explaining the decision pressure that produced it.
+
+In a placement interview, you normally do not need to write formal architecture documents. What matters is that you can **speak in the same structure**: context, important requirement or constraint, alternatives, decision criteria, chosen option, consequences, and remaining uncertainty.
+
+## Interview-ready checkpoints
+
+1. **How is a requirement different from a constraint?**
+
+   A requirement states an outcome the system must provide, while a constraint limits the solution space available for providing it. The distinction matters because a constraint can eliminate an otherwise attractive architecture before performance or convenience are even compared.
+
+2. **Why should a quality requirement be measurable?**
+
+   Because architecture needs a testable target. “Fast” or “reliable” does not tell you whether a design is good enough. A concrete scenario gives you a condition and an expected response, which allows alternatives to be compared against something real.
+
+3. **Why is assigning every quality the highest priority a problem?**
+
+   Because priorities are useful only when they resolve conflicts. If latency, cost, consistency, availability, flexibility, and security are all declared equally non-negotiable, the design has no principled way to trade one against another.
+
+4. **What made the jsoup decision defensible?**
+
+   The project first established that it needed programmatic access to a DOM-like HTML representation. It then compared alternatives using criteria that mattered to this system: low dependency weight and convenient access to HTML elements. jsoup matched those criteria more directly than the broader HTTPUnit alternative.
+
+5. **What is the difference between evidence and inference in a design discussion?**
+
+   Evidence is what the requirement, measurement, experiment, or source actually establishes. Inference is a conclusion that may be reasonable but has not yet been demonstrated. Keeping them separate prevents a plausible idea from silently becoming a “fact” that later architecture depends on.
+
+6. **When is an assumption acceptable?**
+
+   When the prompt is missing an important fact and the design cannot progress without a provisional value. State the assumption openly, say what evidence would validate or falsify it, and identify which part of the design would change if the assumption proves wrong.
+
+7. **When is a formal architecture decision record worth writing?**
+
+   When the decision is architecturally significant, difficult to reverse, affects important qualities, or is likely to be questioned later. Small and easily reversible implementation choices usually do not need that ceremony.
+
+## Resources from Session 4
+
+- [HtmlSanityCheck — Introduction, Requirements, Quality Goals, Stakeholders](https://examples.arc42.org/systems/htmlsc/01-introduction-and-goals/)
+- [arc42 — HtmlSanityCheck Constraints](https://docs.arc42.org/examples/constraints-1/)
+- [arc42 — HtmlSanityCheck Quality Scenarios](https://docs.arc42.org/examples/quality-htmlsc-2/)
+- [arc42 — HtmlSanityCheck Architecture Decisions](https://docs.arc42.org/examples/decision-htmlsc/)
