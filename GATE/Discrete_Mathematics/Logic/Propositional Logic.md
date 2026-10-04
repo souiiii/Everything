@@ -1,7 +1,6 @@
 # Propositional Logic — GATE Notes
 
-> **Coverage:** Neso Academy Discrete Mathematics playlist positions 2–12 and 15–16, plus the four propositional-logic PYQs inspected in the sprint. This page deliberately stops before the formal logical-equivalences lesson (position 17) and later inference-rule material.
-> 
+> **Coverage:** Neso Academy Discrete Mathematics playlist positions 2–12 and 15–31, together with the propositional-logic and inference PYQs used in the sprint. Part 1 develops the foundations; Part 2 continues with logical equivalence, logical consequence, rules of inference, and argument validity.
 
 # 1. What propositional logic is
 
@@ -54,7 +53,6 @@ The implication is false in exactly one case: when `p` is true but `q` is false.
 This single fact is extremely useful in GATE. When asked whether an implication is a tautology, do not immediately build a full truth table. First ask:
 
 > Can the antecedent be true while the consequent is false?
-> 
 
 If the answer is impossible, the implication is a tautology. If even one assignment makes the antecedent true and the consequent false, it is not a tautology.
 
@@ -193,9 +191,7 @@ First identify the smallest meaningful propositions and assign symbols. Then loc
 For example, if:
 
 `p`: it is raining  
-
 `q`: it is cold  
-
 `r`: it is pleasant
 
 then:
@@ -314,7 +310,6 @@ Therefore the correct choice is **Option B: S1 is a tautology, S2 is not**.
 Let:
 
 `p`: fail grade can be given  
-
 `q`: student scores more than 50%
 
 The statement says:
@@ -349,183 +344,287 @@ In `p → q`, `p` is sufficient for `q`, while `q` is necessary for `p`.
 
 A tautology is true for every valuation; a contradiction is false for every valuation; a contingency is true for some and false for others; satisfiable means true for at least one valuation.
 
-# 14. Scope boundary
+# 14. Part 1 checkpoint
 
-These notes intentionally stop at the material studied today. Formal logical-equivalence laws from playlist position 17 onward, the later solved-problem sequence, rules of inference, and first-order logic are **not included yet**. They should be added only after those blocks are actually studied.
+The foundational block ends here. The next section continues the same topic with the formal equivalence laws and the rules used to derive conclusions from premises. First-order logic is intentionally left for the next study block.
 
-# Sources used for this block
+# Sources used for Part 1
 
 Neso Academy Discrete Mathematics playlist:  
-
 [https://www.youtube.com/playlist?list=PLBlnK6fEyqRhqJPDXcvYlLfXPh37L89g3](https://www.youtube.com/playlist?list=PLBlnK6fEyqRhqJPDXcvYlLfXPh37L89g3)
 
 GATE CSE 2017 Set 1 Q1:  
-
 [https://gateoverflow.in/118698/gate-cse-2017-set-1-question-01](https://gateoverflow.in/118698/gate-cse-2017-set-1-question-01)
 
 GATE CSE 2017 Set 2 Q11:  
-
 [https://gateoverflow.in/118151/gate-cse-2017-set-2-question-11](https://gateoverflow.in/118151/gate-cse-2017-set-2-question-11)
 
 GATE CSE 2021 Set 1 Q7:  
-
 [https://gateoverflow.in/357445/gate-cse-2021-set-1-question-7](https://gateoverflow.in/357445/gate-cse-2021-set-1-question-7)
 
 GATE CSE 2024 Set 2 Q2:  
-
 [https://gateoverflow.in/422895/gate-cse-2024-set-2-question-2](https://gateoverflow.in/422895/gate-cse-2024-set-2-question-2)
+
+---
 
 # Part 2 — Logical Equivalence and Rules of Inference (Videos 17–31)
 
-> **Coverage:** Neso Academy Propositional Logic videos 17–31. This continuation covers logical equivalences, solved equivalence problems, rules of inference, argument validity, and GATE-focused solving patterns.
-> 
+> **Coverage:** Neso Academy positions 17–20 and 24–31, with the relevant GATE PYQs tied directly to the concepts. The aim here is not to memorize a table of laws mechanically. It is to learn when two expressions mean exactly the same thing, how to transform one into another safely, and how premises can justify a conclusion.
 
-# 15. Logical Equivalence
+# 15. What logical equivalence actually means
 
-Two propositions are logically equivalent when they have the same truth value for every possible assignment of their variables.
+Two propositions are **logically equivalent** when they have the same truth value under **every possible assignment** of their propositional variables. If `P` and `Q` are logically equivalent, we write:
 
-Notation:
+`P ≡ Q`
 
-`p ≡ q`
+This is stronger than saying that the two expressions happen to be true for one particular case. Equivalence means that no possible valuation can make one expression true and the other false.
 
-means that both expressions represent the same logical condition.
+There are two equivalent ways to think about this:
 
-In GATE, equivalence questions are rarely about writing full truth tables. They usually test whether you can recognize a transformation using known laws.
+- `P` and `Q` have identical truth-table columns.
+- `P ↔ Q` is a tautology.
 
-A useful approach:
+That second view is especially useful in GATE. To test whether two expressions are equivalent, you are really asking whether they are guaranteed to agree in every possible world.
 
-1. Convert implications using `p → q ≡ ¬p ∨ q`.
-2. Apply known logical laws.
-3. Stop as soon as the expression reaches a familiar equivalent form.
+A crucial consequence follows: **an equivalence law is a safe replacement rule**. If `P ≡ Q`, then wherever `P` appears inside a larger logical expression, it can be replaced by `Q` without changing the meaning of the whole expression.
 
-# 16. Important Logical Equivalence Laws
+## Equivalence is not the same as implication
 
-## Identity Laws
+Do not confuse:
+
+`P → Q`
+
+with:
+
+`P ≡ Q`
+
+`P → Q` only says that whenever `P` is true, `Q` must also be true. It does **not** require `Q` to imply `P`. Logical equivalence requires agreement in both directions.
+
+For example:
+
+`p ∧ q → p`
+
+is valid, because whenever both `p` and `q` are true, `p` is certainly true. But:
+
+`p ∧ q ≡ p`
+
+is false, because `p` can be true while `q` is false. The implication is one-way; equivalence is two-way.
+
+This distinction becomes important later: **equivalence laws rewrite expressions, while inference rules derive conclusions from premises**.
+
+# 16. The logical laws worth knowing for GATE
+
+The laws below are not independent facts to memorize as isolated equations. Most of them express simple ideas such as “adding TRUE with AND changes nothing” or “a statement and its negation cannot both be true.” Learn the meaning behind each family, because that makes reconstruction much easier during the exam.
+
+## Identity laws
 
 `p ∧ T ≡ p`
 
 `p ∨ F ≡ p`
 
-## Domination Laws
+TRUE is neutral for AND, while FALSE is neutral for OR. Requiring `p` and something that is always true adds no new restriction; allowing `p` or something that is always false adds no new possibility.
+
+## Domination laws
 
 `p ∨ T ≡ T`
 
 `p ∧ F ≡ F`
 
-## Idempotent Laws
+With OR, a guaranteed TRUE makes the whole expression true. With AND, a guaranteed FALSE makes the whole expression false.
+
+## Idempotent laws
 
 `p ∨ p ≡ p`
 
 `p ∧ p ≡ p`
 
-## Double Negation Law
+Repeating the same condition does not strengthen or weaken it. “p and p” is still just p, and “p or p” is still just p.
 
-`¬(¬p) ≡ p`
+## Double-negation law
 
-## Commutative Laws
+`¬¬p ≡ p`
 
-Order does not matter:
+Negating a statement twice returns to the original statement.
+
+## Complement laws
+
+`p ∨ ¬p ≡ T`
+
+`p ∧ ¬p ≡ F`
+
+A proposition must either be true or false, so `p ∨ ¬p` is always true. It cannot be both true and false simultaneously, so `p ∧ ¬p` is always false.
+
+These two patterns appear constantly while simplifying expressions. Recognizing them quickly often collapses a large formula in one step.
+
+## Commutative laws
 
 `p ∨ q ≡ q ∨ p`
 
 `p ∧ q ≡ q ∧ p`
 
-## Associative Laws
+The order of operands does not matter for AND or OR.
 
-Grouping does not matter:
+Do **not** extend this habit to implication. In general:
+
+`p → q ≢ q → p`
+
+The arrow has a direction.
+
+## Associative laws
 
 `(p ∨ q) ∨ r ≡ p ∨ (q ∨ r)`
 
 `(p ∧ q) ∧ r ≡ p ∧ (q ∧ r)`
 
-## Distributive Laws
+When the same operator is repeated, the grouping can be changed without changing the result.
+
+## Distributive laws
 
 `p ∧ (q ∨ r) ≡ (p ∧ q) ∨ (p ∧ r)`
 
 `p ∨ (q ∧ r) ≡ (p ∨ q) ∧ (p ∨ r)`
 
-## De Morgan's Laws ⭐
+Both AND and OR distribute over the other in propositional logic. The second form sometimes feels unusual because ordinary algebra does not behave exactly the same way, so it is worth recognizing explicitly.
 
-The most important transformation involving negation:
+## De Morgan’s laws
 
 `¬(p ∧ q) ≡ ¬p ∨ ¬q`
 
 `¬(p ∨ q) ≡ ¬p ∧ ¬q`
 
-Remember: when negation moves inside, the operator changes AND ↔ OR.
+When a negation crosses a bracket, **every component is negated and the connective flips**:
 
-## Absorption Laws
+`∧ ↔ ∨`
 
-Very useful for simplifying GATE expressions:
+A common mistake is to negate the terms but forget to change AND to OR or OR to AND.
+
+## Absorption laws
 
 `p ∨ (p ∧ q) ≡ p`
 
 `p ∧ (p ∨ q) ≡ p`
 
-# 17. Conditional and Biconditional Equivalences
+The second part contributes nothing new because `p` is already enough to determine the expression. These are particularly useful when an expression looks larger than it really is.
 
-## Implication
+# 17. High-value conditional and biconditional transformations
 
-The most important equivalence:
+The general laws above are useful, but GATE propositional-logic questions repeatedly become much easier after eliminating implication and biconditional.
+
+## Eliminate implication first
+
+The most important identity is:
 
 `p → q ≡ ¬p ∨ q`
 
-This removes implication and converts the expression into basic operators.
+This follows directly from the truth condition of implication. The only forbidden case for `p → q` is `p = T` and `q = F`; `¬p ∨ q` is false in exactly that same case.
+
+Whenever an expression contains several arrows and you are unsure what to do, converting them to `¬`, `∧`, and `∨` often reveals the structure immediately.
+
+A second high-value identity is the negation of implication:
+
+`¬(p → q) ≡ p ∧ ¬q`
+
+This is worth understanding rather than memorizing. An implication is false only when its antecedent is true and its consequent is false. Therefore saying “the implication is not true” is exactly the same as asserting that failure pattern.
 
 ## Contrapositive
 
 `p → q ≡ ¬q → ¬p`
 
-The original implication and contrapositive are always equivalent.
+The contrapositive is not merely another implication that happens to be useful; it is **logically equivalent** to the original implication. Therefore either form can replace the other safely.
+
+By contrast, the converse `q → p` is not generally equivalent to `p → q`.
 
 ## Biconditional
 
 `p ↔ q ≡ (p → q) ∧ (q → p)`
 
-Another useful form:
+A biconditional requires both directions to hold.
+
+It can also be written as:
 
 `p ↔ q ≡ (p ∧ q) ∨ (¬p ∧ ¬q)`
 
-A biconditional is true exactly when both propositions have the same truth value.
+This form exposes its meaning very clearly: a biconditional is true when the two propositions have the **same** truth value.
 
-# 18. Solving Equivalence Problems in GATE
+Its negation therefore means the propositions differ:
 
-Do not blindly create truth tables. Use the structure.
+`¬(p ↔ q) ≡ (p ∧ ¬q) ∨ (¬p ∧ q)`
 
-Example pattern:
+which is exactly XOR.
+
+# 18. How to simplify equivalence questions efficiently
+
+A full truth table always works for a small propositional expression, but it is often slower than necessary. GATE usually rewards recognizing structure.
+
+Use this order:
+
+1. **Parse the expression correctly.** Insert parentheses mentally if precedence is unclear.
+2. **Remove `→` and `↔`** when they hide the structure.
+3. **Push negations inward** using De Morgan and double negation.
+4. **Look for complements** such as `q ∨ ¬q = T` or `q ∧ ¬q = F`.
+5. **Factor or distribute only when it simplifies the expression.**
+6. **Use absorption** when the same proposition appears both alone and inside a larger term.
+7. If you only need to prove two expressions are **not** equivalent, stop as soon as you find one valuation on which they differ.
+
+For example:
 
 `(p ∧ q) ∨ (p ∧ ¬q)`
 
-Take common terms:
+Factor `p`:
 
-`= p ∧ (q ∨ ¬q)`
+`p ∧ (q ∨ ¬q)`
 
-Since:
+Since `q ∨ ¬q ≡ T`:
 
-`q ∨ ¬q ≡ T`
+`p ∧ T ≡ p`
 
-therefore:
+The expression looks like it depends on both `p` and `q`, but the complement pair removes `q` completely.
 
-`= p ∧ T`
+<aside>
+💡
 
-`= p`
+**GATE habit:** before drawing a truth table, ask whether one implication conversion, one De Morgan step, or one complement pair collapses the expression. A truth table is a verification tool; it does not have to be your first move.
 
-The important skill is recognizing which law reduces the expression fastest.
+</aside>
 
-# 19. Rules of Inference
+# 19. What an argument is
 
-A logical argument contains:
+Logical equivalence asks whether two expressions mean the same thing. **Inference** asks a different question: if certain statements are accepted as premises, what conclusions are logically forced by them?
 
-- Premises: statements assumed to be true.
-- Conclusion: statement derived from the premises.
+An argument has two parts:
 
-An argument is valid when the conclusion must be true whenever all premises are true.
+- **Premises** — statements assumed to hold for the purpose of the argument.
+- **Conclusion** — the statement claimed to follow from those premises.
 
-Validity does not depend on whether the premises are actually true in real life. It depends only on whether the conclusion logically follows.
+An argument is **valid** when there is no possible valuation in which **all premises are true and the conclusion is false**.
 
-# 20. Important Rules of Inference for GATE
+This definition is extremely important. Validity is about the structure of the reasoning, not about whether the premises happen to describe the real world correctly.
 
-## Modus Ponens ⭐
+For example:
+
+1. If a number is divisible by 4, then it is even.  
+2. 12 is divisible by 4.  
+3. Therefore, 12 is even.
+
+The structure is valid.
+
+But even an argument with a factually false premise can still have a valid logical form. GATE generally asks whether the conclusion **follows**, not whether the story itself is realistic.
+
+## Validity as a single implication
+
+If the premises are `P1, P2, ..., Pn` and the conclusion is `C`, then the argument is valid exactly when:
+
+`(P1 ∧ P2 ∧ ... ∧ Pn) → C`
+
+is a tautology.
+
+This connects inference directly back to propositional logic. A valid argument says: **whenever all premises hold together, the conclusion cannot fail**.
+
+# 20. Rules of inference
+
+Rules of inference are standard valid argument forms. Once the premises match the form of a rule, the conclusion can be derived without rebuilding a truth table from scratch.
+
+## Modus Ponens
 
 Given:
 
@@ -533,19 +632,15 @@ Given:
 
 `p`
 
-Therefore:
+we may conclude:
 
 `q`
 
-Example:
+The reasoning is direct: the rule says that `p` guarantees `q`, and the second premise tells us `p` has occurred.
 
-If the server fails, the backup starts.
+A common mistake is trying to run this rule backward. From `p → q` and `q`, you cannot in general conclude `p`; `q` might have happened for some other reason.
 
-The server failed.
-
-Therefore backup starts.
-
-## Modus Tollens ⭐
+## Modus Tollens
 
 Given:
 
@@ -553,9 +648,11 @@ Given:
 
 `¬q`
 
-Therefore:
+we may conclude:
 
 `¬p`
+
+If `p` were true, `q` would have to be true. Since `q` is false, `p` cannot be true. This is essentially the contrapositive used as an inference rule.
 
 ## Hypothetical Syllogism
 
@@ -565,9 +662,11 @@ Given:
 
 `q → r`
 
-Therefore:
+we may conclude:
 
 `p → r`
+
+The two implications form a chain. If `p` is enough for `q`, and `q` is enough for `r`, then `p` is enough for `r`.
 
 ## Disjunctive Syllogism
 
@@ -577,9 +676,59 @@ Given:
 
 `¬p`
 
-Therefore:
+we may conclude:
 
 `q`
+
+At least one of the alternatives must hold. Once `p` is ruled out, `q` remains.
+
+Because ordinary logical OR is inclusive, the premise `p ∨ q` does not originally claim that exactly one is true. The second premise is what eliminates one branch.
+
+## Addition
+
+From:
+
+`p`
+
+we may infer:
+
+`p ∨ q`
+
+for any proposition `q`.
+
+If `p` is already true, then an OR expression containing `p` must also be true. This rule is simple but useful when constructing a target conclusion.
+
+## Simplification
+
+From:
+
+`p ∧ q`
+
+we may infer either:
+
+`p`
+
+or:
+
+`q`
+
+A conjunction asserts both parts, so either component may be extracted.
+
+## Conjunction
+
+From:
+
+`p`
+
+and:
+
+`q`
+
+we may infer:
+
+`p ∧ q`
+
+If both statements have been established, they may be combined into one conjunction.
 
 ## Resolution
 
@@ -589,46 +738,227 @@ Given:
 
 `¬p ∨ r`
 
-Therefore:
+we may conclude:
 
 `q ∨ r`
 
-# 21. Checking Argument Validity Quickly
+The complementary pair `p` and `¬p` is eliminated. Intuitively, if the first clause is satisfied through `p`, the second clause must be satisfied through `r`; if the first is not satisfied through `p`, it must be satisfied through `q`. Either way, at least one of `q` or `r` must be true.
 
-For GATE, validity can often be checked using contradiction:
+# 21. Equivalence laws and inference rules are different tools
 
-1. Assume all premises are true.
-2. Assume the conclusion is false.
-3. Check whether this creates a contradiction.
+This distinction is worth making explicit because the notation can make the two ideas look similar.
 
-If contradiction occurs, the argument is valid.
+With an **equivalence**:
 
-Alternative shortcut:
+`P ≡ Q`
 
-Try to find a counterexample where all premises are true but the conclusion is false. If such an assignment exists, the argument is invalid.
+`P` and `Q` describe the same truth condition. You can replace one with the other in either direction.
 
-# 22. Common GATE Mistakes
+With an **inference**:
 
-- Confusing implication direction while translating English.
-- Treating converse as equivalent to implication.
-- Applying De Morgan's law without changing the operator.
-- Assuming a true premise automatically means the conclusion is true.
-- Using truth tables for expressions where one known equivalence solves the problem immediately.
+`P1, P2, ... ⟹ C`
 
-# 23. Exam Recall Checklist
+the conclusion `C` is guaranteed when the premises hold, but `C` need not contain the same information as the premises.
 
-Before solving propositional logic questions, remember:
+For example, from:
 
-`p → q ≡ ¬p ∨ q`
+`p ∧ q`
 
-`p → q ≡ ¬q → ¬p`
+we can infer:
 
-`p ↔ q ≡ (p → q) ∧ (q → p)`
+`p`
 
-De Morgan changes both the operator and the negations.
+by simplification. But `p ∧ q` is **not** logically equivalent to `p`, because `p` alone does not guarantee `q`.
 
-A valid argument means: no possible world exists where premises are true and conclusion is false.
+That is the cleanest way to separate the two topics:
 
-# 24. Scope Boundary
+**Equivalence preserves the whole meaning. Inference preserves truth from premises to conclusion.**
 
-This completes the studied propositional-logic block up to video 31. First-order logic and predicate quantifiers are intentionally excluded until studied.
+# 22. Checking validity quickly
+
+There are three useful methods. Choose the cheapest one for the expression in front of you.
+
+## Method 1 — Recognize inference rules
+
+If the argument is a short chain of Modus Ponens, Modus Tollens, Disjunctive Syllogism, or another standard rule, simply derive the conclusion step by step.
+
+## Method 2 — Assume premises true and conclusion false
+
+Because an invalid argument requires all premises to be true while the conclusion is false, deliberately try to create that situation.
+
+If those requirements force a contradiction, then no counterexample is possible and the argument is valid.
+
+This is often much faster than writing every row of a truth table.
+
+## Method 3 — Find one counterexample
+
+To prove an argument invalid, you do **not** need a complete truth table. One valuation with:
+
+- every premise true, and
+- the conclusion false
+
+is enough.
+
+Similarly, one valuation on which two expressions differ is enough to show that they are not logically equivalent.
+
+This “one counterexample is enough” principle is one of the most useful time-saving ideas in logic questions.
+
+# 23. Two invalid patterns that repeatedly cause mistakes
+
+Even before studying formal fallacies later, two tempting but invalid moves should already be avoided.
+
+## Affirming the consequent
+
+From:
+
+`p → q`
+
+`q`
+
+concluding:
+
+`p`
+
+is invalid.
+
+The implication tells us one way for `q` to follow, not the only way. `q` may be true even when `p` is false.
+
+## Denying the antecedent
+
+From:
+
+`p → q`
+
+`¬p`
+
+concluding:
+
+`¬q`
+
+is also invalid.
+
+The failure of a sufficient condition does not imply the failure of the result. Again, `q` may be true for some independent reason.
+
+Compare both with the two valid forms:
+
+- `p → q`, `p` ⟹ `q` — Modus Ponens.
+- `p → q`, `¬q` ⟹ `¬p` — Modus Tollens.
+
+# 24. How the PYQs connect to Part 2
+
+The purpose of these references is not to memorize question numbers. They show the exact kinds of transformations that GATE expects you to perform quickly.
+
+## GATE CSE 2017 Set 1 — Question 1: implication equivalence
+
+The expression:
+
+`¬p → ¬q`
+
+can be transformed by implication elimination:
+
+`¬p → ¬q ≡ p ∨ ¬q`
+
+and by taking the contrapositive:
+
+`¬p → ¬q ≡ q → p`
+
+This is a direct application of Part 2: the question becomes easy once you know that implication elimination and contraposition are **equivalence-preserving transformations**.
+
+**Exam lesson:** when several options are proposed as equivalents, normalize the implication before considering a truth table.
+
+## GATE CSE 2021 Set 1 — Question 7: proving tautology vs finding a counterexample
+
+For:
+
+`(¬p ∧ (p ∨ q)) → q`
+
+the implication could fail only if its antecedent were true and `q` were false. Setting `q = F` reduces the antecedent to `¬p ∧ p`, a contradiction. Therefore the implication can never fail and is a tautology.
+
+For the reverse-looking implication in the same question, one counterexample is enough to show that it is not a tautology.
+
+**Exam lesson:** do not automatically treat a reversed implication as equivalent. Use the single false pattern of implication or find one counterexample.
+
+## GATE CSE 2024 Set 2 — Question 2: translation plus contrapositive
+
+Once the English sentence is translated as:
+
+`q → ¬p`
+
+the contrapositive is immediately available:
+
+`p → ¬q`
+
+Both express the same logical restriction.
+
+**Exam lesson:** translation determines the arrow direction first; equivalence rules can only help after the sentence has been represented correctly.
+
+## GATE 2026 CS1 General Aptitude — Question 5: converse is not guaranteed
+
+The question gives a conditional rule and asks which statement need not follow. The important distinction is exactly the one developed here: the **contrapositive** of an implication is guaranteed, while the **converse** is not.
+
+If the rule is abstractly:
+
+`p → q`
+
+then:
+
+`¬q → ¬p`
+
+is equivalent to the original statement, but:
+
+`q → p`
+
+is an unjustified reversal unless additional information is given.
+
+**Exam lesson:** when an option reverses an implication, label it mentally as “converse” before accepting it. GATE frequently hides a direction error inside natural language.
+
+# 25. A compact solving strategy for GATE
+
+When an equivalence or inference question appears, use the following decision process rather than reaching immediately for a truth table.
+
+**If the question asks whether two expressions are equivalent:** eliminate implication/biconditional, use De Morgan or algebraic laws, and look for complements or absorption. If you suspect they are not equivalent, try to construct one valuation where they differ.
+
+**If the question asks whether an argument is valid:** identify the premises and conclusion, try standard inference rules, or attempt to make all premises true while the conclusion is false. If such a valuation exists, the argument is invalid; if the attempt necessarily produces contradiction, the argument is valid.
+
+**If the question is written in English:** finish the translation first. In particular, resolve `if`, `only if`, `when`, necessary/sufficient language, and the direction of implication before doing any symbolic manipulation.
+
+**If the expression is small but messy:** a truth table remains a perfectly valid final fallback. The goal is not to avoid truth tables at all costs; the goal is to avoid spending time on `2^n` rows when the structure already gives the answer.
+
+# 26. What must be instantly recallable from Part 2
+
+The following should eventually become automatic:
+
+- Logical equivalence means identical truth values under every valuation; equivalently, `P ↔ Q` is a tautology.
+- `p → q ≡ ¬p ∨ q`.
+- `¬(p → q) ≡ p ∧ ¬q`.
+- `p → q ≡ ¬q → ¬p`; the converse is not generally equivalent.
+- `p ↔ q ≡ (p → q) ∧ (q → p)` and is true when both sides have the same truth value.
+- De Morgan negates each component **and flips** AND/OR.
+- `p ∨ ¬p ≡ T` and `p ∧ ¬p ≡ F` are high-value simplification patterns.
+- Modus Ponens: `p → q`, `p` ⟹ `q`.
+- Modus Tollens: `p → q`, `¬q` ⟹ `¬p`.
+- Hypothetical Syllogism chains implications; Disjunctive Syllogism eliminates a false alternative; Resolution eliminates complementary literals across clauses.
+- An argument is valid only if there is **no** valuation with all premises true and the conclusion false.
+- One counterexample is enough to disprove a tautology, equivalence, or argument validity claim.
+- Equivalence is a two-way replacement of meaning; inference is a truth-preserving move from premises to a conclusion.
+
+# 27. Scope boundary
+
+This completes the studied **propositional-logic** material through playlist position 31. The next block begins first-order logic: predicates, quantifiers, restricted domains, quantified negation, nested quantifiers, and inference involving quantified statements. Those ideas should be kept separate until they are actually studied, because propositional logic treats whole statements as atomic units while first-order logic can reason about objects inside those statements.
+
+# Sources used for Part 2
+
+Neso Academy — Discrete Mathematics playlist (positions 17–20 and 24–31):  
+[https://www.youtube.com/playlist?list=PLBlnK6fEyqRhqJPDXcvYlLfXPh37L89g3](https://www.youtube.com/playlist?list=PLBlnK6fEyqRhqJPDXcvYlLfXPh37L89g3)
+
+GATE CSE 2017 Set 1 Q1:  
+[https://gateoverflow.in/118698/gate-cse-2017-set-1-question-01](https://gateoverflow.in/118698/gate-cse-2017-set-1-question-01)
+
+GATE CSE 2021 Set 1 Q7:  
+[https://gateoverflow.in/357445/gate-cse-2021-set-1-question-7](https://gateoverflow.in/357445/gate-cse-2021-set-1-question-7)
+
+GATE CSE 2024 Set 2 Q2:  
+[https://gateoverflow.in/422895/gate-cse-2024-set-2-question-2](https://gateoverflow.in/422895/gate-cse-2024-set-2-question-2)
+
+GATE 2026 CS1 question paper — General Aptitude Q5:  
+[https://gate2026.iitg.ac.in/doc/download/2026/QPs/CS1.pdf](https://gate2026.iitg.ac.in/doc/download/2026/QPs/CS1.pdf)
