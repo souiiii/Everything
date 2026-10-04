@@ -2,7 +2,7 @@
 
 > **Coverage:** Neso Academy Discrete Mathematics playlist positions 32–47: introduction to first-order logic, predicates, truth values of predicates, universal and existential quantifiers, counterexamples, restricted domains, logical equivalences involving quantifiers, negating quantified expressions, English-to-logic translation, and the first solved-problem block. Formal nested-quantifier techniques from position 52 onward are intentionally not developed yet.
 >
-> This continues the propositional-logic material in [`Propositional Logic.md`](./Propositional%20Logic.md).
+> This continues the propositional-logic material in [`01_Propositional_Logic.md`](./01_Propositional_Logic.md).
 
 # 28. Why propositional logic is not enough
 
