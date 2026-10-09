@@ -788,7 +788,7 @@ The earlier worked PYQs should now be read as applications of a small number of 
 
 **GATE 2025 CS1 Q48 — “Everyone has exactly one mother”** tests existence and uniqueness simultaneously. The correct forms guarantee one actual mother and then forbid any distinct second mother. Sections 37 and 47 explain why the existential witness must be present and why the uniqueness condition must refer back to that same witness.
 
-These questions are already fully solved in Sections 39–41; the completed theory now explains *why* those solution patterns work.
+These questions are already fully solved in Sections 39–41; the completed theory now explains _why_ those solution patterns work.
 
 # 59. Bridge topic — Mathematical Induction is not first-order logic, but it appears in a mapped logic-style PYQ
 
