@@ -507,6 +507,148 @@ You should be able to answer these without notes:
 
 ---
 
+## Supplement — Missing building blocks from System Design for Beginners (9 October 2026)
+
+> This continuation belongs to **Part II** and fills in the components introduced in [Piyush Garg's System Design for Beginners](https://www.youtube.com/watch?v=lFeYU31TnQ8) that were not yet explained in the opening scaling-and-load-balancing notes. It deliberately leaves detailed indexing, connection pooling, and Redis caching to the dedicated sessions that already follow. Each component below should be understood through the problem that makes it necessary, not as infrastructure to add automatically.
+
+### A. How a browser reaches a server: DNS, clients, and reverse proxies
+
+A web application begins with a simple relationship: a **client** sends a request, and a **server** performs work and returns a response. The client may be a browser, a mobile application, or another backend service. The server might be a single process on a machine or one of many application replicas. A system-design diagram should make this first boundary clear, because everything else is an attempt to make that request path more capable, reliable, or efficient.
+
+People remember names such as example.com more easily than numerical IP addresses. **DNS (Domain Name System)** helps resolve a domain name into the addressing information a client needs to contact a service. DNS is not itself the application server, and it does not process the HTTP request. It tells the client where to try connecting. DNS can return multiple addresses, but it is not a substitute for a health-aware, application-level load balancer: cached answers, limited request visibility, and changing server health make sophisticated routing difficult to express with DNS alone.
+
+A **reverse proxy** sits on the server side of this interaction. The client connects to the proxy, which forwards the request to an appropriate backend and returns the response. A reverse proxy may terminate TLS, route by hostname or path, apply access rules, or act as a load balancer. The categories overlap: “reverse proxy” describes its position and forwarding behavior, while “load balancer” emphasizes how it distributes work. Products such as Nginx can perform both roles.
+
+**When it matters:** If several services live behind one public domain, a reverse proxy can keep their internal addresses private and route requests consistently. If the problem is merely serving a small application on one machine, a more elaborate routing layer may be unnecessary.
+
+### B. Microservices and the reason to introduce an API gateway
+
+As an application grows, teams may decide to deploy major business capabilities independently. An e-commerce system might separate **authentication**, **orders**, **payments**, and **notifications**. This is the central idea of a microservices architecture: services have their own deployable boundaries and communicate over APIs or events rather than relying entirely on in-process method calls.
+
+Independent deployment can help when different parts of the system need different scaling, release schedules, or ownership. The cost is additional network communication and distributed-system complexity. A call that used to be a function invocation may now require timeouts, retries, monitoring, authentication between services, and careful handling when only one service fails. A well-structured monolith can be the better choice until these benefits justify the overhead.
+
+An **API gateway** gives clients one consistent entry point to an API composed of multiple backends. Instead of teaching the browser the address of each internal service, the gateway can route an incoming request for the orders API to the order service and a login request to the identity service. Depending on the product and configuration, the gateway can also handle authentication, request validation, throttling, or observability.
+
+A gateway and a load balancer are related but solve different primary problems. The **gateway** chooses which backend capability or integration should handle a request and may apply API-wide policies. The **load balancer** distributes work among instances that can serve a particular backend workload. An architecture may use both—for example, a gateway selects the order service, then a load balancer chooses one healthy order-service replica—but not every design requires two separate products. AWS API Gateway can integrate with Lambda, HTTP backends, and other AWS services.
+
+**Important boundary:** Validating a user's identity at the gateway does not eliminate the need for business authorization in the service. Knowing who the user is differs from deciding whether that user may modify a particular order.
+
+### C. Synchronous versus asynchronous work: what should delay the response?
+
+A **synchronous request path** is a sequence of work that must finish before the caller receives the result. Imagine a successful payment request that also needs to send a confirmation email. The payment's correctness matters immediately, but the user rarely needs the email provider to finish sending before the checkout screen can show success.
+
+If the payment handler waits for a slow mail service, that external service now influences checkout latency and potentially its availability. A timeout or temporary email outage might cause the payment request to appear unsuccessful even when the payment itself completed. This is unnecessary coupling between critical and non-critical operations.
+
+**Asynchronous processing** moves work that can happen later out of the request's critical path. The payment service first records the result correctly, then arranges for notification work to be performed separately. The API can return an appropriate response without waiting for every downstream side effect.
+
+This does not make work instant or remove reliability requirements. An asynchronous job may be delayed, retried, or fail permanently. The system needs to decide when it may truthfully acknowledge success, what state is durable, and what the user should see if background work remains unfinished.
+
+**When it matters:** Sending an email, resizing an uploaded image, or producing analytics can often be delayed. Checking available inventory and authorizing a payment usually require stronger correctness decisions before the core operation is acknowledged.
+
+### D. Message queues and worker pools: separating the producer from the consumer
+
+A **message queue** is a holding area for units of work that should be processed by another component. The part of the system that places work in the queue is the **producer**; the process that retrieves and performs it is the **consumer** or **worker**. The producer need not keep a direct connection open to the worker while the job executes.
+
+For example, after an order is accepted, the application can enqueue a message containing the order identifier and the type of notification required. Several email workers can consume messages from the same queue. If order traffic briefly spikes, the queue absorbs the backlog and workers process it as capacity becomes available. Adding worker instances may increase throughput, provided the email provider or database is not already the bottleneck.
+
+**Amazon SQS** is an AWS-managed queue service. In a common pull-based pattern, workers request messages from SQS. With **short polling**, requests may return quickly even when no message is available; **long polling** waits for a configurable interval, reducing empty requests when traffic is intermittent.
+
+Receiving an SQS message is not the same as permanently removing it. The message becomes temporarily invisible to other consumers for a **visibility timeout**. When the worker completes the job successfully, it deletes the message. If processing fails and the message is not deleted, it can become visible and be delivered again. Standard SQS queues provide **at-least-once delivery**, so consumer code must tolerate duplicate deliveries.
+
+A safe worker is therefore designed for **idempotency**: performing the same logical job twice should not create an unacceptable duplicate effect. For an email job, a durable delivery record keyed by a business event identifier may prevent duplicate notifications. A **dead-letter queue (DLQ)** can hold messages that repeatedly fail instead of letting one broken job retry forever.
+
+**Trade-off:** Queues make load spikes and temporary downstream outages easier to handle, but introduce backlog monitoring, eventual completion, retry behavior, message-order questions, and the risk of duplicates. They should be introduced for real asynchronous work rather than every internal function call.
+
+### E. Publish/subscribe and fan-out: one event, several independent reactions
+
+A queue is useful when a particular job needs to be handled by one of several competing workers. **Publish/subscribe (pub/sub)** solves a different problem: a single event should be made available to several independently interested consumers.
+
+Consider an **OrderPaid** event. Email notifications, SMS confirmations, and analytics are different reactions to the same business occurrence. Publishing that event once is cleaner than forcing the payment service to make direct calls to every downstream system. Each subscriber can evolve with less knowledge of how the payment service works internally.
+
+**Amazon SNS** is one managed service for distributing messages to subscribers. A basic topic-to-subscriber design can broadcast an event, but the required delivery, retry, and retention guarantees depend on the type of subscriber and the subscription setup. A notification being published does not, by itself, prove that every subscriber finished its business logic successfully.
+
+A common **fan-out architecture** combines SNS with separate SQS queues:
+
+**Payment service → SNS topic → Email queue / SMS queue / Analytics queue → independent workers**
+
+Each queue then buffers work for one downstream responsibility. If the SMS provider is unavailable, its queue can retain or retry its own messages without requiring the email worker to stop. This also means different worker pools can scale at different rates and observe their own backlogs.
+
+**The crucial distinction:** With competing consumers on a single normal work queue, one message is normally assigned to one worker for processing, although duplicates are possible. With pub/sub, an event is distributed to multiple subscriptions. Combining pub/sub with a separate queue per subscriber gives both broad event distribution and per-consumer buffering.
+
+### F. Rate limiting: controlling admission before a system is overwhelmed
+
+**Rate limiting** sets a boundary on how much work a caller, route, or downstream service may trigger within a time interval. It can help keep an API usable when a client sends an excessive number of requests, make service consumption fairer, and prevent an application from violating an external provider's request quota.
+
+A simple policy might permit a user to make a bounded number of login attempts in a minute, or restrict how quickly an email worker contacts a provider. Limits may be applied by API key, user account, source address, or another carefully chosen identity. The choice matters: a limit based only on IP address can accidentally affect many legitimate users sharing a network.
+
+In the **token bucket** model, tokens enter a bucket at a defined rate, up to a maximum capacity. Each accepted request spends a token. Saved tokens allow short bursts while the refill rate bounds sustained usage. In the common **leaky bucket** model, incoming work is released at a more controlled pace, smoothing bursts; work exceeding the bucket's capacity must wait or be rejected.
+
+Rate limiting can produce a **429 Too Many Requests** response when an HTTP client exceeds the policy, often accompanied by information about when to retry. On a worker, it can instead mean waiting before making another downstream call. These mechanisms should be paired with monitoring and sensible retry/backoff behavior so clients do not all retry simultaneously.
+
+**Trade-off:** Limits protect capacity but can reject legitimate traffic when chosen poorly. They are one part of abuse and overload protection, not a complete defense against large distributed denial-of-service attacks. The real design question is **which resource needs protection, who is allowed to consume it, and what happens when the budget is exhausted?**
+
+### G. Database read replicas: scaling reads without pretending copies are instantaneous
+
+When many application servers read the same database, moving from one application instance to ten does not automatically make the database ten times stronger. If reads dominate traffic, a **read replica** can reduce pressure on the primary database by serving suitable read queries from a separate copy.
+
+The **primary** is typically responsible for accepting writes. Replication then transfers changes to one or more replicas. The application may send read-heavy work such as reports, dashboards, or less time-sensitive queries to those replicas while directing writes and correctness-sensitive reads to the primary.
+
+The key risk is **replication lag**. In commonly used asynchronous replication setups, a write can succeed on the primary before a replica has received and applied it. A user who changes a profile and immediately reads from a lagging replica might briefly see the old information. The system must consciously decide where such staleness is acceptable.
+
+For a **read-after-write** requirement, one simple approach is to send the immediate read to the primary, or use a database-specific consistency mechanism. Read replicas also do not increase the primary's write throughput automatically, and replication itself consumes resources.
+
+**When it matters:** Replicas are useful when the read workload is the demonstrated bottleneck and the application can tolerate the relevant consistency behavior. They should not be added simply because an architecture is expected to look large.
+
+### H. A brief bridge to caching, without repeating the later Redis lesson
+
+**Caching** avoids repeated expensive work by keeping a reusable copy closer to the requester. A hot product listing may be served from an in-memory cache instead of querying the database on every read. On a cache miss, the application can fetch the value from the source of truth and populate the cache.
+
+Caching and read replicas are complementary but not interchangeable. A replica is another database copy that can execute queries, while a cache serves reusable results with its own expiration and invalidation rules. A replica may lag behind the primary; a cache may become stale when its stored value no longer matches the authoritative record. Their consistency problems must be evaluated separately.
+
+Your existing **Session 3 — Caching + Redis** later in this same document already explains cache hits and misses, cache-aside, TTL, invalidation, eviction, and common failure modes in detail. Read that dedicated session when the planner reaches caching; it would add little value to duplicate all of it here.
+
+### I. CDNs and edge caching: serving content closer to the user
+
+Even a healthy origin server can feel slow when users are geographically far away. Every network round trip takes time, and repeatedly fetching the same images or scripts from the origin wastes bandwidth and compute capacity. A **Content Delivery Network (CDN)** improves this by placing a distributed network of edge locations between users and the origin.
+
+When a user requests a cacheable resource, an edge may have a valid cached copy and return it without contacting the origin. On a **cache miss**, the edge fetches the content from the configured origin, returns it, and may store it according to the caching rules. Popular images, JavaScript bundles, stylesheets, and videos can benefit significantly because many users request the same content.
+
+**Amazon CloudFront** is AWS's CDN service. It can use origins such as S3 or an HTTP application/load balancer and apply cache behaviors for different paths. It can also forward non-cacheable requests, which means a CDN does not eliminate the need for backend servers or load balancers. The CDN is another delivery and protection layer, not a replacement for application logic.
+
+Caching dynamic or user-specific content incorrectly can leak private data or serve stale responses. A good CDN policy therefore distinguishes public reusable assets from personalized responses and sets suitable cache keys, headers, and expiration behavior.
+
+**Trade-off:** A CDN reduces latency and origin load for cacheable traffic, but introduces cache invalidation, propagation, pricing, and correctness considerations. Add it because the application's audience and content distribution justify it, not because every diagram must include a global edge network.
+
+### J. Putting the pieces together without overengineering
+
+Imagine a shopping application receiving a payment request. **DNS** helps the client reach its public entry point. A reverse proxy or **API gateway** applies the relevant routing and access policies. If the payment service has multiple replicas, a **load balancer** can select a healthy instance. The payment workflow performs the correctness-critical work and persists its result in its authoritative database.
+
+Once the payment is committed, the system can publish an **OrderPaid** event through a reliable event-publication design. An SNS topic can fan it out into independent **SQS queues** for email, SMS, and analytics. Worker pools process those queues at rates their downstream providers can sustain. **Rate limiting** protects the public API and may also control how fast workers call external services. Separately, **read replicas** can handle suitable read-heavy queries, while a **cache** can reduce repeated database reads. A **CDN** can serve cacheable front-end assets close to users.
+
+This diagram is a **possible growth path, not the starting template**. A modest application might need only a well-organized backend and a single database. The design should gain gateways, worker queues, replicas, and edge caches only as concrete requirements, measured bottlenecks, or resilience needs emerge.
+
+> **The practical lesson:** Every new component solves one problem but creates another set of operating responsibilities. Explain both sides. A queue introduces eventual processing and duplicate-delivery considerations; a replica introduces lag; a cache introduces invalidation; an API gateway becomes an important dependency; and a CDN introduces another cache boundary. System design becomes defensible when those consequences are deliberate.
+
+## Check your understanding
+
+1. A checkout completes correctly, but the email service is slow. Explain why a queue might improve the user experience and what happens if the email worker crashes halfway through processing.
+2. One payment event must notify email, SMS, and analytics independently. Explain why three separate queues fed by a pub/sub topic are different from three workers competing for messages on one queue.
+3. An API is receiving too many login attempts. Describe where a rate limit could be applied, what identity it could use, and why its threshold must be selected carefully.
+4. A user changes their display name but immediately sees the old name. Explain how a read replica and a cache could each cause this symptom, and how you would distinguish them.
+5. An application serves large public images to users on several continents. Explain what a CDN improves and why a normal non-cacheable API call may still reach the origin.
+
+## Follow-up sources for these concepts
+
+- [Piyush Garg — System Design for Beginners (the video studied)](https://www.youtube.com/watch?v=lFeYU31TnQ8)
+- [Amazon API Gateway — Overview](https://docs.aws.amazon.com/apigateway/latest/developerguide/welcome.html)
+- [Amazon SQS — Visibility timeout and repeated delivery](https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-visibility-timeout.html)
+- [Amazon SQS — Recovery, duplicates, and dead-letter queues](https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/designing-for-outage-recovery-scenarios.html)
+- [Amazon SNS — Fan-out to SQS queues](https://docs.aws.amazon.com/sns/latest/dg/sns-sqs-as-subscriber.html)
+- [Amazon RDS — Working with read replicas](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_ReadRepl.html)
+- [Amazon CloudFront — How CloudFront delivers content](https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/HowCloudFrontWorks.html)
+
+---
+
 # Session 2 — Database Performance: Indexing + Connection Pooling
 
 <aside>
