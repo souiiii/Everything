@@ -1,10 +1,11 @@
 # AWS Foundations — Serverless, Monoliths, Lambda and EC2 | 9 Oct 2026
 
-> **Study record — 9 October 2026.** These notes consolidate the two AWS videos assigned in the morning learning slot, the AWS console concepts encountered during account setup, and supporting explanations checked against AWS documentation. The video transcript service was unavailable, so this is a structured, documentation-verified study guide to the subjects of the videos rather than a word-for-word reconstruction of everything said by the instructor. Practical EC2 deployment and SSH are reserved for a later lesson.
+> **Study record — 9 October 2026.** These notes consolidate the two morning AWS videos, the evening SSH lesson, the AWS console concepts encountered during account setup, and supporting explanations checked against AWS documentation. The video transcript service was unavailable, so this is a structured, documentation-verified study guide to the subjects of the videos rather than a word-for-word reconstruction of everything said by the instructor. A live EC2 deployment and SSH login remain for a later hands-on lab, even though the SSH procedure has now been studied.
 
 **Videos studied**
 - [Piyush Garg — What is Serverless? | Serverless Vs Monolith | AWS Lambda](https://www.youtube.com/watch?v=AgOmeANl3ls)
 - [Piyush Garg — Amazon EC2: Elastic Cloud Server & Hosting with AWS](https://www.youtube.com/watch?v=-FKQwXtrSSQ)
+- [Piyush Garg — How to SSH into Amazon EC2 Machine | SSH AWS EC2](https://www.youtube.com/watch?v=57TCFZG08oM)
 
 <callout icon="💡" color="blue_bg">
 	The central idea is not that one AWS service is universally better. A developer is choosing how much infrastructure to manage, how an application is packaged, and how its demand changes over time. These are different design decisions, and understanding their separation makes the rest of AWS much easier to reason about.
@@ -128,7 +129,7 @@ SSH (Secure Shell) is a protocol for securely operating a remote machine through
 
 A normal automatically assigned public IPv4 address can change when an instance is stopped and started again. An Elastic IP is designed to provide a static public IPv4 address, but public IPv4 addressing may incur additional charges. Neither an Elastic IP nor a public IP should be added without a reason.
 
-The later SSH lesson will show the actual connection procedure. At this stage, the important understanding is that **compute**, **network reachability**, **firewall permissions**, and **authentication** are four separate requirements. If an SSH connection fails, the cause could be in any of those areas.
+Part VII now explains the SSH connection procedure in detail; a real instance connection remains for the practical lab. At this stage, the important understanding is that **compute**, **network reachability**, **firewall permissions**, and **authentication** are four separate requirements. If an SSH connection fails, the cause could be in any of those areas.
 
 ### 12. Instance states and what happens to data
 
@@ -192,9 +193,9 @@ Before launching chargeable resources, set an AWS Budget or other suitable cost 
 
 ### 19. Today's progress and the next lab
 
-**Completed:** Both assigned introductory videos were watched, an AWS account was created, the Management Console was explored, the IAM users page was opened, and the root-user MFA setup page was reached.
+**Completed:** All three assigned AWS videos were watched (serverless, EC2, and SSH), an AWS account was created, the Management Console was explored, the IAM users page was opened, and the root-user MFA setup page was reached.
 
-**Not completed:** MFA enrollment, administrative daily-use identity setup, billing/budget confirmation, and a live EC2 instance launch were not confirmed. The EC2 launch and SSH walkthrough belong to the later hands-on lesson, where the instance should be cleaned up afterward.
+**Not completed:** MFA enrollment, administrative daily-use identity setup, billing/budget confirmation, and a live EC2 instance launch were not confirmed. The actual EC2 launch and successful SSH login belong to a later hands-on lab, where the instance should be cleaned up afterward.
 
 This distinction matters because study notes should record understanding without implying that practical steps have been carried out when they have not.
 
@@ -203,6 +204,145 @@ This distinction matters because study notes should record understanding without
 When a browser sends a request to an application, the application needs **compute** to execute code, **networking** to receive traffic, **identity and permissions** to authorize cloud actions, and often **storage** to persist data. EC2 and Lambda solve the compute problem at different levels of abstraction. VPCs and security groups deal with network access. IAM deals with permissions. EBS and services such as S3 deal with different storage needs.
 
 A useful habit is to ask four questions for any new AWS service: *What problem does it solve? What does AWS manage? What do I still manage? What can generate a bill?* If you can answer those clearly, the console becomes a tool for implementing decisions rather than a set of unfamiliar buttons.
+
+## Part VII — Securely connecting to an EC2 Linux instance with SSH
+
+> **Evening AWS lesson — 9 October 2026.** The video [How to SSH into Amazon EC2 Machine | SSH AWS EC2 — Piyush Garg](https://www.youtube.com/watch?v=57TCFZG08oM) was completed. These notes explain the connection procedure and its security model using AWS's current documentation. **The video was watched, but a live instance was not launched and no actual SSH login was performed.** MFA and billing safeguards remain pending. The video transcript was not available, so the explanation is a documentation-aligned study guide rather than a word-for-word retelling.
+
+### 20. What SSH means, and why we need it
+
+**SSH (Secure Shell)** is a protocol for establishing an encrypted, authenticated connection to another computer over a network. Its most familiar use is remote administration: a developer opens a terminal on a laptop, establishes an SSH connection to a Linux server, and runs commands as though the terminal were opened on that remote machine.
+
+This distinction is fundamental. Before connecting, the terminal is running commands on the developer's own computer. After successfully logging in, the shell is running **on the EC2 instance**. If you type `pwd` or inspect an application log after connecting, you are looking at the remote server's working directory or files, not those of the laptop.
+
+SSH involves a **client**, typically the OpenSSH program on your laptop, and an **SSH server**, generally `sshd` on the remote Linux machine. The client and server negotiate an encrypted session, the client establishes which server it is contacting, and the server checks whether the user is allowed to log in.
+
+A deployed Node.js backend provides a concrete example. SSH may be used to inspect its configuration, read logs, restart a process, or troubleshoot a failed deployment. SSH does not itself deploy the application, create an EC2 instance, or stop AWS charges; it is the secure access mechanism through which an administrator can operate an existing server.
+
+### 21. SSH key pairs: proving identity without sending a password
+
+For the common EC2 Linux SSH workflow, authentication uses a **public/private key pair**. The **public key** is registered with the server for the intended Linux user. The **private key** stays on the developer's laptop. When connecting, the SSH client proves possession of the corresponding private key without transmitting the private key itself.
+
+A typical EC2 launch lets you select or create a key pair. If AWS generates it, you download the private-key file, commonly ending in `.pem`, when the key pair is created. You should not assume that the same private key can be downloaded again later. Losing it can make the standard login method unavailable, requiring a separate recovery procedure.
+
+Think of the two keys as complementary responsibilities: the remote machine knows **which public key is permitted**, while the laptop retains the **private proof needed to authenticate**. The public key can be shared for its intended purpose. The private key must not be copied into GitHub, chat messages, screenshots, or study notes.
+
+**Do not confuse AWS identity with Linux identity.** The AWS root user or an IAM identity may have permissions to create, inspect, or terminate EC2 resources through AWS APIs. SSH authentication, however, determines access to an **operating-system user account inside the instance**. Access to the AWS console is not automatically permission to SSH into a server, and the username for SSH is usually not `root`.
+
+### 22. The requirements for a successful SSH connection
+
+Four different parts of the system must be correct before the SSH command can succeed.
+
+**The instance must be ready.** It should be in the running state, have passed its relevant status checks, and have an SSH server configured for the selected access method. An instance still starting up might be visible in the AWS console before it can accept an SSH connection.
+
+**There must be a reachable network path.** For the simplest connection from a home laptop over the public internet, the EC2 instance needs an appropriate public IPv4 address or DNS name, and the VPC/subnet must permit that internet route. An instance's private IP address is normally not directly reachable from an unrelated home network. A public IP by itself does not guarantee that a network route exists.
+
+**The security group must permit the connection.** A security group is an AWS virtual firewall associated with the instance's network interface. Standard SSH uses **TCP port 22**. For a direct connection from your laptop, a suitable inbound rule permits SSH on port 22 from **your current public IP address**, often selected using *My IP* in the console. Permitting SSH from `0.0.0.0/0` instead makes the port reachable from any IPv4 address and is unnecessary for an ordinary beginner lab.
+
+**The client must authenticate as the correct user.** The remote Linux account, the key that was authorized when the instance was configured, and the key file supplied in the SSH command must match. The default username depends on the **AMI (Amazon Machine Image)**. Common Amazon Linux images use `ec2-user`, while common Ubuntu images use `ubuntu`.
+
+These conditions form a useful diagnostic sequence: **Is the instance healthy? Can my network reach it? Is port 22 allowed? Am I using the correct account and key?** A correct key cannot repair a blocked port, and an open port cannot make an incorrect key authenticate.
+
+### 23. Understanding the SSH command
+
+On an Arch Linux laptop with an OpenSSH client, a conventional example is:
+
+```bash
+ssh -i ~/.ssh/aws-demo.pem ec2-user@203.0.113.10
+```
+
+This is an **illustrative command**. The IP address `203.0.113.10` is reserved for documentation, not the address of a real lab instance. The eventual command must use the instance's actual address and the key-file path on your laptop.
+
+The first part, **`ssh`**, starts the local SSH client. The option **`-i ~/.ssh/aws-demo.pem`** specifies the private-key file, also called an *identity file*, to use for authentication. The expression **`ec2-user@203.0.113.10`** identifies the user account and remote server. The `@` separates the operating-system username from the network address.
+
+For an Ubuntu AMI, the same command would typically begin with **`ubuntu@`** instead of `ec2-user@`. The username is not selected according to your personal name or AWS account: it is determined by the operating-system image or by an account that has been explicitly created on that instance.
+
+Before a future lab, `ssh -V` can confirm that the **local** SSH client is installed. It checks a program on your laptop only; it does not create AWS resources or connect to a server.
+
+### 24. Private-key permissions and the server's host key
+
+Because an SSH private key is effectively a credential, the client expects its file to be kept private. On Linux, a key that is readable by unrelated users can trigger an **unprotected private key file** warning and be rejected.
+
+A common way to restrict the file is:
+
+```bash
+chmod 400 ~/.ssh/aws-demo.pem
+```
+
+The command `chmod` changes filesystem permissions. The value `400` grants the file's owner read access while withholding access from other users. The setting `600`, which allows the owner both read and write access, is also restrictive. What matters is that the private key is **not accessible to other local users**.
+
+Notice that this path refers to a file **on the laptop**. One common mistake is to type a key filename that exists in a different directory, or to mistake the name of an EC2 key pair in the AWS console for the exact path where its private file was saved.
+
+SSH also authenticates the **server**. When contacting a host for the first time, the client may display a **host-key fingerprint** and ask you to confirm it. This *server host key* is not the same as your *user login key*. Checking the fingerprint against a trusted source helps avoid connecting to an unexpected machine. A later warning that the host's identity has changed deserves investigation rather than an automatic bypass.
+
+### 25. What to do after a successful login
+
+After connecting, three harmless commands provide a useful orientation:
+
+```bash
+whoami
+hostname
+pwd
+```
+
+`whoami` displays the Linux user running commands. `hostname` displays the current machine's hostname, and `pwd` prints its working directory. They help confirm both **which server** was reached and **which account** is active.
+
+When finished, type `exit` to leave the remote shell and return to your laptop's terminal. **Exiting SSH does not stop the EC2 instance.** The instance may continue running, serving traffic, and incurring charges. Terminating or stopping an instance is a separate action carried out through AWS controls or APIs.
+
+This distinction is especially important for short experiments: a closed terminal is not evidence that the cloud resource was deleted.
+
+### 26. How to reason about common errors
+
+**`Permission denied (publickey)`** usually means the remote SSH service was reached but did not accept the attempted key authentication. Common causes include the wrong `.pem` file, the wrong default Linux username, or a key pair that does not match the instance. Check those details before changing unrelated network settings.
+
+**`UNPROTECTED PRIVATE KEY FILE`** indicates that the SSH client considers the local private-key file insufficiently protected. Use appropriately restrictive local permissions, such as `chmod 400`, and confirm that you are modifying the correct file.
+
+**`Connection timed out`** points toward a reachability issue. Check the instance's status, the public IP or DNS name, the subnet route, TCP port 22 in the security group, and whether your local network blocks outgoing SSH. Repeatedly changing the key will not solve a network timeout.
+
+**`Connection refused`** typically indicates that the destination was reachable enough to reject the connection but was not accepting SSH on the requested port. The SSH server may be stopped, configured differently, or actively rejected by networking rules.
+
+**A warning about changed host identification** is different from a key-file-permissions error. It concerns the identity of the remote SSH server. A new instance or changed host may explain it, but the safer response is to verify the new identity before altering the local `known_hosts` entry.
+
+If the cause remains unclear, the `-v` option prints SSH diagnostic information. This can help distinguish failures during network connection, host verification, and user authentication; any logs shared for help should first be checked for sensitive details.
+
+### 27. SSH from a terminal versus EC2 Instance Connect
+
+AWS also offers **EC2 Instance Connect**, which can provide browser-based access from the EC2 console or an integrated client flow. For supported images and configurations, it works with IAM authorization and provides a short-lived public key to the instance, avoiding the need to distribute the same long-lived downloadable key for every session.
+
+The details matter. Depending on the chosen connection method, EC2 Instance Connect still needs compatible instance software, IAM authorization, and appropriate network/security-group access. A console connection can require SSH traffic from **AWS's EC2 Instance Connect service ranges**, rather than the public IP of your laptop. The **EC2 Instance Connect Endpoint** offers another pattern for reaching some private-address instances.
+
+A further option, **Systems Manager Session Manager**, can permit remote administration without exposing inbound SSH, provided its agent, IAM permissions, and networking prerequisites are configured. These alternatives should not distract from the essential SSH lesson: understand which machine you are reaching, how the remote Linux user authenticates, and what network path carries the connection.
+
+### 28. Next practical lab: what is planned and what remains undone
+
+The objective for a later hands-on lab is deliberately small: **secure the account, create one disposable Linux instance, establish an SSH connection, run three harmless commands, and remove the resources deliberately**.
+
+Before launching anything, finish **root-account MFA**, choose appropriate non-root daily-use access, and confirm billing visibility, available credits or free-plan eligibility, the selected instance's current price, public IPv4 charges, and a suitable budget or cost alert. A normal AWS Budget is an alert mechanism, **not a guaranteed hard cap** on spending.
+
+Once those safeguards are confirmed, the practical steps will be to select one AWS Region; choose a Linux AMI and suitably priced instance type; create/download a key pair; configure a public network path and **TCP 22 from My IP** for direct SSH; wait until the instance is ready; restrict the private key's permissions; and connect using the right username. The verification commands are `whoami`, `hostname`, and `pwd`, followed by `exit`.
+
+For cleanup, **terminate** the disposable instance once no data is needed. Check the relevant EBS volumes, snapshots, allocated public IP addresses, and any other resources that may persist. Stopping an instance is not the same as terminating it, and associated storage or public IPv4 allocations may still generate charges. The exact current console steps should be verified against the AWS EC2 getting-started documentation when the lab is actually performed.
+
+**Progress as of tonight:** Three AWS videos have been completed. No successful SSH login, EC2 creation, account MFA enrollment, or billing/budget verification has been confirmed. Studying the procedure and performing the procedure are separate milestones.
+
+### 29. Questions worth being able to answer
+
+1. Why does knowing the AWS console password not prove that you can log in as a Linux user through SSH?
+2. What is the difference between an **EC2 public IP address** and an **SSH public key**?
+3. If the SSH connection times out, why should you check routing and security groups before looking for a new PEM file?
+4. Why can `ec2-user` be correct for one Linux AMI while `ubuntu` is correct for another?
+5. What changes when you type `exit`, and what does **not** change about the EC2 instance or its billing?
+6. Why is opening TCP 22 only from your IP preferable to allowing inbound SSH from the whole internet?
+
+**References for this lesson**
+
+- [AWS — Connect to a Linux instance using SSH](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/connect-to-linux-instance.html)
+- [AWS — Connect using a local SSH client](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/connect-linux-inst-ssh.html)
+- [AWS — Default Linux usernames](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/managing-users.html)
+- [AWS — EC2 Instance Connect prerequisites](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-instance-connect-prerequisites.html)
+- [AWS — EC2 instance lifecycle](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-instance-lifecycle.html)
+
+---
 
 ## Sources and reliable follow-up reading
 
