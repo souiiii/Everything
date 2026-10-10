@@ -537,11 +537,14 @@ The same architecture works in reverse for uploads: the backend can authorize a 
 
 A **presigned PUT URL** is a time-limited, signed S3 request that lets a client **upload an object directly to S3** without receiving AWS access keys. The bucket can remain private. Unlike a presigned **GET**, which retrieves an existing object, a presigned **PUT** writes the request body to the specified object key.
 
-**Typical flow:** A logged-in user asks the backend for permission to upload a file. After checking authorization, the backend chooses the **bucket and object key** and signs a \`PutObjectCommand\` using \`getSignedUrl\` from AWS SDK v3. It returns the URL to the client, which sends the file bytes in an **HTTP PUT** request directly to S3. The application server does not have to receive and forward the entire file.
+**Typical flow:** A logged-in user asks the backend for permission to upload a file. After checking authorization, the backend chooses the **bucket and object key** and signs a `PutObjectCommand` using `getSignedUrl` from AWS SDK v3. It returns the URL to the client, which sends the file bytes in an **HTTP PUT** request directly to S3. The application server does not have to receive and forward the entire file.
 
-**Example using an existing, properly configured \`S3Client\`:**
+**Backend** (Node.js, with an initialized `s3` client and a server-chosen bucket and object key):
 
-\`\`\`javascript
+```javascript
+import { PutObjectCommand } from "@aws-sdk/client-s3";
+import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
+
 const url = await getSignedUrl(
   s3,
   new PutObjectCommand({
@@ -551,27 +554,31 @@ const url = await getSignedUrl(
   }),
   { expiresIn: 300 }
 );
+```
 
-// In the browser:
-await fetch(url, {
+**Frontend** (browser, with the `url` from the backend and `file` selected by the user):
+
+```javascript
+const response = await fetch(url, {
   method: "PUT",
   headers: { "Content-Type": "image/png" },
   body: file,
 });
-\`\`\`
 
-The signing identity must be allowed to perform **\`s3:PutObject\`** on the chosen object ARN; \`s3:GetObject\` alone is insufficient. The URL authorizes the **specific signed request**, so changing the HTTP method, key, or signed headers can invalidate it. In particular, any header values that are included in the signature must match the actual upload request. A browser uploading from a different origin may also require a suitable **S3 CORS configuration**, because browsers enforce cross-origin request rules.
+if (!response.ok) throw new Error("S3 upload failed");
+```
+The signing identity must be allowed to perform **`s3:PutObject`** on the chosen object ARN; `s3:GetObject` alone is insufficient. The URL authorizes the **specific signed request**, so changing the HTTP method, key, or signed headers can invalidate it. In particular, any header values that are included in the signature must match the actual upload request. A browser uploading from a different origin may also require a suitable **S3 CORS configuration**, because browsers enforce cross-origin request rules.
 
 | | Presigned GET | Presigned PUT |
 | --- | --- | --- |
 | Purpose | Download an object | Upload an object |
-| HTTP method | \`GET\` | \`PUT\` |
-| Required IAM action | \`s3:GetObject\` | \`s3:PutObject\` |
+| HTTP method | `GET` | `PUT` |
+| Required IAM action | `s3:GetObject` | `s3:PutObject` |
 | File transfer | S3 → client | Client → S3 |
 
 **Security and correctness:** A presigned URL is a **bearer credential** until it expires or its underlying authorization ceases to be valid. Do not generate arbitrary object keys from untrusted input; choose keys the current user is permitted to write, preferably with unique names to prevent accidental overwrites. A PUT to an existing key can replace that object's current contents. Keep the URL short-lived, and validate file type, size, and ownership on the server side as required by the application. A plain presigned PUT URL does not automatically enforce every file-size or file-type rule; stronger upload constraints may require additional signed conditions, a presigned POST policy, or validation after upload.
 
-**Interview point:** Issuing a presigned URL does **not** prove that the upload succeeded. If the application needs a reliable record, it should verify the object using S3 metadata (for example, \`HeadObject\`) or process an appropriate S3 event before treating the file as ready.
+**Interview point:** Issuing a presigned URL does **not** prove that the upload succeeded. If the application needs a reliable record, it should verify the object using S3 metadata (for example, `HeadObject`) or process an appropriate S3 event before treating the file as ready.
 
 ### 41. Checkpoints to test understanding
 
