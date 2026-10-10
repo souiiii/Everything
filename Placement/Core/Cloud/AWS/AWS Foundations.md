@@ -346,7 +346,7 @@ For cleanup, **terminate** the disposable instance once no data is needed. Check
 
 ## Part VIII — Amazon S3, Node.js, and presigned downloads
 
-> **Morning lesson — 10 October 2026.** This part accompanies Piyush Garg's [AWS S3 Simple Storage Service](https://www.youtube.com/watch?v=d8A8JmAImc4) and [How to Use AWS S3 with NodeJS?](https://www.youtube.com/watch?v=DOUxRYi2Fwg), both completed today. The explanations are based on the studied topics, the Node.js exercise and errors actually encountered, and the current AWS documentation. They are **not** a claim to reproduce the videos' complete transcripts. The separate evening lesson on **presigned uploads (PUT)** remains scheduled for later and is not marked as studied here.
+> **Core topics:** Amazon S3 object storage, AWS SDK for JavaScript v3, IAM authorization, and presigned **GET** and **PUT** URLs for private objects.
 
 ### 30. Why object storage exists: storing files is different from running applications
 
@@ -531,9 +531,49 @@ The browser then downloads the object **directly from S3**, using the signed URL
 
 That architecture has limits. A presigned URL can be forwarded during its validity period, so it should not be interpreted as proof that the person opening it is still the original user. For especially sensitive data, the application may need additional constraints or a different delivery design. The lesson is not that every file should always use a presigned URL; it is that **private object storage and temporary delegated access are distinct, composable capabilities**.
 
-The next related topic is **presigned PUT upload URLs**, in which a browser can upload data to a permitted object key without receiving general AWS credentials. The signing method is related, but the HTTP operation and required IAM permission are different. **That lesson belongs to tonight's separate video and is not yet covered as completed material here.**
+The same architecture works in reverse for uploads: the backend can authorize a specific object key, while the browser transfers the file directly to S3. The operation and required IAM permission differ, as explained next.
 
-### 40. Checkpoints to test understanding
+### 40. Presigned PUT URLs — uploading directly to a private bucket
+
+A **presigned PUT URL** is a time-limited, signed S3 request that lets a client **upload an object directly to S3** without receiving AWS access keys. The bucket can remain private. Unlike a presigned **GET**, which retrieves an existing object, a presigned **PUT** writes the request body to the specified object key.
+
+**Typical flow:** A logged-in user asks the backend for permission to upload a file. After checking authorization, the backend chooses the **bucket and object key** and signs a \`PutObjectCommand\` using \`getSignedUrl\` from AWS SDK v3. It returns the URL to the client, which sends the file bytes in an **HTTP PUT** request directly to S3. The application server does not have to receive and forward the entire file.
+
+**Example using an existing, properly configured \`S3Client\`:**
+
+\`\`\`javascript
+const url = await getSignedUrl(
+  s3,
+  new PutObjectCommand({
+    Bucket: bucket,
+    Key: key,
+    ContentType: "image/png",
+  }),
+  { expiresIn: 300 }
+);
+
+// In the browser:
+await fetch(url, {
+  method: "PUT",
+  headers: { "Content-Type": "image/png" },
+  body: file,
+});
+\`\`\`
+
+The signing identity must be allowed to perform **\`s3:PutObject\`** on the chosen object ARN; \`s3:GetObject\` alone is insufficient. The URL authorizes the **specific signed request**, so changing the HTTP method, key, or signed headers can invalidate it. In particular, any header values that are included in the signature must match the actual upload request. A browser uploading from a different origin may also require a suitable **S3 CORS configuration**, because browsers enforce cross-origin request rules.
+
+| | Presigned GET | Presigned PUT |
+| --- | --- | --- |
+| Purpose | Download an object | Upload an object |
+| HTTP method | \`GET\` | \`PUT\` |
+| Required IAM action | \`s3:GetObject\` | \`s3:PutObject\` |
+| File transfer | S3 → client | Client → S3 |
+
+**Security and correctness:** A presigned URL is a **bearer credential** until it expires or its underlying authorization ceases to be valid. Do not generate arbitrary object keys from untrusted input; choose keys the current user is permitted to write, preferably with unique names to prevent accidental overwrites. A PUT to an existing key can replace that object's current contents. Keep the URL short-lived, and validate file type, size, and ownership on the server side as required by the application. A plain presigned PUT URL does not automatically enforce every file-size or file-type rule; stronger upload constraints may require additional signed conditions, a presigned POST policy, or validation after upload.
+
+**Interview point:** Issuing a presigned URL does **not** prove that the upload succeeded. If the application needs a reliable record, it should verify the object using S3 metadata (for example, \`HeadObject\`) or process an appropriate S3 event before treating the file as ready.
+
+### 41. Checkpoints to test understanding
 
 1. Why is S3 a better home for durable user uploads than the temporary local filesystem of an application server that may be redeployed?
 2. If an object has key `notes/chapter1.txt`, why is asking for key `chapter1.txt` not necessarily the same request?
@@ -541,7 +581,7 @@ The next related topic is **presigned PUT upload URLs**, in which a browser can 
 4. Why did changing `ap-south-1` to `eu-north-1` resolve the `PermanentRedirect` problem but not the `AccessDenied` problem?
 5. What IAM action must authorize the signing identity for a presigned **GET** link, and why does granting it not automatically make the entire bucket public?
 6. Why is a presigned URL best treated as a temporary bearer credential rather than as a freely shareable public link?
-7. What would you change if a frontend needed to **upload** a file rather than download one? Identify the operation that changes, but leave its complete implementation for the next lesson.
+7. What changes between a presigned GET and PUT: HTTP method, SDK command, required IAM permission, and data direction? Why must the backend verify a completed upload?
 
 **Sources for this section**
 
