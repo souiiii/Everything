@@ -649,6 +649,94 @@ This diagram is a **possible growth path, not the starting template**. A modest 
 
 ---
 
+## Supplement — Traffic patterns, containers, and orchestration (10 October 2026)
+
+> This continuation follows [Piyush Garg — System Design Crash Course, Part 2](https://www.youtube.com/watch?v=YuB3OuF3MUE). It extends the existing discussions of horizontal scaling, load balancing, and serverless computing instead of restating them. The video transcript was unavailable; these notes synthesize the lesson's identifiable topics and the corresponding official documentation.
+
+### 1. Traffic patterns determine how a system should scale
+
+Two applications can receive the same total number of requests in a day yet require very different architectures. What matters is not only **how much traffic** arrives but also **when it arrives, how quickly it changes, and what work each request creates**.
+
+A video-on-demand service may experience relatively steady demand with predictable daily peaks. A live sports platform might receive a sharp surge when a major match begins. Both need capacity, but the live platform must handle a large increase over a short interval. A system sized only for average traffic can fail during a burst even though it looks underutilized for most of the day.
+
+There are three particularly useful workload shapes to recognize:
+
+- **Steady demand** changes relatively little, so a modest, stable number of instances may be sufficient.
+- **Gradual growth** allows capacity to be increased as utilization, latency, and request volume rise over time.
+- **Burst traffic** arrives faster than additional servers or containers can necessarily become ready. It demands an explicit strategy for sudden peak load.
+
+**Autoscaling** means adjusting available computing capacity in response to demand or a schedule. *Reactive* scaling responds to measurements such as CPU use, request concurrency, or queue backlog. *Scheduled* scaling increases capacity before an event whose timing is known. Reactive scaling has a delay: metrics must indicate a problem, new capacity must be provisioned, and the application must become ready to serve requests. For a predictable live-event spike, scaling **before** the event can therefore be more reliable than waiting for CPU utilization to reach a threshold.
+
+This does not mean that adding instances is always the answer. If the database, external API, or a shared lock is already saturated, more application replicas may only intensify the bottleneck. When traffic cannot be served immediately, **rate limiting, queueing, or graceful degradation** may protect essential operations. Those mechanisms are explained in the earlier Part II supplement and should be chosen according to whether the work can be delayed or must receive an immediate response.
+
+> **Design question:** What is the expected peak, how much warning do we have, and how long does it take to bring useful new capacity online? These facts justify a scaling policy more clearly than saying only that the application must “handle millions of users.”
+
+### 2. Serverless handles some scaling work, but not every scaling problem
+
+**Serverless compute**, such as AWS Lambda, changes who manages the execution infrastructure. The developer supplies a function and its configuration; the platform provisions execution environments and scales them within applicable limits as invocations arrive. This can be attractive when demand is irregular or when individual pieces of work are naturally event-driven.
+
+However, **automatic scaling is not infinite or instantaneous**. A newly created execution environment may incur a **cold start**, so its initial request can be slower than one handled by an existing warm environment. Concurrency and scaling quotas still apply. When an application has a strict latency requirement, cold-start behavior and the available execution capacity need to be considered rather than assuming every request begins immediately.
+
+A serverless function should also be designed **without depending on durable in-process state**. An execution environment may be reused, so some memory and connections can survive between invocations, but reuse is not guaranteed. User sessions, important application data, and coordination that must survive instance replacement belong in an appropriate external store.
+
+The most important scaling trade-off may be downstream. If a burst causes hundreds of functions to run concurrently and each opens its own database connection, the database can exhaust its connection capacity even while Lambda successfully scales. Connection reuse, concurrency limits, pooling or proxying, and careful workload design may be necessary. **Scaling the function is not the same as scaling every resource it calls.**
+
+Choose serverless when its event-driven execution model and reduced operational responsibility fit the workload. Choose long-running services when continuous execution, predictable low latency, particular runtime requirements, or greater infrastructure control make them simpler or more economical. Neither choice is universally better; the earlier AWS notes provide the service-specific details.
+
+### 3. Virtual machines and containers solve related but different problems
+
+Deploying an application requires more than copying its source code to a server. It also needs a runtime, dependencies, system libraries, and configuration. When those differ between a developer's machine and production, an application can behave differently despite having identical source code. **Virtualization and containerization** make the execution environment more reproducible, but they provide different boundaries.
+
+A **virtual machine (VM)** is a software-defined computer with its own guest operating system and kernel, running on virtualized hardware. It offers a strong machine-level boundary and flexibility over the guest OS, but the additional operating-system resources and boot process generally make VMs heavier than application containers. EC2 instances are commonly used as virtual machines, though the exact underlying AWS virtualization implementation depends on the instance type.
+
+A **container** packages an application with the userspace files and dependencies it needs, and runs it as an isolated process environment. On a Linux container host, containers typically **share the host's kernel** rather than each booting a full guest operating system. They can therefore start more quickly and use fewer resources for many workloads. The isolation boundary is different from that of a full VM; a container should not be described as a tiny virtual machine with its own independent kernel.
+
+**Docker** is a common tool for building and running containers. A **container image** is the packaged, versioned blueprint containing application files and required dependencies. A **running container** is an instance created from that image. The image helps ensure that the same application environment can be reproduced across machines with compatible container runtimes.
+
+Portability does not mean that every environmental dependency disappears. A container still needs compatible CPU architecture, a suitable host kernel, networking, configuration, secrets, and access to required services. Its filesystem may also be ephemeral, so durable data should live in persistent storage or an external database rather than depending on a disposable container's local writes.
+
+> **Distinction worth remembering:** A VM packages a complete guest operating system. A container packages an application's userspace environment while relying on the host kernel. Both can run together: a cloud VM may host several containers.
+
+### 4. Why container orchestration becomes necessary
+
+Packaging an application as a container makes it easier to start a consistent copy, but **Docker alone does not decide how many copies a distributed application needs, which machine should run each copy, or how to recover when machines fail**. Those responsibilities become significant when an application has many container replicas across several servers.
+
+**Container orchestration** coordinates the deployment and ongoing operation of containers across a pool of machines. The orchestrator maintains the system toward a **desired state**. For example, if the configuration says that a service should have three healthy replicas and one disappears, the platform attempts to create a replacement. If a new application version is released, it can replace old replicas gradually instead of taking the entire service offline at once.
+
+**Kubernetes** is a widely used orchestration platform. The essential concepts at this stage are:
+
+- A **Pod** is Kubernetes' basic unit for running one or more closely related containers.
+- A **Deployment** describes the desired application replicas and supports controlled updates to those replicas.
+- A **Service** gives a stable way to reach an evolving set of matching Pods, whose individual addresses may change.
+- A **Horizontal Pod Autoscaler (HPA)** can change replica counts based on configured metrics, such as CPU utilization. It is not automatically active merely because an application runs on Kubernetes.
+
+Kubernetes also supports **readiness checks**, which help determine whether a Pod should receive traffic, and **liveness checks**, which can trigger a restart when an application becomes unhealthy. This distinction matters during deployment: a newly started container might be running but not yet ready to serve real requests. **Rolling updates** allow healthy new replicas to replace old ones progressively, reducing disruption when properly configured.
+
+Kubernetes manages workload placement, recovery, and replication, but it does not make a flawed application automatically scalable. A service that relies on local session state, cannot handle termination cleanly, or overwhelms one shared database can still fail at scale. Moreover, increasing Pod replicas only helps if the cluster has enough node capacity; the nodes may need their own scaling mechanism.
+
+The trade-off is **operational complexity**. A single application with modest traffic may be easier to maintain on one server or a managed container platform. Kubernetes becomes justifiable when multiple services, frequent deployments, replica management, recovery needs, and operational scale outweigh the cost of running an orchestrator.
+
+### 5. Applying the ideas to one concrete design
+
+Suppose a ticket-booking service receives a large and predictable surge when tickets for a popular event become available. Before adding technology, identify the critical operation: **reserve inventory correctly without selling the same seat twice**.
+
+Because the start time is known, the team may **pre-scale** stateless API replicas before sales open. Containers make those replicas reproducible; an orchestrator can distribute them, replace failed instances, and roll out new versions. A queue may help with work that can be delayed, such as confirmation emails, while rate limiting or an admission-control mechanism can protect the booking path from overload.
+
+Neither containers nor Kubernetes guarantee correct seat reservations. The **inventory database and reservation transaction** still need to enforce correctness under competing requests. If that database is the bottleneck, scaling only the application layer does not solve the core problem.
+
+This example captures the reasoning sequence: **study the traffic pattern → identify the critical request and bottleneck → choose a deployment model → plan for recovery and overload → verify the data-consistency requirement**. Technologies appear as responses to concrete pressures rather than as a checklist.
+
+### The decisions to retain
+
+- **Predictable spikes:** consider pre-scaling because reactive capacity takes time to become useful.
+- **Serverless:** useful for event-driven or variable demand, but cold starts, concurrency limits, state, and downstream capacity still matter.
+- **Containers:** useful for reproducible application environments; they are not automatically an autoscaling system.
+- **Kubernetes:** useful for managing replicas, rollouts, health, and scheduling across servers; it is not required for every small application.
+
+**Learning resources:** [System Design Crash Course — Part 2](https://www.youtube.com/watch?v=YuB3OuF3MUE) · [Docker — What is a container?](https://docs.docker.com/get-started/docker-concepts/the-basics/what-is-a-container/) · [Kubernetes — Overview](https://kubernetes.io/docs/concepts/overview/) · [Kubernetes — Horizontal Pod Autoscaling](https://kubernetes.io/docs/concepts/workloads/autoscaling/horizontal-pod-autoscale/) · [AWS Lambda — Scaling behavior](https://docs.aws.amazon.com/lambda/latest/dg/scaling-behavior.html)
+
+---
+
 # Session 2 — Database Performance: Indexing + Connection Pooling
 
 <aside>
