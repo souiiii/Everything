@@ -256,3 +256,155 @@ The central principle is straightforward: the present continuous depicts an acti
 **Primary learning resource:** Raymond Murphy, *English Grammar in Use*, **Unit 1: Present continuous (I am doing)**. Consult your edition's explanation page, exercises, and answer key for the original textbook exercises. The future-arrangement discussion is an additional bridge to the later unit on **present tenses for the future**, not a claim that the whole later unit has been completed.
 
 **Progress:** Unit 1 explanation and exercises completed; five original sentences reviewed. The sections below this topic can be added gradually as the next grammar units are studied. Keep all present-tense and past-tense material within this **Tenses** document so the topic remains a continuous reference rather than being scattered across daily files.
+
+---
+
+## 2. Present Simple (I do) — Unit 2
+
+> **Studied on 10 October 2026:** Raymond Murphy, *English Grammar in Use*, Unit 2. The explanation and exercises were completed, the answers were checked, and five original sentences were reviewed. This section records the rules needed for the unit and the mistakes worth remembering.
+
+### 2.1 Formal definition and central meaning
+
+The **present simple tense**, also called the **simple present**, describes situations presented as **usual, repeated, generally true, or existing as a state**. Unlike the present continuous, it does not normally draw attention to an action unfolding at this exact moment.
+
+For example, **“He plays football every weekend”** describes a repeated habit. It tells us what he normally does, not whether he is playing at the moment of speaking. **“Water boils at about 100°C at standard atmospheric pressure”** states a general fact under specified conditions. **“Mahesh seems friendly”** expresses a present impression or state, not a physical action being performed.
+
+The defining idea is therefore **habitual or general validity**, not merely “something that happens in the present.” A sentence may describe a daily routine, a long-term preference, an occupation, a fact, or an opinion without implying that the activity is taking place right now.
+
+### 2.2 Formal sentence structure
+
+For most verbs, the present simple uses the **base form** with **I, you, we, and they**, but adds a **third-person singular ending** with **he, she, and it** or a singular noun.
+
+| Subject | Affirmative example | Verb form |
+| --- | --- | --- |
+| I / you / we / they | **They live** in Bengaluru. | Base form: **live** |
+| He / she / it | **He lives** in Whitefield. | Third-person singular: **lives** |
+| Singular noun | **Mahesh seems** friendly. | Third-person singular: **seems** |
+
+**Affirmative pattern:** **Subject + base verb** (add **-s / -es**, or change **-y** to **-ies**, for third-person singular where appropriate) + remainder of sentence.
+
+**Negative pattern:** **Subject + do/does + not + base verb** + remainder of sentence.
+
+**Yes/no question pattern:** **Do/Does + subject + base verb + … ?**
+
+These patterns apply to ordinary lexical verbs such as *live, play, like,* and *work*. The verb **be** has its own forms—**am, is, are**—and ordinarily does **not** use *do* or *does* to form its negatives and questions: **“She isn't ready”** and **“Is she ready?”**, not *“She doesn't be ready.”*
+
+### 2.3 Third-person singular: why *he goes* but *they go*
+
+In the affirmative present simple, a **third-person singular subject** changes the verb form. This is one of the most common sources of otherwise small grammatical errors.
+
+- Most verbs add **-s**: *like → likes, live → lives, seem → seems*.
+- Verbs ending in **-s, -sh, -ch, -x**, and some ending in **-o**, normally add **-es**: *watch → watches, wash → washes, fix → fixes, go → goes*.
+- With a **consonant + y**, change **y** to **-ies**: *study → studies, try → tries*.
+- With a **vowel + y**, simply add **-s**: *play → plays, enjoy → enjoys*.
+- **Have** becomes **has**: **“She has a car.”**
+
+Compare **“I go to college”** with **“He goes to college.”** The action is the same, but **he** requires the third-person form. Likewise, **“Mahesh seems to be a good guy”** is correct because *Mahesh* is one person, so **seems** takes **-s**.
+
+A common mistake is to choose the verb ending based on the closest nearby noun instead of the actual subject. Identify **who or what the sentence is about** before deciding whether the verb needs a singular ending.
+
+### 2.4 Negatives: *don't* and *doesn't*
+
+Ordinary present-simple negatives use the helping verb **do** or **does**, followed by **not**. In everyday English these are usually contracted to **don't** and **doesn't**.
+
+**I / you / we / they + don't + base verb.** For example, **“They don't work on Sundays.”**
+
+**He / she / it + doesn't + base verb.** For example, **“He doesn't like Honda as much as he likes Mitsubishi.”**
+
+Notice the contrast inside that last sentence: **“doesn't like”** in the negative clause, but **“he likes”** in the affirmative clause. After **doesn't**, the main verb returns to its **base form** because **does** already marks the third-person singular subject.
+
+**Common mistake:** *“He doesn't likes Honda.”* The correct form is **“He doesn't like Honda.”** Never attach the third-person **-s** to the main verb after *doesn't*.
+
+For the same reason, *“She don't like it”* is not standard formal English: **she** requires **doesn't** in an ordinary present-simple negative.
+
+### 2.5 Questions: *do/does* and word order
+
+To ask an ordinary **yes/no question** in the present simple, put **do** or **does** before the subject and use the **base form** of the main verb.
+
+- **“Do you live in Whitefield?”**
+- **“Does he live in Whitefield?”**
+- **“Does she like this book?”**
+
+The structure of your own sentence, **“Does he live in Whitefield?”**, is entirely correct. *Does* marks third-person singular; *live* therefore has no **-s**.
+
+For a question beginning with *where, why, what, when,* or *how*, the question word normally comes first:
+
+**Question word + do/does + subject + base verb + … ?**
+
+Thus, **“Where does Mahesh live?”** and **“Why does she dislike the film?”** are correct. *“Where does Mahesh lives?”* is not, because it places the singular ending on the main verb even though *does* already carries it.
+
+Short answers repeat the auxiliary rather than the complete action: **“Yes, he does,” “No, he doesn't,” “Yes, they do,”** or **“No, they don't.”**
+
+**Useful exception:** When **who** or **what** is itself the subject of a question, ordinary present-simple questions generally do **not** add *do/does*: **“Who lives here?”** and **“What makes that sound?”** This is different from **“Who does he know?”**, where *who* is the object rather than the subject.
+
+### 2.6 The uses you need to recognize
+
+**Habits and repeated actions.** The present simple is the usual choice when describing a routine or something that happens regularly: **“He goes to church every Sunday”** and **“I practise English in the evening.”** The sentence does not assert that the activity is happening at this exact moment.
+
+**Facts and generally true statements.** The tense also states information that holds in general: **“The Earth revolves around the Sun”** or **“A triangle has three sides.”** These are not habits; they are facts. The present simple is therefore broader than descriptions of daily routines.
+
+**Opinions, preferences, emotions, and states.** Verbs such as **like, love, prefer, know, believe, understand,** and **seem** commonly express states rather than ongoing activities. **“She loves him,” “He prefers Mitsubishi,”** and **“Mahesh seems friendly”** naturally use the present simple. These verbs are not all forbidden in continuous forms in every possible meaning or context, but their ordinary *state* meanings generally favour the simple tense.
+
+**Long-term circumstances.** **“She works at a bank”** or **“He lives in Bengaluru”** describes a situation presented as regular or relatively stable. If the speaker wants to emphasize that a situation is temporary, the present continuous may be more natural: **“She's working from home this week.”** This difference is about the speaker's meaning, not a strict limit on how long a situation can last.
+
+### 2.7 Common time expressions and adverbs of frequency
+
+Words such as **always, usually, often, sometimes, rarely,** and **never** help describe how frequently an action happens. They commonly appear **before the main verb** but **after forms of *be***.
+
+Compare **“She often reads before bed”** with **“She is often tired after work.”** In the first sentence, *often* precedes the main verb *reads*; in the second, it follows *is*.
+
+Expressions such as **every day, every weekend, on Mondays,** and **once a week** also naturally accompany habits. They are clues to meaning, not commands to use one tense regardless of context.
+
+A particularly useful writing distinction is:
+
+- **Every day** (two words) means **each day**: **“He goes to church every day.”**
+- **Everyday** (one word) is an **adjective** meaning **ordinary or routine**: **“These are my everyday shoes.”**
+
+### 2.8 Present simple versus present continuous: the essential difference
+
+The two forms do not merely represent different degrees of grammatical formality. They often present the **same activity from different viewpoints**.
+
+**“She works from home.”** This suggests a normal or established arrangement.
+
+**“She is working from home this week.”** This highlights a temporary situation around the present.
+
+**“He plays football.”** This states a habit, ability, or regular participation.
+
+**“He is playing football now.”** This describes an activity currently underway.
+
+You do not need to memorize hundreds of time expressions to choose correctly. Ask yourself whether you are describing **what normally happens or is generally true**, or **what is unfolding or temporarily happening around now**. That question usually identifies the appropriate tense.
+
+### 2.9 Corrections and observations from today's five sentences
+
+**1. “He goes to the church everyday.”**
+
+Your tense is correct: **he goes** follows the third-person rule. A more natural version for regular religious attendance is **“He goes to church every day.”** Here, *go to church* commonly means *attend a religious service*. **“Go to the church”** is also grammatical, but it more readily suggests going to a particular church **building**. Separately, **every day** must be written as two words when it means *each day*.
+
+**2. “She loves him to heaven and hell.”**
+
+The present-simple form **loves** is correct because *love* expresses a state or feeling. The awkwardness is idiomatic, not a tense error. If the intended meaning is **strong affection**, **“She loves him to the moon and back”** sounds more natural. If you mean **steadfast loyalty through difficulties**, **“She loves him through thick and thin”** expresses that different idea. These two alternatives are not exact synonyms; choose according to the meaning you want.
+
+**3. “Mahesh seems to be a good guy.”**
+
+This sentence is correct. **Seems** expresses an impression; it does not normally describe an action actively being performed. The third-person singular ending **-s** is also correct with *Mahesh*.
+
+**4. “He doesn't like Honda as much as he likes Mitsubishi.”**
+
+This sentence is correct and a good illustration of two related rules: **doesn't + like** uses the base form after the auxiliary, while **he likes** uses the third-person singular ending in the affirmative clause. The comparison **as much as** is also natural.
+
+**5. “Does he live in Whitefield?”**
+
+This question is correct. **Does** appears before the subject, and **live** remains in its base form. *“Does he lives … ?”* would be incorrect.
+
+### 2.10 The rule to carry forward
+
+The most useful single rule from this unit is that **third-person singular marking appears once** in ordinary present-simple clauses: on the main verb in an affirmative sentence (**“She likes it”**), but on **does** in a negative or question (**“She doesn't like it”; “Does she like it?”**).
+
+A final quick check before writing is to identify the **subject**, decide whether the statement describes a **habit/fact/state**, and then inspect the **verb form**. That method catches most of the errors addressed in Unit 2 without turning the tense into a long list of exceptions.
+
+**Study record:** Unit 2 reading and textbook exercises completed; answer key checked; five original sentences reviewed. The two optional follow-up questions from the practice session have not been marked as answered.
+
+**Source:** Raymond Murphy, *English Grammar in Use*, **Unit 2: Present simple (I do)**. The textbook's own exercises and answer key remain the authoritative exercise resource; the examples and explanations here serve as a concise companion reference.
+
+---
+
