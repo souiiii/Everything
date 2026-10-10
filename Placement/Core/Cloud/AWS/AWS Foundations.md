@@ -344,6 +344,216 @@ For cleanup, **terminate** the disposable instance once no data is needed. Check
 
 ---
 
+## Part VIII — Amazon S3, Node.js, and presigned downloads
+
+> **Morning lesson — 10 October 2026.** This part accompanies Piyush Garg's [AWS S3 Simple Storage Service](https://www.youtube.com/watch?v=d8A8JmAImc4) and [How to Use AWS S3 with NodeJS?](https://www.youtube.com/watch?v=DOUxRYi2Fwg), both completed today. The explanations are based on the studied topics, the Node.js exercise and errors actually encountered, and the current AWS documentation. They are **not** a claim to reproduce the videos' complete transcripts. The separate evening lesson on **presigned uploads (PUT)** remains scheduled for later and is not marked as studied here.
+
+### 30. Why object storage exists: storing files is different from running applications
+
+Suppose a website allows students to upload question-bank PDFs, profile photographs, or recorded explanations. The application server needs to **receive instructions and execute logic**, but the files themselves may need to remain available long after any one server has been restarted or replaced. Saving every upload to a local disk attached to an application instance is a fragile design: another server might not see the file, deployment could replace the instance, and storing larger media could gradually exhaust the machine's capacity.
+
+**Amazon Simple Storage Service (Amazon S3)** solves a different problem from EC2 and Lambda. S3 is AWS's managed **object-storage service**. It stores and retrieves data as objects, accessible through service APIs, rather than supplying an operating system in which application code runs. EC2 offers virtual machines; Lambda executes bounded pieces of code; S3 retains files and related metadata. In a practical web application, all three might participate in the same workflow without competing to do the same job.
+
+The essential design idea is to separate **application execution** from **durable file storage**. A backend can keep file metadata—such as ownership, original filename, and who can access it—in a database, while S3 holds the actual bytes. This division also allows file delivery and retention policies to evolve independently of the machines that serve application requests.
+
+### 31. Buckets, objects, keys, and the illusion of folders
+
+The basic S3 storage container is a **bucket**. A bucket has a name and is created in a particular AWS Region. Inside a general-purpose bucket, each stored item is an **object**: the object's content plus associated information such as its key and metadata.
+
+The **object key** is the name by which that object is identified inside its bucket. In ordinary object storage, the pair **bucket + key** locates the object. For example, a bucket named `study-assets-demo` may contain an object with the key `papers/2026/sample.pdf`. The full key includes the apparent path prefix. Asking S3 for `sample.pdf` is not equivalent to asking for `papers/2026/sample.pdf`; the latter is a different key.
+
+A key can contain slashes, so the AWS console often displays familiar **folders**. In a general-purpose S3 bucket, those visual folders are usually **prefixes within keys**, not actual nested directories with their own filesystem semantics. A key such as `users/42/avatar.png` can be convenient for grouping objects without implying that S3 is an ordinary Linux filesystem.
+
+S3 also lets an object carry **metadata**, including properties such as content type. A document served with `Content-Type: text/html` may be displayed as HTML by a browser; the same bytes served under another type may be handled differently. The extension at the end of a key does not, by itself, guarantee how the response is interpreted.
+
+**Common mistake:** A beginner sees the console's folder layout and assumes that `GetObject` accepts a local computer path or automatically searches subfolders. It does neither. The request needs the exact object key inside the chosen bucket.
+
+### 32. S3 Regions, endpoints, and the difference between an address and permission
+
+A bucket is associated with an AWS **Region**, such as **Europe (Stockholm), `eu-north-1`**, or **Asia Pacific (Mumbai), `ap-south-1`**. Requests should be sent to the appropriate regional endpoint and signed using the bucket's actual Region.
+
+For an ordinary virtual-hosted-style bucket request, a regional endpoint has a shape such as:
+
+```text
+https://BUCKET_NAME.s3.eu-north-1.amazonaws.com/OBJECT_KEY
+```
+
+This pattern identifies **where** the request is directed; it does not establish that the browser is **allowed** to read the object. A URL can be syntactically correct and still lead to an authorization error because storage location and access control are separate questions.
+
+In today's Node.js exercise, the S3 client was initially configured for `ap-south-1`, while the bucket's actual endpoint identified `eu-north-1`. Opening the generated URL produced **`PermanentRedirect`**, along with an instruction to use the specified endpoint. The fix was to configure the client for the bucket's real Region and **generate a fresh presigned URL**, not merely replace the hostname in an already signed URL.
+
+Why does the old URL not simply work after a redirect? **AWS Signature Version 4** ties a signature to details of the request, including the host, Region, and credential scope. A URL prepared for one regional endpoint cannot safely be treated as a valid signature for an arbitrary second endpoint. A redirected request may need to be signed anew. The simplest choice, when the bucket Region is known, is to create the client in that Region from the beginning.
+
+**Common mistake:** Assuming that the Region shown in the AWS console's top-right selector automatically matches the Region configured in a locally running Node.js process. The SDK client has its own configuration, and the bucket has its own Region.
+
+### 33. What the Node.js AWS SDK does for us
+
+A Node.js application communicates with S3 through authenticated API requests. Instead of constructing signatures and HTTP requests manually, we can use **AWS SDK for JavaScript v3**. Its modular packages let an application import the clients and commands it needs without treating every AWS service as one enormous library.
+
+For the read-only exercise, the two relevant packages are **`@aws-sdk/client-s3`** and **`@aws-sdk/s3-request-presigner`**. The first contains the S3 client and service commands. The second contains utilities that calculate a time-limited signature and place it in a request URL.
+
+Three pieces of code have distinct responsibilities:
+
+**`S3Client`** is configured with a Region and resolves the appropriate AWS credentials. It represents how the application will communicate with S3; constructing the client alone does not download an object.
+
+**`GetObjectCommand`** describes the requested operation—retrieve an object using a particular **`Bucket`** and **`Key`**. Constructing this command is only a declaration of intent, not proof that the object exists or that the caller is permitted to read it.
+
+**`getSignedUrl(client, command, { expiresIn })`** prepares a URL that authorizes the described operation for a limited period using the signing identity's credentials. For this example, generating the URL is different from **calling** `s3Client.send(command)` to fetch an object's bytes inside Node.js. The browser or another HTTP client performs the actual request later using the URL.
+
+This separation is valuable because a backend can create a short-lived route to an object without becoming a proxy that downloads every file itself and streams the entire content to the user.
+
+### 34. What a presigned GET URL actually represents
+
+S3 buckets are often deliberately **private**. A private object normally cannot be retrieved through an ordinary unsigned URL by an anonymous visitor. A **presigned URL** solves a narrower problem: a trusted application signs a specific request so that a recipient can perform the authorized operation for a limited period, **without receiving AWS account credentials**.
+
+For a presigned download, the operation is typically **`GetObject`**, corresponding to an HTTP **GET** request. The backend identifies the bucket and key, chooses a suitable expiration time, and uses authorized AWS credentials to sign the request. The recipient opens that signed URL in a browser, and S3 validates the signature before returning the object.
+
+The query string commonly contains fields such as **`X-Amz-Algorithm`**, **`X-Amz-Credential`**, **`X-Amz-Date`**, **`X-Amz-Expires`**, **`X-Amz-SignedHeaders`**, and **`X-Amz-Signature`**. These fields collectively describe and authenticate the request. They are not decorations that can be edited independently. For example, changing `X-Amz-Expires` by hand does not extend access because the changed request would no longer match its signature.
+
+A presigned URL is best treated as a **temporary bearer credential**: anyone who obtains a usable copy can potentially use it while it remains valid. It should not be committed to a repository, published in a public log, or shared with an unintended audience. It can often be used repeatedly before expiry rather than being automatically single-use.
+
+The URL's effective lifetime cannot exceed the validity of the credentials that signed it. If an associated access key is deactivated, deleted, or expires, an otherwise unexpired link may stop working. Permissions can also change during its lifetime. The exact maximum duration depends on signing method and credential type; specifying `expiresIn` does not guarantee that the link will remain usable for that long.
+
+**Important boundary:** A presigned URL grants access only as far as the **signer's existing permissions** allow. It cannot turn an IAM identity with no `s3:GetObject` privilege into one that is authorized to read private objects.
+
+### 35. A safe and minimal Node.js example (SDK v3)
+
+The following example recreates the **presigned GET concept**, not the later upload lesson. It avoids writing an AWS secret key directly into source code. The example assumes a Node.js project configured for ES modules, for example through `"type": "module"` in `package.json`.
+
+Install the required packages in a separate learning directory:
+
+```bash
+npm install @aws-sdk/client-s3 @aws-sdk/s3-request-presigner
+```
+
+Then create `index.js`:
+
+```javascript
+import { S3Client, GetObjectCommand } from "@aws-sdk/client-s3";
+import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
+
+const region = process.env.AWS_REGION;
+const bucket = process.env.S3_BUCKET;
+const key = process.env.S3_KEY;
+
+if (!region || !bucket || !key) {
+  throw new Error("Set AWS_REGION, S3_BUCKET and S3_KEY first.");
+}
+
+// The SDK resolves credentials from the configured AWS profile,
+// environment, or workload role. No secret is stored in this file.
+const s3 = new S3Client({ region });
+
+const command = new GetObjectCommand({
+  Bucket: bucket,
+  Key: key,
+});
+
+const url = await getSignedUrl(s3, command, {
+  expiresIn: 900, // 15 minutes, measured in seconds
+});
+
+console.log("Private S3 object — temporary GET URL:");
+console.log(url);
+```
+
+This code is small enough that every line should be understood. **`region`** must be the Region of the bucket. **`bucket`** identifies the storage container. **`key`** identifies one exact object. The **`S3Client`** obtains the configured identity; the **`GetObjectCommand`** describes the read; and **`getSignedUrl`** creates the time-limited signed URL.
+
+For a local development setup, configure an AWS profile using a supported secure login or credentials workflow, then supply the non-secret Region, bucket, and object-key settings. For example, with an already configured profile named `learning`:
+
+```bash
+AWS_PROFILE=learning AWS_REGION=eu-north-1 \
+S3_BUCKET=my-private-demo-bucket \
+S3_KEY=example.txt node index.js
+```
+
+The bucket and key above are **placeholders**, not objects guaranteed to exist in your account. The example also requires the selected AWS profile to be authorized to read that object. When running software inside AWS, a properly scoped **IAM role** with temporary credentials is generally preferable to a long-lived access key.
+
+**Do not infer success from seeing a URL printed.** Signing the request shows that the client could construct a signature; it does not prove that S3 will authorize and return the object. A browser may still display `AccessDenied` or `NoSuchKey` when the link is actually used.
+
+### 36. IAM permissions: why the signed link was denied
+
+After the Region was corrected in today's exercise, the browser returned **`AccessDenied`** and named the IAM user **`nodejs`**. Crucially, the error explained that **no identity-based policy allowed `s3:GetObject`** for the requested S3 object.
+
+This is an **authorization** failure, not a broken JavaScript import, a bad Region, or proof that presigned URLs do not work. S3 evaluated the attempted operation using the signing identity's permissions and did not find the necessary Allow. The policy attached to the user had a name suggesting broad S3 access, but **policy names do not establish the actions they grant**. The actual permission statements matter.
+
+A narrowly scoped identity-based policy for a learning bucket can grant read access to objects in only that bucket:
+
+```json
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "ReadLearningObjects",
+      "Effect": "Allow",
+      "Action": "s3:GetObject",
+      "Resource": "arn:aws:s3:::my-private-demo-bucket/*"
+    }
+  ]
+}
+```
+
+The bucket name is illustrative. The ARN ending in **`/*`** refers to **objects inside the bucket**. By contrast, the bucket ARN without that object suffix is used for bucket-level permissions such as `s3:ListBucket`. These are different actions and do not automatically imply one another.
+
+Permission evaluation has multiple layers. An identity policy granting `s3:GetObject` is a necessary remedy for the specific missing-allow message in this exercise, but access could still be blocked by an **explicit Deny**, a restrictive bucket policy, other organizational constraints, or applicable encryption-key permissions. A presigned URL does not bypass those controls. The security benefit is that the application can keep the bucket private and delegate **specific, time-limited access**, rather than enabling public read for the entire bucket.
+
+**Important learning distinction:** IAM access and S3 Block Public Access serve different purposes. Allowing an authenticated signing identity to call `GetObject` is **not** the same as making every object publicly readable. Do not disable Block Public Access merely to make a presigned GET work.
+
+### 37. Two errors, two independent causes: today's troubleshooting sequence
+
+The exercise produced two separate failure messages in order. They are useful because each illustrates a different stage of handling an S3 request.
+
+**First: `PermanentRedirect`.** The URL was constructed for **`ap-south-1`**, while the bucket's specified endpoint was in **`eu-north-1`**. S3 indicated that the bucket must be addressed using the proper endpoint. The remedy was to update the S3 client's Region and generate a **new** URL signed for that Region. The next error demonstrated that the incorrect-Region problem had been bypassed.
+
+**Second: `AccessDenied` with “no identity-based policy allows `s3:GetObject`.”** The later URL reached S3 in the correct regional context, but the IAM identity that generated it was not authorized for the requested object read. The remedy was to inspect the actual IAM permission statements and grant **`s3:GetObject`** on the intended objects, without unnecessarily broadening access.
+
+These are **not** interchangeable problems. Widening IAM permissions cannot repair a wrong regional endpoint; changing the Region cannot create a missing IAM Allow. When debugging, read the actual error instead of trying every AWS setting in turn.
+
+The two screenshots verify that the SDK successfully **generated presigned URLs**, and that the browser encountered and then moved past the Region problem to a permission problem. They do **not**, by themselves, verify that the final object download succeeded after the permission change. That end-to-end success is left unconfirmed in the study record.
+
+### 38. Storage security, lifecycle, and costs worth knowing now
+
+Because S3 can hold sensitive user files, a good default is to **keep the bucket private** and grant only the necessary actions to carefully scoped identities. A backend should decide **whether a user is entitled to a file** before generating a presigned link. A short expiration reduces the period of exposure, but does not replace authorization. Publicly exposing an entire bucket to make one test URL work removes this useful boundary.
+
+S3 provides encryption and storage-management features, but they solve different problems. **Encryption at rest** protects stored data under the selected encryption scheme; **IAM and bucket policies** determine who may perform operations; **versioning**, if enabled, can retain multiple object versions and help recover from an unintended overwrite or deletion; and **lifecycle rules** can transition or expire objects under defined conditions. Turning on versioning may retain additional data and therefore increase storage costs.
+
+Choosing a **storage class** also influences cost and access behavior. Standard storage suits frequently accessed objects; other classes can reduce certain storage costs in exchange for retrieval charges, minimum storage duration, or different access characteristics. A temporary practice bucket rarely needs elaborate lifecycle and storage-class engineering, but understanding that object storage has ongoing charges is essential.
+
+S3 costs may include data stored, requests made, outgoing data transfer, and other features used. Keep sample data small, verify pricing and account credits, and delete test objects and unneeded buckets when finished. Deleting a bucket ordinarily requires that its contents be emptied first; if versioning was enabled, object versions and delete markers may also need removal.
+
+The **sensitive access key visible in today's earlier screenshot was exposed**. For secure practice, that specific key should be **deactivated or deleted and replaced**, and the replacement credentials should be stored through a supported profile or temporary-credential workflow rather than inside `index.js`. A key that was published in a screenshot must not be considered safe merely because the account was created for learning.
+
+### 39. How this fits into a real application
+
+Imagine a student using Mathead to access a private exam document. The browser makes an authenticated request to the application's backend: “I want to open this document.” The backend checks the student's entitlement using the application's own user and database records. If access is permitted, it generates a short-lived **presigned S3 GET URL** for that precise object's bucket and key.
+
+The browser then downloads the object **directly from S3**, using the signed URL. The backend need not hold the entire file in memory or stream its bytes through the application server. S3 handles the transfer while the application remains responsible for the access decision and the decision about how long a link should live.
+
+That architecture has limits. A presigned URL can be forwarded during its validity period, so it should not be interpreted as proof that the person opening it is still the original user. For especially sensitive data, the application may need additional constraints or a different delivery design. The lesson is not that every file should always use a presigned URL; it is that **private object storage and temporary delegated access are distinct, composable capabilities**.
+
+The next related topic is **presigned PUT upload URLs**, in which a browser can upload data to a permitted object key without receiving general AWS credentials. The signing method is related, but the HTTP operation and required IAM permission are different. **That lesson belongs to tonight's separate video and is not yet covered as completed material here.**
+
+### 40. Checkpoints to test understanding
+
+1. Why is S3 a better home for durable user uploads than the temporary local filesystem of an application server that may be redeployed?
+2. If an object has key `notes/chapter1.txt`, why is asking for key `chapter1.txt` not necessarily the same request?
+3. What is the difference between *constructing a presigned URL* and *successfully downloading an S3 object using it*?
+4. Why did changing `ap-south-1` to `eu-north-1` resolve the `PermanentRedirect` problem but not the `AccessDenied` problem?
+5. What IAM action must authorize the signing identity for a presigned **GET** link, and why does granting it not automatically make the entire bucket public?
+6. Why is a presigned URL best treated as a temporary bearer credential rather than as a freely shareable public link?
+7. What would you change if a frontend needed to **upload** a file rather than download one? Identify the operation that changes, but leave its complete implementation for the next lesson.
+
+**Sources for this section**
+
+- [AWS — Getting started with Amazon S3](https://docs.aws.amazon.com/AmazonS3/latest/userguide/GetStartedWithS3.html)
+- [AWS — Download and upload objects with presigned URLs](https://docs.aws.amazon.com/AmazonS3/latest/userguide/using-presigned-url.html)
+- [AWS SDK for JavaScript v3 — S3 presigner package](https://docs.aws.amazon.com/AWSJavaScriptSDK/v3/latest/Package/-aws-sdk-s3-request-presigner/)
+- [AWS SDK for JavaScript v3 — Complete S3 examples](https://docs.aws.amazon.com/sdk-for-javascript/v3/developer-guide/javascript_s3_code_examples.html)
+- [AWS — Troubleshooting S3 AccessDenied (403)](https://docs.aws.amazon.com/AmazonS3/latest/userguide/troubleshoot-403-errors.html)
+- [AWS — S3 pricing and cost factors](https://aws.amazon.com/s3/pricing/)
+
+---
+
 ## Sources and reliable follow-up reading
 
 - [AWS Lambda overview](https://docs.aws.amazon.com/lambda/latest/dg/welcome.html) — its standard function model and AWS-managed responsibilities.
