@@ -601,6 +601,67 @@ The signing identity must be allowed to perform **`s3:PutObject`** on the chosen
 
 ---
 
+## Part IX — AWS in production: from a working demo to a reliable application
+
+### 42. The architecture is still relevant; the deployment process has evolved
+
+Amazon S3, IAM, Lambda, API Gateway, and the AWS SDK are not outdated concepts. They remain useful building blocks because they solve distinct problems: **S3 stores objects**, **IAM controls access**, **Lambda runs event-driven code**, and **API Gateway exposes and manages API endpoints**.
+
+A common serverless request follows this path: **Client → API Gateway → Lambda → database or another AWS service**. For file transfers, a backend can authorize a request and issue a presigned URL, allowing the client to communicate **directly with S3**. The detailed GET and PUT flows are covered in Part VIII.
+
+A production system may use these services together, but it does not need to use all of them. The correct architecture is the **smallest design that satisfies the application's requirements**, including security, expected traffic, reliability, latency, and cost.
+
+### 43. Deployment tools describe infrastructure; they do not replace architectural decisions
+
+**Infrastructure as Code (IaC)** means defining cloud resources in version-controlled configuration or programming-language code rather than creating every resource manually through a web console. This makes environments easier to review, reproduce, update, and eventually deploy through an automated pipeline.
+
+The **Serverless Framework** can describe Lambda functions, HTTP events, and related AWS resources in a `serverless.yml` file. On AWS, it generally provisions and updates that infrastructure using **AWS CloudFormation**, AWS's stack-management service. A successful deployment therefore means that the requested cloud resources were created or updated; it does **not** prove that the application behaves correctly when a user invokes it.
+
+Other widely used approaches include **AWS SAM**, which is focused on serverless applications, and **AWS CDK**, which lets developers define infrastructure using languages such as TypeScript. **Terraform** is another IaC option, particularly where teams manage resources across providers. These are **alternative workflows**, not technologies every project must combine. Learning one approach well—and understanding the cloud resources it creates—is more useful than memorizing the syntax of several tools.
+
+In a production team, configuration is ordinarily stored in a repository, reviewed like application code, and deployed through **CI/CD** (continuous integration and continuous delivery/deployment). Separate development and production environments reduce the risk of experimentation affecting real users.
+
+### 44. Permissions belong to the workload, not inside the source code
+
+When a Lambda function needs to access an S3 object, it should normally receive an **IAM execution role** granting only the actions and resources it actually needs. For example, a function that generates private download links might need `s3:GetObject` on one bucket's objects, not unrestricted access to every AWS resource.
+
+AWS supplies the function with temporary credentials for that role. The code can then use the SDK's **default credential provider chain** rather than embedding an access key and secret in JavaScript. For local development, use an approved AWS profile or temporary-credential workflow; never commit credentials to Git.
+
+**Environment variables** are useful for non-secret configuration such as a bucket name or deployment stage. Sensitive values should use an appropriate secret-management mechanism with tightly controlled access, rather than being exposed in code or logs.
+
+The rule to remember is **least privilege**: an identity should have the minimum permissions required to perform its job. A presigned URL inherits the limits of the identity that signs it; it does not bypass IAM.
+
+### 45. Deployed successfully is not the same as working correctly
+
+Cloud deployment and application execution are separate stages. An infrastructure tool can report success because API Gateway and Lambda were created correctly, while the public endpoint still returns **HTTP 500 — Internal Server Error** when invoked. That response tells us the request failed somewhere in the application or its integration, not that the deployment necessarily failed.
+
+The correct debugging path is to **follow the request**. First confirm that the endpoint and HTTP method are correct. Then inspect the Lambda invocation and its **Amazon CloudWatch logs** for an exception, missing configuration, permission denial, timeout, or unexpected response shape. Check the API Gateway integration if the Lambda logs do not explain the result. Fix the underlying issue, redeploy, and invoke the endpoint again.
+
+Production readiness also means knowing whether an application is healthy **after deployment**. Logs explain individual failures; **metrics** help reveal patterns such as rising error rates or latency; and **alarms** notify operators when important thresholds are exceeded. Monitoring is part of the system, not an optional feature added only after a serious outage.
+
+### 46. Choosing Lambda or a continuously running service
+
+**Lambda** is often a good fit for short-lived, event-triggered work, scheduled tasks, and APIs with variable demand. AWS manages the execution infrastructure, but developers must still consider timeouts, cold starts, concurrency, downstream limits, and pricing.
+
+A **continuously running Node.js server**, hosted on EC2 or a managed container platform such as ECS/Fargate, can be a better choice when the application needs persistent processes, more direct runtime control, or traffic patterns that make an always-available service more suitable. Neither approach is automatically cheaper or faster: cost and latency depend on workload characteristics.
+
+When choosing, ask: **What triggers the work? How long does it run? Is traffic continuous or irregular? Does it need persistent connections or background processes? What operational responsibility can the team support?** Those answers matter more than which technology appears newer.
+
+### 47. The essential production checklist
+
+For an AWS-backed application, retain these four questions:
+
+1. **Access:** Does each service have only the IAM permissions it needs, with no credentials stored in source code?
+2. **Deployment:** Can the infrastructure and application be reproduced, reviewed, and safely updated?
+3. **Failure handling:** Can we distinguish provisioning failures from runtime errors, and find the cause through logs and metrics?
+4. **Fit and cost:** Does the chosen compute model match the workload, and are unused resources cleaned up or monitored for charges?
+
+The central principle is simple: **cloud services make infrastructure easier to obtain, not architecture, security, or operations automatic**. A working tutorial proves that a component can be deployed; a production design must also explain why it belongs in the system and how it behaves when something goes wrong.
+
+**Further reading:** [AWS Lambda execution roles](https://docs.aws.amazon.com/lambda/latest/dg/lambda-intro-execution-role.html) · [CloudWatch logs for Lambda](https://docs.aws.amazon.com/lambda/latest/dg/monitoring-cloudwatchlogs.html) · [AWS CDK](https://docs.aws.amazon.com/cdk/v2/guide/home.html) · [AWS SAM](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/what-is-sam.html)
+
+---
+
 ## Sources and reliable follow-up reading
 
 - [AWS Lambda overview](https://docs.aws.amazon.com/lambda/latest/dg/welcome.html) — its standard function model and AWS-managed responsibilities.
