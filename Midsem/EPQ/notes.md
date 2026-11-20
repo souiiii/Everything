@@ -339,158 +339,206 @@ You must be able to explain **how the shunt L–C filter works**, identify the *
 
 ## 3. Harmonic Numericals, Distortion Factor and Power Factor
 
-### Detailed explanation — why the RMS currents are different
+### 1. Before solving numericals, understand the different RMS currents
 
-This was one of the concepts that needed extra explanation during our revision, because **fundamental RMS**, **AC RMS** and **total RMS** are different quantities.
+This was one of the concepts we spent extra time on because the words **fundamental RMS**, **AC RMS** and **total RMS** mean different things.
 
-Suppose a current is given as $i(t)=8+15\cos(377t+30^\circ)+6\cos(754t+45^\circ)+2\cos(1131t+60^\circ)$. The numbers 15, 6 and 2 are the **peak amplitudes** of sinusoidal components, so their individual RMS currents are $15/\sqrt2$, $6/\sqrt2$ and $2/\sqrt2$. The constant term **8 A DC** has RMS value **8 A**; you must **not** divide DC by $\sqrt2$.
+Suppose current is given as:
 
-**Fundamental RMS current:** $15/\sqrt2$ in this example. This includes only the fundamental.
-
-**Harmonic RMS current:** Combine just the 2nd and 3rd harmonic currents in root-sum-of-squares: $\sqrt{(6^2+2^2)/2}$. It does not include the fundamental or DC.
-
-**Total AC RMS current:** Add the fundamental and higher harmonics by root-sum-of-squares: $\sqrt{(15^2+6^2+2^2)/2}$. It **does not include the DC term**.
-
-**Overall RMS current:** Now include the DC contribution too: $\sqrt{8^2+(15^2+6^2+2^2)/2}$. This is the current to use in apparent power when finding **true power factor** for the supplied full waveform.
-
-**What is THD?** Total Harmonic Distortion compares the **combined higher-harmonic RMS current** with the **fundamental RMS current**. DC is excluded. Here the common $\sqrt2$ factors cancel, giving $\sqrt{6^2+2^2}/15=42.16\%$. The phase angles of those harmonic components do not affect THD.
-
-**What is distortion factor (DF)?** The conventional AC distortion factor is **fundamental RMS current divided by total AC RMS current**. So the result here is $15/\sqrt{15^2+6^2+2^2}=0.9214$. If you include DC in the denominator, you obtain a different ratio. That does **not** mean our AC DF was calculated incorrectly; it means the denominator now represents a different total RMS quantity.
-
-**Real power versus apparent power:** Real power $P$ is measured in **watts**. Apparent power is $S=V_{\rm rms}I_{\rm rms}$ in **VA**. Power factor is $P/S$. Displacement power factor $\cos\phi_1$ is the cosine of the phase angle between the fundamental voltage and current, not the true PF when significant distortion exists.
-
-In our 2020 problem, voltage contains only the fundamental. Harmonic currents and the DC current make **zero net contribution to average real power** when multiplied by the pure sine voltage over a complete cycle. So $P=(100\times15/2)\cos30^\circ=649.52$ W. But **true PF** uses the entire RMS current, including DC and harmonics, which gives about **0.6553**, not $\cos30^\circ=0.8660$.
-
-**Power-factor correction:** Remember the power triangle: real power **P in kW**, reactive power **Q in kVAr**, apparent power **S in kVA**. A capacitor bank supplies capacitive reactive power, reducing the reactive power drawn from the source while real power remains approximately constant. In the 2024 problem, the initial apparent power was **120 kVA**, power factor was **0.65**, and the required new PF was **0.95**. First find $P=120(0.65)=78$ kW. Then compute $Q_c=P(\tan\phi_1-\tan\phi_2)=65.55$ kVAr. **kVAr means kilovolt-ampere reactive**, a unit of reactive power.
-
-**Exam numerical method:** Given → identify peak/RMS quantities → formula → substitution → boxed result with units. The calculations and formulas below are retained in full so you can practise the same 2020, 2024 and 2025 questions again.
-
-
-
-### Core formulas and the RMS distinction
-
-If a current is $i(t)=I_{\rm DC}+\sum I_{h,\rm peak}\cos(h\omega t+\phi_h)$, each sinusoidal component has $I_{h,\rm rms}=I_{h,\rm peak}/\sqrt2$, while **DC RMS equals the DC magnitude**.
-
-$
-\boxed{\mathrm{THD}_I=\frac{\sqrt{\sum_{h\ge2}I_{h,\rm rms}^2}}{I_{1,\rm rms}}\times100\%}.
-$
-
-**THD excludes DC** and its numerator excludes the fundamental. Harmonic phase angles do not affect the result.
-
-$
-I_{\rm AC,rms}=\sqrt{I_{1,\rm rms}^2+\sum_{h\ge2}I_{h,\rm rms}^2}
-$
-
-$
-I_{\rm total,rms}=\sqrt{I_{\rm DC}^2+I_{\rm AC,rms}^2}.
-$
-
-**Conventional AC current distortion factor:**
-
-$
-\boxed{DF=\frac{I_{1,\rm rms}}{I_{\rm AC,rms}}
-=\frac{1}{\sqrt{1+(\mathrm{THD}_I/100)^2}}}.
-$
-
-Some material defines a ratio using **total** RMS (including DC); read the question's definition. These ratios differ when DC exists.
-
-**Power definitions:** $S=V_{\rm rms}I_{\rm rms}$ (VA), $P$ is mean real power (W), $PF=P/S$, and for the *fundamental* $DPF=\cos\phi_1$. If voltage is a pure sinusoid, only the fundamental current contributes to average real power:
-
-$
-P=V_{1,\rm rms}I_{1,\rm rms}\cos\phi_1.
-$
-
-### Worked PYQ — 2020 Q4(a)
-
-$
-v(t)=100\cos377t
-$
-
-$
+$$
 i(t)=8+15\cos(377t+30^\circ)+6\cos(754t+45^\circ)+2\cos(1131t+60^\circ).
-$
+$$
 
-Current components: DC = 8 A; fundamental RMS $=15/\sqrt2$ A; second-harmonic RMS $=6/\sqrt2$ A; third-harmonic RMS $=2/\sqrt2$ A.
+The current has a **DC component** of 8 A and three sinusoidal components.
 
-**THD:**
+The coefficients **15, 6 and 2 are peak current amplitudes**. For any sinusoidal component:
 
-$
+$$
+I_{\text{rms}}=\frac{I_{\text{peak}}}{\sqrt 2}.
+$$
+
+The RMS of the **DC term** is simply **8 A**. We do not divide it by $\sqrt2$.
+
+Now distinguish the four currents:
+
+1. **Fundamental RMS:** The RMS of the fundamental-frequency component only, $I_1=15/\sqrt2$.
+2. **Combined harmonic RMS:** The root-sum-square of the higher harmonics, $\sqrt{(6^2+2^2)/2}$.
+3. **Total AC RMS:** Fundamental and higher harmonics combined, $\sqrt{(15^2+6^2+2^2)/2}$.
+4. **Overall total RMS:** AC components plus DC, $\sqrt{8^2+(15^2+6^2+2^2)/2}$.
+
+**Why does this difference matter?**
+
+Because different formulas use **different denominators**. THD compares harmonics with the fundamental. Conventional current distortion factor compares the fundamental with total **AC** current. True power factor uses the RMS of the **complete current waveform**, including any DC component.
+
+### 2. Total harmonic distortion (THD)
+
+**What is THD?**
+
+THD tells us how much unwanted harmonic content is present **relative to the fundamental**.
+
+$$
+\boxed{\mathrm{THD}_I=\frac{\sqrt{I_{2,\mathrm{rms}}^2+I_{3,\mathrm{rms}}^2+\cdots}}{I_{1,\mathrm{rms}}}\times100\%.}
+$$
+
+**Important:** Do not include the fundamental in the numerator. Do not include DC in THD. The phase angles of separate harmonics do not alter the RMS sum.
+
+**Worked 2020 PYQ Q4(a) — Part 1**
+
+Given:
+
+$$
+v(t)=100\cos377t
+$$
+
+$$
+i(t)=8+15\cos(377t+30^\circ)+6\cos(754t+45^\circ)+2\cos(1131t+60^\circ).
+$$
+
+The fundamental peak is 15 A; higher harmonics have peaks 6 A and 2 A.
+
+$$
 \mathrm{THD}=\frac{\sqrt{6^2+2^2}}{15}\times100
 =\boxed{42.16\%}.
-$
+$$
 
-**Real power absorbed:** The voltage contains only the fundamental, so the DC and harmonic currents contribute no average real power:
+Notice that the $\sqrt2$ factors cancel because the numerator and denominator are all sinusoidal RMS components.
 
-$
-P=\frac{100\times15}{2}\cos30^\circ=\boxed{649.52\ \mathrm W}.
-$
+### 3. Distortion factor (DF)
 
-**Conventional distortion factor:**
+**What is distortion factor?**
 
-$
+Distortion factor measures **what fraction of the AC RMS current belongs to the fundamental**.
+
+$$
+\boxed{DF=\frac{I_{1,\mathrm{rms}}}{I_{\mathrm{AC,rms}}}}
+$$
+
+It is also related to THD by:
+
+$$
+\boxed{DF=\frac{1}{\sqrt{1+(\mathrm{THD}/100)^2}}}.
+$$
+
+**Worked 2020 PYQ Q4(a) — Part 2**
+
+$$
 DF=\frac{15/\sqrt2}{\sqrt{(15^2+6^2+2^2)/2}}
-=\frac{15}{\sqrt{265}}=\boxed{0.9214}.
-$
+=\frac{15}{\sqrt{265}}
+=\boxed{0.9214}.
+$$
 
-**True power factor including DC:**
+**One question we discussed:** Why is the RMS current used for distortion factor different from the RMS current used in true power factor?
 
-$
-I_{\rm total,rms}=\sqrt{8^2+\frac{15^2+6^2+2^2}{2}}
-=\sqrt{196.5}=14.018\ \mathrm A.
-$
+Because DF normally compares the fundamental with **total AC RMS**, while true PF involves **overall RMS current**, including the DC component of this particular signal. If a question explicitly defines DF differently, use that definition.
 
-$
-PF_{\rm true}=\frac{649.52}{(100/\sqrt2)(14.018)}
+### 4. Real power, apparent power and true power factor
+
+**Real power ($P$):** Average power consumed or converted into useful work; unit **W**.
+
+**Apparent power ($S$):** $V_{\mathrm{rms}}I_{\mathrm{rms}}$; unit **VA**.
+
+**Power factor:** $PF=P/S$.
+
+**Displacement power factor:** $\cos\phi_1$, the phase-angle effect between fundamental voltage and fundamental current.
+
+When voltage is a **pure fundamental sinusoid**, the DC component and higher harmonic currents produce **zero average real power** over a full period. Only the fundamental current contributes.
+
+**Worked 2020 PYQ Q4(a) — Parts 3 and 4**
+
+$$
+P=\frac{100\times15}{2}\cos30^\circ
+=\boxed{649.52\ \mathrm W}.
+$$
+
+The full RMS current is:
+
+$$
+I_{\mathrm{total,rms}}=\sqrt{8^2+\frac{15^2+6^2+2^2}{2}}
+=\sqrt{196.5}=\boxed{14.018\ \mathrm A}.
+$$
+
+Voltage RMS is $100/\sqrt2$ V, so:
+
+$$
+PF_{\mathrm{true}}=\frac{649.52}{(100/\sqrt2)(14.018)}
 =\boxed{0.6553}.
-$
+$$
 
-Compare: displacement PF $=\cos30^\circ=0.8660$; ratio of fundamental RMS to **total** RMS including DC $=(15/\sqrt2)/14.018=0.7567$. These are **not** the conventional AC distortion factor.
+Compare these values:
 
-### Worked PYQ — November 2025 Q2(a): voltage THD
+| Quantity | Result |
+| --- | ---: |
+| THD | **42.16%** |
+| AC distortion factor | **0.9214** |
+| Displacement PF, $\cos30^\circ$ | **0.8660** |
+| True PF including DC | **0.6553** |
 
-Given fundamental $V_1=120$ V and harmonics $V_3=6$ V, $V_5=4$ V, $V_7=1.5$ V, $V_9=5.5$ V (consistent RMS magnitudes):
+All four values answer **different questions**. Don't substitute one for another.
 
-$
-\mathrm{THD}_V=
-\frac{\sqrt{6^2+4^2+1.5^2+5.5^2}}{120}\times100
+### 5. November 2025 Q2(a) — Voltage THD
+
+Given fundamental voltage $V_1=120$ V and harmonics $V_3=6$ V, $V_5=4$ V, $V_7=1.5$ V, and $V_9=5.5$ V:
+
+$$
+\mathrm{THD}_V
+=\frac{\sqrt{6^2+4^2+1.5^2+5.5^2}}{120}\times100
 =\boxed{7.66\%}.
-$
+$$
 
-**Exam method:** Square only higher-harmonic magnitudes, add, take square root, divide by fundamental, multiply by 100.
+**What to do:** Square the harmonic magnitudes, add, take the square root, divide by the fundamental and multiply by 100.
 
-### Power-factor correction — theory and 2024 PYQ
+### 6. Power-factor correction — 2024 PYQ Q2(a)
 
-An inductive motor draws **real power** $P$ (kW) plus **reactive power** $Q$ (kVAr); the supply handles **apparent power** $S$ (kVA).
+Let's first understand the theory.
 
-**Power triangle:**
+Power in a conventional sinusoidal AC circuit has three related quantities:
 
-The power triangle is defined by the adjacent formulas: horizontal real power P, vertical reactive power Q, and hypotenuse apparent power S.
+- **Real power $P$** in **kW**.
+- **Reactive power $Q$** in **kVAr**.
+- **Apparent power $S$** in **kVA**.
 
-$
-\boxed{S^2=P^2+Q^2},\qquad PF=\cos\phi=P/S,\qquad Q=P\tan\phi.
-$
+$$
+\boxed{S^2=P^2+Q^2}
+$$
 
-A shunt capacitor supplies capacitive reactive power locally, reducing the inductive reactive power drawn from the source. Real power remains approximately constant.
+$$
+\boxed{PF=\cos\phi=\frac{P}{S}},\qquad Q=P\tan\phi.
+$$
 
-$
-\boxed{Q_c=P(\tan\phi_1-\tan\phi_2)},\quad
-\phi_i=\cos^{-1}(PF_i).
-$
+**What is kVAr?**
 
-**2024 PYQ:** Initial apparent power 120 kVA, PF improves from 0.65 lagging to 0.95.
+It stands for **kilovolt-ampere reactive**, the unit of reactive power. Real power does useful work; reactive power is exchanged with magnetic and electric fields, particularly in inductive and capacitive equipment. A capacitor bank can supply capacitive reactive power to reduce the net reactive power drawn from the supply.
 
-$
-P=120(0.65)=78\ \mathrm{kW}.
-$
+**How do we correct a lagging power factor?**
 
-$
-Q_c=78\left[\tan(\cos^{-1}0.65)-\tan(\cos^{-1}0.95)\right]
+A shunt capacitor supplies reactive power near the inductive load. The load's **real power stays approximately the same**, but the upstream system supplies less reactive power, improving PF.
+
+$$
+\boxed{Q_c=P(\tan\phi_1-\tan\phi_2)}
+$$
+
+**2024 PYQ:** A 120 kVA load with PF 0.65 is to be improved to 0.95.
+
+**Step 1 — Find real power**
+
+$$
+P=S(PF_1)=120\times0.65=\boxed{78\ \mathrm{kW}}.
+$$
+
+You answered **78**, which was correct.
+
+**Step 2 — Find capacitor compensation**
+
+$$
+Q_c=78[\tan(\cos^{-1}0.65)-\tan(\cos^{-1}0.95)]
 =\boxed{65.55\ \mathrm{kVAr}}.
-$
+$$
 
-Here **kVAr means kilovolt-ampere reactive**, a unit of reactive power. This standard correction calculation assumes the usual approximately sinusoidal power-triangle model.
+You calculated **65.56**, also correct to rounding.
 
----
+**Remember:** For this standard correction problem, the capacitor supplies the reactive-power difference. It does not create additional real power.
+
+
 
 ## 4. UPS — Online, Offline and Hybrid
 
@@ -746,59 +794,129 @@ For a classification chart: magnitude on vertical axis; duration horizontal; mar
 
 ## 7. Power Quality Monitoring — Definition, Purpose and Architecture
 
-### Detailed explanation — monitoring basics without memorising every paragraph
+### 1. What is power quality monitoring?
 
-**Power quality monitoring is the process of gathering, analysing and interpreting voltage/current measurements to identify disturbances and understand electrical-system performance.**
+Power quality monitoring is the process of **gathering, analysing and interpreting raw voltage and current measurement data into useful information**.
 
-Suppose a factory machine suddenly shuts down. A monitoring system can record supply voltage and reveal whether a **sag, swell or transient** happened at that moment. It converts raw measurements into useful information: **Measure → Collect → Analyse → Interpret**.
+The idea is simple: if an industrial drive trips, we want to know **what happened to the electrical supply at that moment**.
 
-**Why is monitoring useful?** Industrial equipment is sensitive to voltage disturbances: a contactor might drop out, a drive could trip, or a controller might reset, leading to production losses. Monitoring helps **detect problems, identify causes, protect equipment and improve system performance**. You can explain these purposes in your own words.
+A monitoring system records voltage and current, detects abnormal events and helps us determine whether there was a sag, swell, harmonic distortion, transient or interruption.
 
-**What are monitoring considerations?** Think of the decisions before installing a monitor: **Why** monitor (objective)? **What equipment** is needed? **When** should an event trigger recording (triggering threshold)? **Where** should data be stored? **How** will it be analysed? A **triggering threshold** is the preset limit at which an event is detected or recorded.
+**Why are industries increasingly concerned about power quality?**
 
-**Five objectives, low-priority memory aid:** **Performance, Problems, Service, Maintenance, Survey**. These correspond to understanding normal performance, investigating an existing problem, verifying promised service, predicting failures and surveying a facility's wiring/conditions. You understood these even though you didn't want to memorise all five by heart.
+Modern industrial processes use many sensitive devices, such as adjustable-speed drives, PLCs and control electronics. Even a brief voltage disturbance may reset or trip them.
 
-**Proactive vs reactive:** Proactive monitoring measures the normal system routinely so it is easier to recognise abnormalities. Reactive monitoring begins after a particular problem to investigate its cause.
+The electrical disturbance may last only a fraction of a second, but the resulting **production shutdown, equipment malfunction and data loss** can last much longer.
 
-**Major monitoring subsystems:** Instrument/sensor measurement → event detection and data acquisition → data storage → communications → analysis, interpretation and reports. The original monitoring-system figure is below. In the **2020 PYQ**, PQ monitoring differs from general data acquisition because it is designed to catch **electrical disturbances of varied frequencies and durations**, not merely log ordinary signals.
+Monitoring helps identify the causes, improve performance and prevent repeated losses.
 
-**Duration of monitoring:** There is **no fixed universal duration**; it depends on the objective and how often disturbances occur. Frequent recurring problems may suit **short-term monitoring**. Rare, unpredictable sags require **long-term or continuous monitoring** — exactly what you answered in our quick check.
+### 2. Monitoring considerations — what should we actually think about?
 
-**Online vs offline analysis:** Online means processing measurements promptly for timely warnings; offline means analysing stored records later. We intentionally deprioritised long descriptions, seven-point site surveys and equipment specifications so we could focus on instruments and flickermeter.
+When we set up monitoring, several practical questions matter.
+
+- **What is our objective?** Are we studying normal system performance or investigating a specific fault?
+- **What instrument should we use?** We choose it according to the disturbance we want to measure.
+- **What triggering threshold should we set?** This determines when the instrument records an event.
+- **How will data be collected and stored?**
+- **How will the recorded information be analysed and interpreted?**
+
+**What is a triggering threshold?**
+
+A triggering threshold is a **predefined limit** that causes the monitoring system to detect or record an event.
+
+**Simple example:** If the monitor is configured to recognise a sag when voltage falls below **0.9 pu**, crossing that threshold triggers recording.
+
+You don't need to memorise the long paragraphs on the first page. Once you understand these ideas, you can explain them in your own words.
+
+### 3. Five objectives of monitoring — remember the ideas, not paragraphs
+
+You understood the five objectives but were concerned you wouldn't recall them later. We reduced them to **five keywords**:
+
+| Keyword | What it helps you recall |
+| --- | --- |
+| **Performance** | Understand how the system normally behaves. |
+| **Problems** | Find the cause of a specific disturbance. |
+| **Service** | Verify the quality promised to customers. |
+| **Maintenance** | Predict equipment failures. |
+| **Survey** | Inspect the electrical conditions at a facility. |
+
+Think of it as five questions:
+
+**How is the system performing? What's wrong? Are customers getting good service? Is something about to fail? Is the facility properly installed?**
+
+You can reconstruct explanations from these ideas without memorising the long paragraphs.
+
+**Proactive monitoring:** Monitoring regularly to identify problems before they become serious.
+
+**Reactive monitoring:** Monitoring after a problem occurs to investigate its cause.
+
+We deliberately skipped memorising the seven initial site-survey points. For the exam, it's enough to understand why we choose a measurement objective and monitoring location carefully.
+
+### 4. Permanent PQ monitoring systems
+
+A permanent monitoring system can use different types of instruments at substations and selected customer locations. Their measurements are collected, communicated, stored and analysed.
+
+**Original monitoring-system diagram from UNIT-6:**
+
+![Original system PQ monitoring concept — UNIT-6.pdf](figures/monitoring-architecture.webp)
+
+Understand the basic flow:
+
+~~~text
+  Monitoring instruments
+ (substations / customers)
+            |
+     Data collection
+            |
+   Communication / network
+            |
+      Data storage
+            |
+    Analysis and reports
+~~~
+
+You do **not** need to memorise the complex networking details in the lecture figure.
+
+**Major monitoring subsystems — 2020 PYQ:** Measurement sensors/instruments, data acquisition and triggering, data storage, communications, analysis and interpretation, and reporting. A general data-acquisition system collects signals; a PQ monitoring system is specifically designed to detect and characterise **electrical disturbances over very different time and frequency ranges**.
+
+### 5. Duration of power quality monitoring — 2025 Q1(e), 2 marks
+
+**What does it mean?**
+
+The duration of monitoring is the **length of time for which voltage and current are measured and recorded** to detect power-quality disturbances.
+
+**There is no single fixed duration.** It depends on the monitoring objective and how frequently disturbances occur.
+
+| Situation | Monitoring duration |
+| --- | --- |
+| Investigating a frequently occurring problem | Short-term monitoring |
+| Detecting rare or unpredictable disturbances | Longer monitoring period |
+| Assessing overall system performance | Continuous or long-term monitoring |
+
+**Exam-ready answer**
+
+The duration of power quality monitoring depends on the objective, frequency of disturbances and operating conditions of the electrical system. Short-term monitoring is suitable for identifying specific recurring problems, whereas long-term or continuous monitoring is required for unpredictable disturbances, system performance assessment and predictive maintenance. The monitoring period should be sufficient to capture representative operating conditions.
+
+**Quick check we practised:** If a factory experiences an unpredictable voltage sag once every few weeks, should monitoring be short or long term?
+
+You answered **long term**, which was correct.
+
+### 6. Online versus offline analysis — lower priority
+
+| Offline analysis | Online analysis |
+| --- | --- |
+| Data is analysed later using separate software. | Data is analysed as it is captured. |
+| Useful for historical trends and detailed reports. | Useful for real-time alerts and quick corrective action. |
+
+That's all you need for now. Don't memorise the detailed software features, databases, file formats or statistical indices.
+
+### What to prioritise
+
+For the examination, focus on the definition and importance of monitoring, the major monitoring-system components, duration of monitoring and the six measurement instruments in the next section.
+
+**Related questions:** 2020 monitoring-system subsystems; 2025 Q1(a), Q1(e) and Q4(a).
 
 
-
-### What is PQ monitoring?
-
-**Power-quality monitoring is continuous or periodic measurement, collection, analysis and interpretation of voltage/current data to identify power-quality disturbances and assess system performance.**
-
-**Why industries care:** Voltage events can trip drives, reset PLCs, damage equipment, corrupt data and cause production stoppages far longer than the actual disturbance. Monitoring lets them diagnose causes, protect sensitive processes and verify improvements.
-
-**Monitoring considerations (explain in your own words):** Why to monitor (objective), what to use (instrument), what triggers an event (threshold), where to store the data and how to analyse it. There is no need to memorise lengthy site-survey checklists.
-
-**Monitoring objectives, backup list:** Characterise normal performance; investigate specific problems; verify service quality; support predictive maintenance; survey a facility. Proactive = routine characterisation; reactive = investigate after a problem.
-
-### Major subsystems — 2020 PYQ Q3(a)
-
-
-![Original power-quality monitoring system diagram — UNIT-6.pdf, p. 4](figures/monitoring-architecture.webp)
-
-
-1. **Measurement** observes voltage and current through suitable sensors/instruments.
-2. **Acquisition/triggering** samples the signal and identifies events that cross configured thresholds.
-3. **Storage** keeps event magnitude, duration and optionally waveforms.
-4. **Communications** moves records to a database or central monitoring system.
-5. **Analysis/reporting** identifies the disturbance and helps determine remedies.
-
-**How PQ monitoring differs from general data acquisition:** PQ monitoring is specialised for electrical disturbances of very different durations and frequencies; it includes disturbance/event detection, relevant waveforms, harmonic analysis and power-quality reporting, beyond simply logging ordinary signals.
-
-### Duration of monitoring — November 2025 Q1(e), 2 marks
-
-There is **no universal fixed duration**. It depends on purpose, disturbance frequency and whether monitoring covers representative operating conditions. Short-term monitoring may diagnose a frequent recurring problem; long-term or continuous monitoring suits rare unpredictable events, trends and permanent performance assessment.
-
-**Online vs offline analysis — low priority:** Online = data processed promptly for timely alerts; offline = data stored and examined later for historical patterns. No further details needed.
-
----
 
 ## 8. Power Quality Measurement Instruments
 
