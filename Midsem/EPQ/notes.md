@@ -800,67 +800,200 @@ There is **no universal fixed duration**. It depends on purpose, disturbance fre
 
 ---
 
-## 8. PQ Measurement Instruments — 2025 Q4(a), 5 marks
+## 8. Power Quality Measurement Instruments
 
-### Detailed explanation — each instrument as we studied it
+This is the important equipment section we've been looking for. Unlike the earlier monitoring pages, this one directly relates to the **2025 Q4(a): “What are the instruments used for Power Quality Monitoring? Briefly Describe.” — 5 marks**.
 
-The **November 2025 Q4(a)** asks for the instruments used for power-quality monitoring, with brief descriptions. We studied each one for its **actual function**, not by memorising long technical specifications.
+We don't need to memorise every long description. For each instrument, learn **what it is**, **what it measures**, and **one or two useful functions**.
 
-**1. Wiring and grounding testers.** Many power-quality problems arise from incorrect wiring and grounding. These instruments identify **open or faulty wires, neutral–ground problems, incorrect/reversed connections**, and excessive grounding impedance. Some three-phase devices also check phase rotation. For the exam, explain the purpose and give two such examples; don't memorise the entire list of test capabilities.
+### 1. Wiring and Grounding Testers — Important for Q4(a)
 
-**2. Multimeters.** A multimeter measures **voltage, current and resistance**. In a three-phase installation, it can check phase-to-phase, phase-to-neutral, phase-to-ground and neutral-to-ground voltages, and phase and neutral currents. It helps identify abnormal voltages and circuit loading. We discussed **peak method, averaging method and true RMS method**: peak and averaging methods calibrated for sinusoids can be misleading for distorted waveforms, whereas a **true RMS meter** gives a more reliable effective RMS measurement within its ratings.
+**What does it do?**
 
-**3. Oscilloscopes.** An oscilloscope displays **voltage/current waveforms against time**. Engineers can actually see distortion, transient spikes, variations and waveform shape. Digital oscilloscopes can **store the waveforms** for later analysis. You need not memorise details about handheld versions or computer software.
+A wiring and grounding tester detects problems in electrical wiring and grounding that may cause power-quality disturbances.
 
-**4. Disturbance analyzers.** A disturbance analyzer is specifically designed to **detect, record and analyse power-quality disturbances** such as sags, swells, transient overvoltages, interruptions and under-/over-voltage. It monitors electrical conditions and can begin recording when a preset **triggering threshold** is crossed. It records magnitude, duration and sometimes waveform information.
+Examples include:
+- Open or incorrectly connected neutral and ground wires.
+- Reversed live and neutral connections.
+- Excessive grounding impedance.
+- Incorrect phase rotation in three-phase systems.
 
-There are **two important types**. **Conventional analyzers** record summary information such as an event's magnitude and duration. **Graphics-based analyzers** capture the **actual voltage/current waveform**. A graphical recording is particularly useful for an **oscillatory transient** because it shows rapid bipolar ringing and decaying oscillations, which a conventional peak-and-duration summary may fail to describe. You explained this difference correctly in our question.
+**What to remember for the exam**
 
-**5. Harmonic and spectrum analyzers.** A harmonic analyzer identifies the harmonic frequency components of voltage and current, computes **THD**, and may display a frequency spectrum or bar graph. Some instruments use **FFT**. We only need to recognise the three categories: **simple meters** (quick checks), **general-purpose spectrum analyzers** (many signal types), and **special-purpose power-system harmonic analyzers** (detailed electrical analysis). Skip detailed sampling requirements and K-factor calculations.
+> Wiring and grounding testers detect faulty connections, grounding problems and wiring errors in electrical installations.
 
-**6. Flickermeters.** A flickermeter measures **flicker severity** caused by voltage fluctuations, including the sensitivity of a lamp and the human eye–brain system. Its special five-block mechanism is treated fully in the next section.
+That's sufficient for a short instrument-description question. Don't memorise the entire page of test specifications.
 
-**7. Combination disturbance and harmonic analyzers.** These combine the monitoring and recording of disturbances with **harmonic/THD analysis** in one instrument, often with graphical outputs and storage.
+### 2. Multimeters — Important for Q4(a)
 
-**8. Energy monitors.** These measure and log energy consumption and related power quantities for ongoing monitoring.
+**What does a multimeter do?**
 
-**Your mind-map recall was strong:** You independently named **wiring and grounding testers, multimeters, oscilloscopes, disturbance analyzers, harmonic analyzers and flickermeters**, with the correct functions. You even remembered conventional versus graphical disturbance analyzers and all five flickermeter blocks. For the written exam, expand each mind-map label into **one or two complete sentences**.
+A multimeter measures electrical quantities such as **voltage and current** to help identify power-quality problems.
 
-**For the separate five-mark disturbance-analyzer question**, write the definition, disturbances detected, threshold-based operation, the two types and their difference. The shape and polarity changes visible in a graphical trace are especially relevant when explaining oscillatory transients.
+According to your notes, it can measure:
+- Phase-to-ground, phase-to-neutral and phase-to-phase voltages.
+- Neutral-to-ground voltage.
+- Phase and neutral currents.
 
+**Applications:** Detecting overvoltage, undervoltage, circuit overloading and phase imbalance.
 
+**One important concept: Three RMS measurement methods**
 
-**The exam strategy:** Write six to eight names, each with one accurate function. Six carefully described instruments are better than copying unrelated technical specifications.
+| Method | How it works | Limitation |
+| --- | --- | --- |
+| Peak method | Measures peak value and divides by $\sqrt 2$. | Assumes a sinusoidal waveform. |
+| Averaging method | Measures the average rectified value and converts it to RMS. | Calibrated for sinusoidal waveforms. |
+| True RMS method | Calculates the actual effective RMS value. | Works with distorted waveforms too, within the meter's specifications. |
 
-| Instrument | What to write |
+**Why does this matter?**
+
+Suppose a nonlinear load draws current containing harmonics. The waveform is no longer a pure sine wave. Therefore, simply dividing its peak by $\sqrt2$ may give an incorrect RMS reading.
+
+A **true RMS multimeter** provides a more reliable measurement of distorted current.
+
+**What to remember for the exam:** A multimeter measures voltage and current, checks phase voltages and currents, and true RMS meters are preferred for distorted signals.
+
+### 3. Oscilloscopes — Important for the Exam
+
+**What is an oscilloscope?**
+
+An oscilloscope is an instrument that displays **voltage and current waveforms in real time**, helping engineers observe power-quality disturbances.
+
+**Important things to know**
+
+1. **Waveform observation:** Displays voltage and current against time, allowing us to see distortions, transients and other abnormalities.
+2. **Measurement:** Helps determine voltage and current magnitudes and identify significant variations.
+3. **Data storage:** Digital oscilloscopes can save waveforms for later analysis.
+4. **Advanced analysis:** Some digital oscilloscopes can perform energy calculations and spectrum analysis.
+
+**What to write for a 5-mark instrument-list question**
+
+> An oscilloscope displays real-time voltage and current waveforms to identify power quality disturbances. Digital oscilloscopes can also store waveforms and perform further analysis, such as spectrum analysis.
+
+That is sufficient when describing it as one of several instruments.
+
+### 4. Disturbance Analyzers — Very Important
+
+This deserves more attention because **2025 Q6(c)** explicitly asks for a **short note on disturbance analyzers — 5 marks**.
+
+**What is a disturbance analyzer?**
+
+A disturbance analyzer is an instrument used to **detect, measure and record power-quality disturbances over time**.
+
+It can record:
+- Voltage sags and swells.
+- Transient overvoltages.
+- Undervoltage and overvoltage.
+- Supply interruptions.
+
+**How does it work?**
+
+Remember the triggering threshold we studied earlier?
+
+A disturbance analyzer uses the same principle:
+
+1. Continuously monitors voltage or current.
+2. Detects when a disturbance crosses a predefined threshold.
+3. Records the disturbance's magnitude, duration and other relevant information.
+4. Stores the data for later analysis.
+
+For example, if voltage drops below a configured threshold, the analyzer records the sag event.
+
+**Two types of disturbance analyzers**
+
+| Conventional analyzer | Graphics-based analyzer |
 | --- | --- |
-| **Wiring and grounding tester** | Finds open/wrong neutral or ground connections, reversals and grounding faults/impedance issues. |
-| **Multimeter** | Measures voltage, current, resistance; helps check phase–phase, phase–neutral, phase–ground, neutral–ground voltages and phase/neutral currents. |
-| **Oscilloscope** | Displays voltage/current waveforms against time, revealing spikes and distortions; digital versions can store traces. |
-| **Disturbance analyzer** | Detects and records sags, swells, over/under-voltage, transients and interruptions, often using thresholds. |
-| **Harmonic or spectrum analyzer** | Measures harmonic component magnitudes/frequencies, frequency spectrum, THD and often PF. |
-| **Flickermeter** | Measures severity of light flicker resulting from voltage fluctuations, taking human perception into account. |
-| **Combination disturbance/harmonic analyzer** | Combines event monitoring and harmonic/THD analysis in one instrument. |
-| **Energy monitor** | Records energy consumption and related electrical measurements. |
+| Records summary information. | Records the actual waveform. |
+| Shows magnitude and duration of disturbances. | Shows magnitude, duration and waveform shape. |
+| Useful for basic monitoring. | Useful for detailed investigation. |
+| Cannot fully describe complex transient waveforms. | Can capture oscillatory transients more effectively. |
 
-**Multimeter caveat:** Peak ÷ $\sqrt2$ and average-responding RMS-calibrated methods assume a sinusoid; **true RMS** measurement is preferred for distorted currents because it measures effective heating value within meter limits.
+**Simple example**
 
-### Disturbance analyzer — November 2025 Q6(c), 5 marks
+A conventional analyzer might report that a transient reached **800 V** and lasted **2 milliseconds**.
 
-A disturbance analyzer continuously measures electrical quantities and records disturbances when preset **triggering thresholds** are crossed. It stores magnitude and duration and may record waveforms.
+A graphics-based analyzer can also show whether the transient was a sharp spike or a series of decaying oscillations.
 
-**Two types:**
+That's why **waveform capture matters**.
 
-- **Conventional:** Records summary details — sag/swell magnitude, duration, surge peak, interruption time.
-- **Graphics-based:** Records the **actual waveform**, revealing an impulsive spike or the alternating, decaying ringing of an oscillatory transient. This is important because a peak and duration alone cannot show transient shape.
+**Why is a graphics-based disturbance analyzer better for oscillatory transients?**
 
-**For a 5-mark short note:** Definition, working in 3 steps (monitor → threshold/event → store/analyse), two types and one reason graphical recording is valuable.
+Because it captures the actual waveform, allowing us to examine its shape, rapid oscillations, changing polarity and gradual decay. Conventional analyzers mainly give summary information such as magnitude and duration.
 
-### Harmonic analyzers — important but brief
+**Exam-ready answer**
 
-They measure individual harmonics and THD, often using FFT/spectrum analysis; simple meters make quick checks, general-purpose spectrum analyzers analyse frequency content, special-purpose power-system analyzers are designed for detailed electrical harmonics. No need to memorise K-factor/TIF or sampling-rate specifications.
+A disturbance analyzer detects and records electrical disturbances such as sags, swells, transients and interruptions. It uses triggering thresholds and stores information for later analysis.
 
----
+There are two types:
+- **Conventional:** Records event summaries, including magnitude and duration.
+- **Graphics-based:** Records the actual waveform, allowing detailed analysis of complex disturbances.
+
+For a short note, prioritise the definition, working principle, two types and their differences. You do **not** need to reproduce the instrument's screenshot.
+
+### 5. Spectrum and Harmonic Analyzers
+
+This section looked huge in your notes, but we only need the core functions.
+
+**What is a harmonic analyzer?**
+
+A harmonic analyzer measures the **harmonic components present in voltage and current waveforms**. It helps determine how distorted an electrical waveform is.
+
+**Important things to know**
+
+1. **Measures individual harmonics:** For example, the 3rd, 5th and 7th harmonic components.
+2. **Calculates THD:** Determines total harmonic distortion as a percentage of the fundamental.
+3. **Displays a frequency spectrum:** Shows harmonic magnitudes at different frequencies, often as a bar graph.
+4. **Measures power factor:** Useful for assessing electrical system performance.
+
+Some analyzers use the **Fast Fourier Transform (FFT)** to separate a distorted waveform into its frequency components.
+
+You've already studied THD and harmonics, so none of these concepts is new.
+
+**Three types — Just recognise the names**
+
+| Type | Main purpose |
+| --- | --- |
+| Simple meters | Quick harmonic measurements at a site. |
+| General-purpose spectrum analyzers | Frequency analysis of various signals. |
+| Special-purpose power-system harmonic analyzers | Detailed harmonic measurements designed for power networks. |
+
+No need to memorise the sampling specifications, K-factor or telephone influence factor for this exam.
+
+### 6. Combination Disturbance and Harmonic Analyzers
+
+This one is even simpler.
+
+A combination analyzer performs **both disturbance monitoring and harmonic analysis using a single instrument**.
+
+It can detect sags, swells and transients; measure harmonics and THD; store results; and transfer data for further analysis.
+
+Think of it as a **disturbance analyzer + harmonic analyzer in one device**.
+
+### 7. Flickermeters
+
+A **flickermeter measures the severity of voltage flicker** caused by voltage fluctuations.
+
+What makes it special is that it accounts for how humans perceive changes in lamp brightness. Its IEC five-block diagram and full explanation are in **Section 9**.
+
+### 8. Energy Monitors
+
+Energy monitors record electrical-energy consumption and related electrical measurements. They are another category of equipment used in ongoing power-quality monitoring.
+
+### Final recall — what you already answered correctly
+
+You recalled **six instruments** without looking at your notes:
+- Wiring and grounding testers.
+- Multimeter.
+- Oscilloscope.
+- Disturbance analyzer.
+- Harmonic analyzer.
+- Flickermeter.
+
+You also remembered conventional versus graphics-based analyzers, the three harmonic-analyzer categories, and all five flickermeter blocks.
+
+**For 2025 Q4(a), write any six instruments with one or two meaningful sentences about each.** That's a stronger answer than a bare list of names.
+
+
 
 ## 9. IEC Flickermeter — 5-Mark Answer
 
@@ -960,44 +1093,64 @@ You don't need the complicated transfer function, detailed filter characteristic
 
 ## 10. Ferroresonance Transformer — 2025 Q4(b), 5 marks
 
-### Detailed explanation — ferroresonance is not the same as a ferroresonant transformer
+**This section is more complicated than what you need for the 2025 exam question.**
 
-**Ferroresonance** is a nonlinear resonance involving **capacitance and an iron-core inductance**. Because the iron core can **saturate**, its magnetising behaviour changes with operating conditions. In an unintended electrical network, this effect may create dangerously high voltages, currents and irregular waveforms. Your midsem notes also described a series RLC analogy.
+Notice that the paper asks:
 
-But **November 2025 Q4(b)** specifically asks for a **ferroresonance/ferroresonant transformer**, also known as a **Constant Voltage Transformer (CVT)**.
+**Q4(b): Explain briefly about Ferroresonance Transformer — 5 marks.**
 
-A **ferroresonant transformer** is a voltage-regulating transformer that deliberately uses **a saturated magnetic core** and **a resonant capacitor/winding arrangement** to maintain a nearly constant output voltage despite variations in input voltage.
+Your midsem notes mainly explain *ferroresonance as an electrical phenomenon*. We need to focus on the **ferroresonant transformer**, also called a **Constant Voltage Transformer (CVT)**.
 
-**How it works:** (1) An iron core is designed to operate in the saturation region. (2) A capacitor interacts with a suitable transformer winding to form a resonant circuit. (3) The saturated core and resonance help stabilise the voltage reaching the load. (4) Sensitive equipment therefore receives a relatively stable voltage within the transformer's operating limits.
+### 1. First, understand ferroresonance
 
-Think of it as a **passive voltage stabiliser**. It can also form the voltage-regulating part of a **hybrid UPS**, where its ability to maintain output briefly helps with **momentary ride-through** during switching.
+Ferroresonance occurs when **capacitance interacts with an iron-core inductance whose magnetic behaviour changes due to saturation**.
 
-**Important distinction:** Unwanted ferroresonance is **dangerous** because it can create excessive voltages or currents. A ferroresonant transformer deliberately uses **controlled saturated-core and capacitor resonance** for useful voltage regulation. Do not confuse these in the exam.
+Under certain conditions, this interaction can produce unusually high voltages and currents.
 
-**Five-mark answer:** Definition → two main features (**saturated core and resonant capacitor**) → how the output remains nearly constant → one or two applications. You answered the two-feature recall question correctly. The original transformer diagram remains below; you don't need the complicated RLC derivation for this PYQ.
+The important idea is that an iron core does not behave like an ordinary fixed inductor once it becomes saturated.
+
+You can skip the RLC impedance derivation and resonance equations in your screenshot for now.
+
+### 2. What is a ferroresonant transformer?
+
+A **ferroresonant transformer is a voltage-regulating transformer that uses magnetic core saturation and a resonant capacitor to maintain an approximately constant output voltage despite variations in input voltage.**
+
+### How does it work?
+
+1. The transformer uses an iron core designed to operate in magnetic saturation.
+2. A capacitor forms a resonant circuit with a winding of the transformer.
+3. The saturated core and resonant arrangement help stabilise the output voltage when the input fluctuates.
+4. Therefore, the load receives a relatively constant voltage within the transformer's operating range.
+
+Think of it as a **passive voltage stabiliser**, meaning it regulates voltage without requiring an electronically controlled inverter.
+
+### 3. Original lecture diagram
+
+![Original ferroresonant transformer winding diagram — Unit-3.pdf](figures/cvt.webp)
+
+You should understand how the **saturated core** and **resonant capacitor** interact. The original figure is useful to recognise the arrangement; you don't need the entire series-RLC derivation.
+
+### 4. Applications
+
+- Voltage regulation for sensitive electrical equipment.
+- Reduction of the effects of moderate voltage fluctuations and sags.
+- Power conditioning for control and electronic equipment.
+
+### What to write for 5 marks
+
+Use the definition, explain the role of **core saturation and the resonant capacitor**, describe how the output stays approximately constant, and mention two applications.
+
+One important distinction:
+
+**Unwanted ferroresonance** can produce dangerous overvoltages, whereas a **ferroresonant transformer** deliberately uses controlled ferroresonant behaviour for voltage regulation.
+
+That's the essential theory for this question.
+
+**Quick check we practised:** What are the two main features that allow the transformer to maintain a nearly constant output voltage?
+
+Your answer was correct: **a saturated core, and a resonant capacitor that interacts with the core windings to regulate the output voltage.**
 
 
-
-### What it is
-
-A **ferroresonant / constant-voltage transformer (CVT)** is a passive voltage-conditioning transformer that uses a **deliberately saturated magnetic core** and a **resonant capacitor/winding arrangement** to keep output voltage nearly constant as input varies within its operating limits.
-
-### Working
-
-1. Transformer iron core is designed to operate in saturation, making its magnetic behaviour nonlinear.
-2. A capacitor interacts with a designated winding to form a resonant arrangement.
-3. The saturated-core and capacitor system stabilises the voltage delivered to the load.
-4. It helps protect sensitive equipment from moderate supply variations and some sags, subject to its rating and operating range.
-
-**Simplified conceptual diagram:**
-
-
-![Original ferroresonant transformer winding diagram — Unit-3.pdf, p. 4](figures/cvt.webp)
-
-
-**Distinction:** Unwanted **ferroresonance** in a power network can produce dangerous voltages and currents. A **ferroresonant transformer** deliberately uses a controlled version of the effect for regulation. No series-RLC derivation is needed for the 2025 short theory question.
-
----
 
 ## 11. Exact PYQ Targets and Last-Minute Checklist
 
