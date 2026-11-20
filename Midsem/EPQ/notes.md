@@ -687,6 +687,34 @@ There is **no universal fixed duration**. It depends on purpose, disturbance fre
 
 ## 8. PQ Measurement Instruments — 2025 Q4(a), 5 marks
 
+### Detailed explanation — each instrument as we studied it
+
+The **November 2025 Q4(a)** asks for the instruments used for power-quality monitoring, with brief descriptions. We studied each one for its **actual function**, not by memorising long technical specifications.
+
+**1. Wiring and grounding testers.** Many power-quality problems arise from incorrect wiring and grounding. These instruments identify **open or faulty wires, neutral–ground problems, incorrect/reversed connections**, and excessive grounding impedance. Some three-phase devices also check phase rotation. For the exam, explain the purpose and give two such examples; don't memorise the entire list of test capabilities.
+
+**2. Multimeters.** A multimeter measures **voltage, current and resistance**. In a three-phase installation, it can check phase-to-phase, phase-to-neutral, phase-to-ground and neutral-to-ground voltages, and phase and neutral currents. It helps identify abnormal voltages and circuit loading. We discussed **peak method, averaging method and true RMS method**: peak and averaging methods calibrated for sinusoids can be misleading for distorted waveforms, whereas a **true RMS meter** gives a more reliable effective RMS measurement within its ratings.
+
+**3. Oscilloscopes.** An oscilloscope displays **voltage/current waveforms against time**. Engineers can actually see distortion, transient spikes, variations and waveform shape. Digital oscilloscopes can **store the waveforms** for later analysis. You need not memorise details about handheld versions or computer software.
+
+**4. Disturbance analyzers.** A disturbance analyzer is specifically designed to **detect, record and analyse power-quality disturbances** such as sags, swells, transient overvoltages, interruptions and under-/over-voltage. It monitors electrical conditions and can begin recording when a preset **triggering threshold** is crossed. It records magnitude, duration and sometimes waveform information.
+
+There are **two important types**. **Conventional analyzers** record summary information such as an event's magnitude and duration. **Graphics-based analyzers** capture the **actual voltage/current waveform**. A graphical recording is particularly useful for an **oscillatory transient** because it shows rapid bipolar ringing and decaying oscillations, which a conventional peak-and-duration summary may fail to describe. You explained this difference correctly in our question.
+
+**5. Harmonic and spectrum analyzers.** A harmonic analyzer identifies the harmonic frequency components of voltage and current, computes **THD**, and may display a frequency spectrum or bar graph. Some instruments use **FFT**. We only need to recognise the three categories: **simple meters** (quick checks), **general-purpose spectrum analyzers** (many signal types), and **special-purpose power-system harmonic analyzers** (detailed electrical analysis). Skip detailed sampling requirements and K-factor calculations.
+
+**6. Flickermeters.** A flickermeter measures **flicker severity** caused by voltage fluctuations, including the sensitivity of a lamp and the human eye–brain system. Its special five-block mechanism is treated fully in the next section.
+
+**7. Combination disturbance and harmonic analyzers.** These combine the monitoring and recording of disturbances with **harmonic/THD analysis** in one instrument, often with graphical outputs and storage.
+
+**8. Energy monitors.** These measure and log energy consumption and related power quantities for ongoing monitoring.
+
+**Your mind-map recall was strong:** You independently named **wiring and grounding testers, multimeters, oscilloscopes, disturbance analyzers, harmonic analyzers and flickermeters**, with the correct functions. You even remembered conventional versus graphical disturbance analyzers and all five flickermeter blocks. For the written exam, expand each mind-map label into **one or two complete sentences**.
+
+**For the separate five-mark disturbance-analyzer question**, write the definition, disturbances detected, threshold-based operation, the two types and their difference. The shape and polarity changes visible in a graphical trace are especially relevant when explaining oscillatory transients.
+
+
+
 **The exam strategy:** Write six to eight names, each with one accurate function. Six carefully described instruments are better than copying unrelated technical specifications.
 
 | Instrument | What to write |
@@ -721,6 +749,30 @@ They measure individual harmonics and THD, often using FFT/spectrum analysis; si
 
 ## 9. IEC Flickermeter — Five-Block Answer (2025 Q6(b))
 
+### Detailed explanation — the five blocks, with enough material for 5 marks
+
+A **flickermeter is an instrument used to measure the severity of voltage flicker** caused by fluctuations in supply voltage. When voltage fluctuates, lamp brightness can change noticeably. A flickermeter processes the voltage signal while considering the response of the **incandescent lamp and human eye–brain system**.
+
+**Why does the human eye–brain response matter?** Different fluctuation frequencies cause different levels of perceived flicker even if their voltage magnitudes are the same. So we need to measure not merely the electrical fluctuation but **how noticeable the visible flicker is to a person**. This is exactly the point you made in your answer to the Block 3 question.
+
+**Block 1 — Input Voltage Adapter.** Adjusts the incoming voltage to a suitable reference level. This allows flicker measurement to respond to **percentage voltage fluctuations**, rather than depending only on the absolute supply voltage.
+
+**Block 2 — Squaring Demodulator.** Squares the voltage waveform to separate the low-frequency voltage fluctuation (modulating signal) from the normal power-frequency waveform (carrier). It also helps represent the response of an incandescent lamp to voltage changes.
+
+**Block 3 — Weighting Filters.** Removes unwanted frequency components produced by demodulation. It weights the remaining fluctuation signal according to the lamp and **human eye–brain sensitivity**, because different frequencies produce different amounts of perceived flicker.
+
+**Block 4 — Squaring and Smoothing.** Squares the weighted signal to model nonlinear flicker perception. A sliding-mean/smoothing filter produces an **instantaneous flicker-level indication**.
+
+**Block 5 — Statistical Analysis.** Examines instantaneous flicker levels over time. Their statistical distribution is used to assess overall flicker severity.
+
+**Easy memory sequence:** **Adapt → Extract → Weight → Smooth → Analyse**.
+
+We originally wrote very short descriptions, but you pointed out they might be **too little for a five-mark answer**. So we expanded the definition and each block to **one or two meaningful sentences**. That is the version to prepare.
+
+**Diagram choice:** The original IEC block figure is included below. You do **not** need to memorise all internal curves, calibration circuits, filter frequency settings, transfer functions and output connections. For the five-mark short note, a **simplified five-box diagram** with the full block names and explanations is an efficient answer. You accepted that a question explicitly demanding a *detailed* diagram could cost some diagram-specific marks, but that memorising the entire internal schematic was not worth the time for this exam.
+
+
+
 ### What is a flickermeter?
 
 A **flickermeter** measures the severity of **voltage flicker** — perceived variations in lamp brightness caused by voltage fluctuations. Its weighting considers how an incandescent lamp and human eye–brain system respond to different fluctuation frequencies.
@@ -753,6 +805,24 @@ A **flickermeter** measures the severity of **voltage flicker** — perceived va
 
 ## 10. Ferroresonance Transformer — 2025 Q4(b), 5 marks
 
+### Detailed explanation — ferroresonance is not the same as a ferroresonant transformer
+
+**Ferroresonance** is a nonlinear resonance involving **capacitance and an iron-core inductance**. Because the iron core can **saturate**, its magnetising behaviour changes with operating conditions. In an unintended electrical network, this effect may create dangerously high voltages, currents and irregular waveforms. Your midsem notes also described a series RLC analogy.
+
+But **November 2025 Q4(b)** specifically asks for a **ferroresonance/ferroresonant transformer**, also known as a **Constant Voltage Transformer (CVT)**.
+
+A **ferroresonant transformer** is a voltage-regulating transformer that deliberately uses **a saturated magnetic core** and **a resonant capacitor/winding arrangement** to maintain a nearly constant output voltage despite variations in input voltage.
+
+**How it works:** (1) An iron core is designed to operate in the saturation region. (2) A capacitor interacts with a suitable transformer winding to form a resonant circuit. (3) The saturated core and resonance help stabilise the voltage reaching the load. (4) Sensitive equipment therefore receives a relatively stable voltage within the transformer's operating limits.
+
+Think of it as a **passive voltage stabiliser**. It can also form the voltage-regulating part of a **hybrid UPS**, where its ability to maintain output briefly helps with **momentary ride-through** during switching.
+
+**Important distinction:** Unwanted ferroresonance is **dangerous** because it can create excessive voltages or currents. A ferroresonant transformer deliberately uses **controlled saturated-core and capacitor resonance** for useful voltage regulation. Do not confuse these in the exam.
+
+**Five-mark answer:** Definition → two main features (**saturated core and resonant capacitor**) → how the output remains nearly constant → one or two applications. You answered the two-feature recall question correctly. The original transformer diagram remains below; you don't need the complicated RLC derivation for this PYQ.
+
+
+
 ### What it is
 
 A **ferroresonant / constant-voltage transformer (CVT)** is a passive voltage-conditioning transformer that uses a **deliberately saturated magnetic core** and a **resonant capacitor/winding arrangement** to keep output voltage nearly constant as input varies within its operating limits.
@@ -775,6 +845,18 @@ A **ferroresonant / constant-voltage transformer (CVT)** is a passive voltage-co
 ---
 
 ## 11. Exact PYQ Targets and Last-Minute Checklist
+
+### How to revise what we've studied
+
+You've learned most of this material through explanations and recall, so the final step is **retrieving it without the notes**. Completing the syllabus isn't the same as reproducing formulas, diagrams and structured answers under exam conditions.
+
+For a **five-mark theory question**: State what the concept or device is, explain its working in complete but concise statements, draw the correct labelled diagram when useful, and finish with applications or important limitations. For a **ten-mark comparison**: Explain each device separately and compare the mechanisms. For a **numerical**: Write **Given → Formula → Substitution → Boxed answer with unit**.
+
+**Most important practice tonight:** The November 2025 symmetrical-component numerical; the 2020 harmonic THD/DF/true PF numerical; the 2024 capacitor kVAr correction; passive and active filter configurations; online/offline/hybrid UPS paths; TCR vs TSC; STATCOM; and the **five-block flickermeter**.
+
+**What we deliberately skipped:** The complicated internal IEC flickermeter diagram, detailed frequency-weighting transfer function, exhaustive instrument specifications, site-survey lists, high-pass filter topology design and the misleading SVC presentation slide. These are not worth displacing the explicitly announced material during final exam preparation.
+
+
 
 ### November 2025 end-sem paper — direct mapping
 
