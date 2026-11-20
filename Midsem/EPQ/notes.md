@@ -109,118 +109,233 @@ Intermediate rectangular results, useful for checking calculator entry: $I_0=27.
 
 ## 2. Harmonics, Voltage Distortion and Filters
 
-### Detailed explanation — what actually happens in a filter
+### 1. What are harmonics?
 
-**What are harmonics?** In an ideal system, voltage and current are sinusoidal. Nonlinear loads, such as rectifiers, adjustable-speed drives and electronic power supplies, draw **distorted current** containing sinusoidal components whose frequencies are integer multiples of the fundamental. If the fundamental is 50 Hz, the 3rd, 5th and 7th components are 150, 250 and 350 Hz.
+In an ideal electrical system, voltage and current have a sinusoidal waveform.
 
-**Voltage distortion versus current distortion:** A nonlinear load appears approximately as a **source of harmonic currents** injected into the system. The supply network has some impedance. The harmonic currents flowing through that impedance produce harmonic voltage drops. Therefore, distorted current can cause **distorted voltage at the load**. That's the physical meaning of $V_h=I_hZ_h$.
+But many modern loads, such as rectifiers, adjustable-speed drives and electronic equipment, are **nonlinear loads**. They draw distorted current containing additional frequency components called **harmonics**.
 
-**Passive shunt filter:** A passive filter uses components such as **resistors, inductors and capacitors**. The most important type for us is the **shunt single-tuned filter**. Its inductor and capacitor are **in series with each other**, but that whole L–C branch is connected **in parallel with the load**. At its tuned harmonic frequency, the inductor and capacitor reactances cancel, leaving **low impedance**. The unwanted harmonic current then finds it easier to flow into that branch instead of passing through the rest of the supply.
-
-**Why is the notch in the graph useful?** In a graph of harmonic impedance against harmonic order, a **notch** means very low impedance at the selected harmonic. This helps suppress its effect. But a capacitor connected alone can interact with supply inductance and create a **parallel resonance peak** of very high impedance. Then even a moderate harmonic current may create a large harmonic voltage. A tuned filter can also create a smaller parallel resonance peak near its tuning frequency. That's why a practical filter is often tuned slightly **below** the target harmonic to allow for changes and tolerances.
-
-**Series passive filter:** Do not confuse this with the shunt filter. A **parallel LC combination inserted in series with the load** can present high impedance to a chosen harmonic, **blocking** it. The shunt single-tuned filter provides an easy route to divert harmonic current; the series filter prevents it from passing.
-
-**Shunt active filter:** Instead of depending on fixed L and C values, an active filter uses a **voltage-source converter/inverter** and control electronics. It injects compensating harmonic current in the **opposite direction** to the load's harmonic current. Imagine the load producing 5 A of fifth-harmonic current: the shunt APF produces approximately 5 A of opposing fifth-harmonic current, so the source current becomes much closer to a clean sine wave. It can also compensate reactive current.
-
-**Series active filter:** A series APF is mainly concerned with **the voltage delivered to the load**. A converter and coupling transformer inject the missing or compensating voltage. For example, if the input is 190 V and the load needs 230 V, adding 40 V in phase restores 230 V. In a general AC calculation, these are phasors.
-
-**Comparison for the exam:** Passive filters are relatively inexpensive and simple, but bulky, fixed in compensation and may cause resonance. Active filters are more expensive but respond dynamically to multiple harmonic components. Remember **shunt APF = current compensation** and **series APF = voltage compensation**.
-
-**Diagrams:** Use the original lecture figures included alongside these topics. For the 2020 three-phase three-wire filter PYQ, draw the labelled three-phase tuned filter with its filter inductors and delta capacitor bank rather than an unlabeled generic box. Avoid memorising every high-pass design that was outside our announced scope.
-
-
-
-### What are harmonics?
-
-A harmonic is a sinusoidal component whose frequency is an integer multiple of the fundamental:
+A harmonic has a frequency that is an integer multiple of the fundamental frequency.
 
 $
-f_h=h f_1.
+f_h=h f_1
 $
 
-For a 50 Hz supply, the 3rd, 5th and 7th harmonics are 150, 250 and 350 Hz. **Nonlinear loads** such as rectifiers, drives and switched-mode supplies draw nonsinusoidal currents.
+If the fundamental frequency is **50 Hz**:
 
-### Why does current distortion produce voltage distortion?
-
-A nonlinear load acts approximately as a **harmonic-current source**. Harmonic current flowing through the supply-network impedance causes harmonic voltage drops:
-
-$
-\boxed{V_h=I_h Z_h}.
-$
-
-**Current distortion** originates mainly in nonlinear load current; **voltage distortion** arises when those currents pass through system impedance. Consequences include transformer heating/derating, malfunction of controls that sense voltage and distortion at neighbouring loads.
-
-### Passive filters — shunt single-tuned filter
-
-A passive filter uses **inductors, capacitors and sometimes resistors**. The standard shunt single-tuned filter is a **series L–C branch connected across the supply**, in parallel with the load.
-
-
-![Original tuned passive-filter schematic and impedance response — UNIT-4.pdf, p. 25](figures/passive-filter.webp)
-
-
-At the tuned frequency the inductive and capacitive reactances cancel, making the branch **low impedance**. It diverts the selected harmonic current away from the upstream network.
-
-$
-\boxed{f_r=\frac{1}{2\pi\sqrt{LC}}}.
-$
-
-- **At the fundamental:** The filter's operating impedance and capacitive effect may also improve power factor.
-- **At the target harmonic:** Low branch impedance diverts harmonic current.
-- **Why slightly detune below the target (e.g. below the 5th)?** To allow for tolerances, drift and changes in network conditions.
-- **Risk:** The filter and system impedance may create a **parallel-resonance peak** at another frequency, amplifying harmonic voltage. The filter is not universally low impedance at all frequencies.
-
-**Graph you may need:** Horizontal axis = harmonic order; vertical axis = equivalent harmonic impedance. A capacitor-only system can show a very tall resonance peak. A tuned L–C filter produces a sharp **notch near the target harmonic**, with a possible smaller peak just below it.
-
-**Three-phase, three-wire PYQ sketch (2020 Q2(b)):** Draw three line conductors A, B and C, show the passive filter as a shunt assembly, and label the **filter inductors** and **delta-connected capacitor bank**. For the particular delta-capacitor model used in the lecture figure, the notch order is $h_n=\sqrt{X_C/(3X_f)}$; the factor 3 arises from converting the delta capacitor bank to an equivalent star. Use this only for that circuit and definitions of $X_C$, $X_f$.
-
-### Other passive arrangements
-
-**Series passive filter:** A **parallel L–C resonant circuit placed in series with the line/load** can present high impedance at its tuned harmonic to block it. Do not confuse its topology with the shunt single-tuned filter.
-
-![Original series passive-filter L/C circuit — UNIT-4.pdf, p. 26](figures/series-filter.webp)
-
-**High-pass passive filter:** Gives unwanted higher-order harmonic currents a low-impedance route over a wider frequency band. Detailed first-/second-/third-order circuits are not needed for our announced scope.
-
-**Limitations of passive filters:** Bulky; compensation is relatively fixed; performance depends on system impedance; possible resonance/overload.
-
-### Active power filters
-
-An active filter uses power electronics, normally a **voltage-source inverter/converter (VSI/VSC)**, to generate compensating electrical quantities dynamically.
-
-**Shunt active filter — cancels harmonic current:**
-
-
-![Original shunt active-filter circuit — UNIT-4.pdf, p. 31](figures/active-shunt.webp)
-
-
-The shunt APF injects harmonic current **opposite to the load's harmonic current**, so the source current becomes closer to sinusoidal. It can also compensate reactive current. Example: a 5 A fifth-harmonic load component is counteracted by approximately 5 A in opposite phase.
-
-**Series active filter — corrects supply/load voltage:**
-
-
-![Original series active-filter circuit — UNIT-4.pdf, p. 31](figures/active-series.webp)
-
-
-It injects a controlled voltage to compensate voltage harmonics, sags or swells:
-
-$
-\boxed{\mathbf V_{\rm load}=\mathbf V_{\rm supply}+\mathbf V_{\rm injected}}.
-$
-
-Example in the same phase: to maintain 230 V when the supply is 190 V, inject 40 V. In general these are **phasors**, so direction and phase matter.
-
-| Passive filter | Active filter |
+| Component | Frequency |
 | --- | --- |
-| Fixed R, L and C elements | Electronic converter and controller |
-| Economical but bulkier | Flexible, dynamic, more expensive |
-| Tuned to selected frequencies | Can compensate multiple changing harmonic components |
-| May cause resonance | Does not rely on the same tuned passive resonance |
-| Shunt tuned type diverts harmonic current | Shunt APF injects compensating current; series APF injects voltage |
+| Fundamental | 50 Hz |
+| 3rd harmonic | 150 Hz |
+| 5th harmonic | 250 Hz |
+| 7th harmonic | 350 Hz |
 
-**PYQ anchors:** 2020 Q2(b) asks for a tuned passive filter in a three-phase three-wire system; 2024 Q5(a) tests active filtering; November 2025 Q1(b) asks active versus passive filters with examples.
+These harmonics can cause overheating, increased losses and malfunctioning equipment.
 
----
+**Our objective is to reduce these unwanted harmonics.**
+
+That's where harmonic filters come in.
+
+### 2. What are harmonic filters?
+
+A harmonic filter is a device or circuit used to reduce harmonic distortion in electrical systems.
+
+Your notes classify filters into three types:
+
+- **Passive filters:** Use inductors (L), capacitors (C) and sometimes resistors (R) to control harmonic currents.
+- **Active filters:** Use power electronics to generate compensating currents or voltages.
+- **Hybrid filters:** Combine passive and active filtering.
+
+**Simple example**
+
+Suppose a device produces unwanted **250 Hz** harmonic current along with the normal **50 Hz** current.
+
+A properly designed **shunt passive filter** provides a low-impedance path for the 250 Hz harmonic, diverting much of that unwanted current away from the supply.
+
+The normal 50 Hz component continues supplying the load.
+
+That's the basic idea behind the topic!
+
+### 3. Voltage distortion versus current distortion
+
+A nonlinear load produces **harmonic current**. It appears approximately like a harmonic-current source connected in shunt with the power system.
+
+But how can that distort the **voltage**?
+
+The wires, transformer and power system have some impedance. When distorted harmonic current flows through that impedance, it produces a harmonic voltage drop.
+
+$
+\boxed{V_h=I_h Z_h}
+$
+
+So a load can create harmonic currents and, because of the network impedance, produce harmonic voltage distortion at the load.
+
+**Remember:** Current distortion mainly originates in nonlinear loads. Voltage distortion occurs when those currents flow through system impedance.
+
+This can make sensitive controls malfunction and cause heating or derating of electrical equipment.
+
+### 4. Passive filter — the shunt single-tuned filter
+
+**What is it?**
+
+A passive filter is constructed using passive circuit components, mainly inductors, capacitors and sometimes resistors.
+
+The most important one for our exam is the **shunt single-tuned (notch) filter**.
+
+**How is it connected?**
+
+The inductor **L** and capacitor **C** are connected **in series with each other**. But that complete L–C branch is connected **in parallel (shunt)** with the power line and the load.
+
+**Simple diagram to understand the connection**
+
+~~~text
+Supply ───────────┬──────── Load
+                  |
+                  L
+                  |
+                  C
+                  |
+             Return path
+~~~
+
+**Actual circuit from UNIT-4 (and its harmonic-impedance response):**
+
+![Original tuned passive filter and impedance response — UNIT-4.pdf](figures/passive-filter.webp)
+
+**What exactly happens?**
+
+Inductive and capacitive reactances depend on frequency. At one particular frequency, they become equal in magnitude and cancel each other.
+
+This is called **resonance**.
+
+$
+\boxed{f_r=\frac{1}{2\pi\sqrt{LC}}}
+$
+
+At the tuned frequency, the series L–C branch has **very low impedance**.
+
+Imagine that the load is generating a fifth-harmonic current at **250 Hz**. If the filter is tuned near that harmonic, the harmonic current finds a much easier path through the shunt filter than through the rest of the supply network. Thus, the filter **diverts harmonic current away from the source**.
+
+The normal fundamental-frequency supply continues feeding the load. The filter may also provide capacitive reactive-power support and improve the power factor.
+
+**Why do we see a notch in the impedance graph?**
+
+The graph has **harmonic order** on the horizontal axis and **equivalent harmonic impedance** on the vertical axis.
+
+At the tuned harmonic, the equivalent impedance drops sharply. That dip is called the **notch**. A low impedance means the unwanted current can be diverted into the filter.
+
+However, if you connect a capacitor bank without considering the supply inductance, the network can develop a **parallel-resonance peak** — very high impedance at a particular harmonic. Since $V_h=I_hZ_h$, a high impedance can produce a large harmonic voltage.
+
+Even a tuned filter may create a smaller resonance peak just below the notch. This is why filters are often tuned **slightly below the intended harmonic**, allowing for changes in system conditions and component tolerances.
+
+**Important:** A notch is useful because it represents **low impedance** at the harmonic to be suppressed. A peak can be dangerous because it represents **high impedance**.
+
+**The three-phase three-wire PYQ**
+
+In the lecture figure, the shunt filter uses series inductors and a delta-connected capacitor bank. For that particular circuit, the tuned harmonic order is:
+
+$
+\boxed{h_{\text{notch}}=\sqrt{\frac{X_C}{3X_f}}}
+$
+
+The factor of three comes from the delta-to-star equivalent for the capacitor bank. Use that formula only when the question uses the same circuit and reactance definitions.
+
+**2020 Q2(b):** Explain and draw a tuned passive filter for a three-phase three-wire system. Use the actual diagram above and label the phases, inductors and capacitors.
+
+### 5. Series passive filter
+
+Don't confuse this arrangement with the shunt filter.
+
+A **series passive filter** can use an **L–C parallel resonant combination**, and the entire assembly is inserted **in series with the load**.
+
+At its resonant harmonic frequency, this parallel L–C combination offers high impedance, **blocking the unwanted harmonic**.
+
+![Original series passive filter — UNIT-4.pdf](figures/series-filter.webp)
+
+**The distinction:**
+
+- **Shunt single-tuned filter:** A series L–C branch is in parallel with the load. It provides a low-impedance route to **divert** harmonic current.
+- **Series passive filter:** A parallel L–C assembly is in series with the load. It provides high impedance to **block** the selected harmonic.
+
+Series filters are less common because they carry load current and may cause voltage drop or overload issues. Do not spend time memorising every first-, second- or third-order high-pass design.
+
+### 6. Active power filters
+
+**What is an active filter?**
+
+Unlike passive filters, active filters use **power electronics**, such as a Voltage-Source Inverter (VSI), to generate compensating currents or voltages.
+
+They can respond dynamically when harmonic distortion or load conditions change.
+
+There are two important types.
+
+#### Shunt active power filter — compensates current
+
+It is connected **in parallel with the load**.
+
+The filter measures the unwanted harmonic current and injects **compensating current of opposite phase**.
+
+**Simple example**
+
+Suppose a nonlinear load produces **5 A of fifth-harmonic current**.
+
+The shunt active filter injects approximately **5 A of fifth-harmonic current in the opposite direction**.
+
+The two harmonic contributions cancel at the supply connection, so the source current becomes much closer to a clean sine wave.
+
+It can also compensate reactive current.
+
+**Quick connection diagram**
+
+~~~text
+Supply ───────────┬──────── Nonlinear load
+                  |
+               Coupling L
+                  |
+             VSI / DC link
+~~~
+
+![Original shunt active power filter — UNIT-4.pdf](figures/active-shunt.webp)
+
+#### Series active power filter — compensates voltage
+
+It is connected **in series with the supply line**, commonly through a coupling/injection transformer.
+
+The inverter injects a controlled voltage to make the **load voltage** closer to the required waveform.
+
+$
+\boxed{\mathbf V_{\text{load}}=\mathbf V_{\text{supply}}+\mathbf V_{\text{injected}}}
+$
+
+**Simple example**
+
+Suppose the load needs **230 V**, but because of a voltage sag the supply falls to **190 V**.
+
+In a simple in-phase illustration, the series APF injects **40 V**:
+
+$
+190+40=230\ \text{V}.
+$
+
+In a general AC system these voltages are **phasors**, so their relative phase is important.
+
+![Original series active power filter — UNIT-4.pdf](figures/active-series.webp)
+
+### 7. Passive versus active filters
+
+| Passive filters | Active filters |
+| --- | --- |
+| Use L, C and sometimes R. | Use power electronics and control. |
+| Relatively simple and economical. | More complex and expensive. |
+| Usually designed for selected harmonic frequencies. | Can compensate multiple changing harmonic components. |
+| Bulky; possible resonance problems. | Dynamic compensation; avoids the same passive tuned-resonance limitation. |
+| Shunt tuned filters divert harmonic currents. | Shunt APFs inject harmonic current; series APFs inject voltage. |
+
+**What should you remember for the exam?**
+
+You must be able to explain **how the shunt L–C filter works**, identify the **notch in the impedance graph**, distinguish **series from shunt passive filters**, and explain **series and shunt active filters** with their correct diagrams.
+
+**Related PYQs:** 2020 Q2(b), 2024 Q5(a), and 2025 Q1(b).
 
 ## 3. Harmonic Numericals, Distortion Factor and Power Factor
 
