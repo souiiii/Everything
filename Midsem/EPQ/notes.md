@@ -10,102 +10,203 @@
 
 ## 1. Balanced, Unbalanced and Symmetrical Components
 
-### Detailed explanation — balanced, unbalanced, and phase sequence
+### 1. What is a balanced three-phase system?
 
-A **balanced three-phase system** has three voltage/current phasors of **equal magnitude**, with angular separation of **120°**. If the magnitudes differ or the phase angles no longer have the proper separation, the system is **unbalanced**.
+A **balanced three-phase system** has three phase voltages or currents that:
 
-A complicated unbalanced system can be resolved into **three balanced sets** called symmetrical components.
+1. Have **equal magnitudes**.
+2. Have a **phase difference of exactly 120°** between successive phases.
+3. Follow a specified **phase sequence**.
 
-**Positive sequence (ABC):** Three equal phasors separated by 120°, in the normal A–B–C order. Taking phase A at 0°, draw B at −120° and C at +120°.
+If these conditions are not satisfied, the system is **unbalanced**.
 
-**Negative sequence (ACB):** The same phasor magnitudes and separation, but the reverse order. Taking A at 0°, draw B at +120° and C at −120°.
+**Simple example**
 
-**Zero sequence:** All three phasors have equal magnitude and **the same angle**. Draw the arrows on top of one another.
+For a balanced positive-sequence voltage set:
 
-**How to approach the numerical:** First check whether the question provides the actual three phase values or the sequence values. If actual phases are given, extract $V_0,V_1,V_2$ or $I_0,I_1,I_2$. If the components are given, reconstruct the actual phases. Use $a=1\angle120^\circ$, $a^2=1\angle-120^\circ$ and the formulas in the next subsection. You cannot add complex magnitudes or angles separately.
+$$
+V_A=100\angle0^\circ,\qquad
+V_B=100\angle-120^\circ,\qquad
+V_C=100\angle120^\circ.
+$$
 
-**Calculator method:** On your Casio fx-991ES PLUS, use CMPLX mode and degree setting. Enter each phasor in polar form, use the complex arithmetic functions, and convert the result to polar form. In the exam show the formula and substitution, not only the calculator's final number.
+All three have the same magnitude, and their angles are separated by 120°.
 
-**What you should be able to draw:** The original phasor diagrams immediately below show all three component sets. Label A, B and C and their angles. The subsequent two worked PYQs cover both directions of transformation.
+But if one phase is 80 V while the others are 100 V, the system is unbalanced.
+
+### 2. What is phase sequence?
+
+Phase sequence describes **the order in which the three alternating phase quantities reach corresponding points in their cycles**.
+
+The three sequence sets are the basis of symmetrical-component analysis.
+
+**Positive sequence (ABC)**
+
+Three equal phasors separated by 120°, following the normal **A → B → C** order.
+
+With phase A at 0°:
+
+$$
+V_{A1}=V_1,\qquad V_{B1}=a^2V_1,\qquad V_{C1}=aV_1.
+$$
+
+**Negative sequence (ACB)**
+
+Three equal phasors separated by 120°, but in the **reverse order**.
+
+$$
+V_{A2}=V_2,\qquad V_{B2}=aV_2,\qquad V_{C2}=a^2V_2.
+$$
+
+**Zero sequence**
+
+All three phasors have **equal magnitudes and the same phase angle**. In a phasor diagram, all three arrows point in the **same direction**.
+
+$$
+V_{A0}=V_{B0}=V_{C0}=V_0.
+$$
+
+**Original lecture phasor diagrams:**
+
+![Positive, negative and zero sequence phasors — class_7](figures/seq.webp)
+
+**How to draw them in the exam**
+
+Take phase A as 0°:
+- Positive sequence: B at −120°, C at +120°.
+- Negative sequence: B at +120°, C at −120°.
+- Zero sequence: all three lie on top of one another.
+
+You don't need artistic phasor diagrams. Just make the directions, labels and 120° separation clear.
+
+### 3. What are symmetrical components?
+
+An unbalanced three-phase set is difficult to analyse directly. Symmetrical-component analysis lets us express it as the **sum of three balanced component sets**:
+
+1. Positive sequence.
+2. Negative sequence.
+3. Zero sequence.
+
+Each actual phase is obtained by **adding the corresponding component phasors**.
+
+Define:
+
+$$
+a=1\angle120^\circ,\qquad a^2=1\angle(-120^\circ),\qquad 1+a+a^2=0.
+$$
+
+### 4. Given symmetrical components — find actual phase voltages
+
+Use the **reconstruction formulas**:
+
+$$
+\boxed{V_A=V_0+V_1+V_2}
+$$
+
+$$
+\boxed{V_B=V_0+a^2V_1+aV_2}
+$$
+
+$$
+\boxed{V_C=V_0+aV_1+a^2V_2}
+$$
+
+**2020 PYQ Q1(b)**
+
+Given:
+
+$$
+V_0=0.6\angle90^\circ,\qquad V_1=1\angle30^\circ,\qquad V_2=0.8\angle(-30^\circ).
+$$
+
+**Step 1:** Find $V_A$ by directly adding the three component phasors.
+
+$$
+V_A=0.6\angle90^\circ+1\angle30^\circ+0.8\angle(-30^\circ)
+=\boxed{1.7088\angle24.18^\circ}.
+$$
+
+**Step 2:** Apply the rotation factors to the positive- and negative-sequence terms for phase B.
+
+$$
+V_B=V_0+a^2V_1+aV_2
+=\boxed{0.4000\angle90^\circ}.
+$$
+
+**Step 3:** Apply the opposite rotation factors for phase C.
+
+$$
+V_C=V_0+aV_1+a^2V_2
+=\boxed{1.7088\angle155.82^\circ}.
+$$
+
+**Important:** These are **phasor sums**. Do not add magnitudes or angles separately.
+
+### 5. Given phase voltages/currents — find the symmetrical components
+
+Use the **extraction formulas**:
+
+$$
+\boxed{V_0=\frac{V_A+V_B+V_C}{3}}
+$$
+
+$$
+\boxed{V_1=\frac{V_A+aV_B+a^2V_C}{3}}
+$$
+
+$$
+\boxed{V_2=\frac{V_A+a^2V_B+aV_C}{3}}
+$$
+
+The same formulas apply to currents: simply replace $V$ with $I$.
+
+**November 2025 PYQ Q3**
+
+Given:
+
+$$
+I_A=100\angle30^\circ,\qquad
+I_B=50\angle300^\circ,\qquad
+I_C=30\angle180^\circ.
+$$
+
+**Zero-sequence component:**
+
+$$
+I_0=\frac{I_A+I_B+I_C}{3}
+=\frac{81.6025+j6.6987}{3}
+=\boxed{27.29\angle4.69^\circ\ \mathrm A}.
+$$
+
+**Positive-sequence component:**
+
+$$
+I_1=\frac{I_A+aI_B+a^2I_C}{3}
+=\boxed{57.98\angle43.29^\circ\ \mathrm A}.
+$$
+
+**Negative-sequence component:**
+
+$$
+I_2=\frac{I_A+a^2I_B+aI_C}{3}
+=\boxed{18.97\angle24.96^\circ\ \mathrm A}.
+$$
+
+**How to solve it using your calculator**
+
+On the **Casio fx-991ES PLUS**, select **CMPLX** mode and set angle units to **degrees**. Enter polar phasors with the angle operator, multiply by $a=1\angle120^\circ$ or $a^2=1\angle-120^\circ$ as required, add the complex terms, then divide by three.
+
+**The one thing you must not mix up:** For $I_1$ the order is $I_A+aI_B+a^2I_C$. For $I_2$ the rotation factors are reversed.
+
+### 6. What should you be ready to write?
+
+For theory: definition of balanced/unbalanced systems, three sequence sets, and their phasor diagrams.
+
+For numericals: both sets of formulas, the correct rotation factors and one complete phasor calculation using your calculator.
+
+**PYQ focus:** 2020 Q1(b) and November 2025 Q3, which is a **10-mark question**.
 
 
-
-### What is a balanced three-phase system?
-
-A balanced three-phase set has **equal RMS magnitudes** and **phase angles separated by exactly 120°**, in the expected phase order. Equal magnitudes alone do not guarantee balance. Unequal loading, faults or unequal impedances can make the voltage set unbalanced, causing negative-sequence currents and motor heating.
-
-### Important things to know: phase sequence
-
-- **Positive sequence (ABC):** Three equal phasors, 120° apart, in the normal A–B–C order.
-- **Negative sequence (ACB):** Three equal phasors, 120° apart, in reverse A–C–B order.
-- **Zero sequence:** Three equal phasors pointing in the *same* direction.
-- A normally balanced, positive-sequence set contains only its positive-sequence component. An unbalanced set may have negative- and zero-sequence components.
-
-**Phasor sketch to reproduce:** Choose phase A as 0°. For positive sequence, draw B at −120° and C at +120°; for negative sequence, swap B and C; for zero sequence, draw A, B and C coincident. Label all three.
-
-![Sequence-component phasors — class_7(1).pdf, p. 7](figures/seq.webp)
-
-### Formula sheet
-
-Let $a=1\angle120^\circ$, $a^2=1\angle240^\circ=1\angle(-120^\circ)$ and $1+a+a^2=0$.
-
-**Components → actual phase voltages:**
-
-$
-V_A=V_0+V_1+V_2,\qquad
-V_B=V_0+a^2V_1+aV_2,\qquad
-V_C=V_0+aV_1+a^2V_2.
-$
-
-**Actual phases → components:**
-
-$
-V_0=\frac{V_A+V_B+V_C}{3},\quad
-V_1=\frac{V_A+aV_B+a^2V_C}{3},\quad
-V_2=\frac{V_A+a^2V_B+aV_C}{3}.
-$
-
-For current problems, replace $V$ by $I$ throughout. **Memorise the order**: $V_1$ uses $a$ on phase B and $a^2$ on phase C; $V_2$ swaps them.
-
-### Worked PYQ — 2020, Q1(b): reconstruct phase voltages
-
-Given $V_0=0.6\angle90^\circ$, $V_1=1\angle30^\circ$, $V_2=0.8\angle(-30^\circ)$:
-
-$
-V_A=V_0+V_1+V_2=\boxed{1.7088\angle24.18^\circ}
-$
-
-$
-V_B=V_0+a^2V_1+aV_2=\boxed{0.4000\angle90^\circ}
-$
-
-$
-V_C=V_0+aV_1+a^2V_2=\boxed{1.7088\angle155.82^\circ}
-$
-
-**Method:** Substitute the phasors, perform complex additions (preferably in rectangular form), then give polar answers. Do not add magnitudes or angles separately.
-
-### Worked PYQ — November 2025, Q3: find symmetrical currents
-
-Given $I_A=100\angle30^\circ$, $I_B=50\angle300^\circ$, $I_C=30\angle180^\circ$ A:
-
-$
-I_0=(I_A+I_B+I_C)/3=\boxed{27.29\angle4.69^\circ\ \text{A}}
-$
-
-$
-I_1=(I_A+aI_B+a^2I_C)/3=\boxed{57.98\angle43.29^\circ\ \text{A}}
-$
-
-$
-I_2=(I_A+a^2I_B+aI_C)/3=\boxed{18.97\angle24.96^\circ\ \text{A}}
-$
-
-Intermediate rectangular results, useful for checking calculator entry: $I_0=27.2009+j2.2329$, $I_1=42.2009+j39.7607$, $I_2=17.2009+j8.0064$ A.
-
-**Calculator:** Casio fx-991ES PLUS → CMPLX mode, DEG, use $\angle$ for polar entries. Verify the setting before using $120^\circ$. A final 10-mark answer should show the component formulas and substitution, not just the three values.
-
----
 
 ## 2. Harmonics, Voltage Distortion and Filters
 
@@ -540,160 +641,288 @@ You calculated **65.56**, also correct to rounding.
 
 
 
-## 4. UPS — Online, Offline and Hybrid
+## 4. Uninterruptible Power Supply (UPS)
 
-### Detailed explanation — follow the power supply path
+### 1. What is a UPS?
 
-**What is a UPS?** An Uninterruptible Power Supply maintains power to sensitive equipment when ordinary mains power fails or becomes unacceptable, usually using a battery for backup energy.
+A **UPS (Uninterruptible Power Supply)** is a device that maintains continuous electrical power to connected equipment when the normal utility power becomes unavailable.
 
-**Online UPS:** In normal operation, the load is **always supplied through the inverter**. Incoming AC power goes through the **rectifier/charger** to become DC. The DC feeds the inverter, which produces AC for the load, and the battery is kept charged. When mains power fails, the **battery supplies the existing inverter**, and the inverter continues feeding the load. We do **not** need a second inverter. This is why online UPS has essentially **zero battery-transfer delay**. The bypass line in the lecture figure is an alternate or maintenance route, not the normal power path.
+It usually uses batteries as an alternative energy source.
 
-**Offline/standby UPS:** Under normal conditions, **the mains directly supplies the load**. The charger keeps the battery charged, while the inverter normally stands by. If the mains becomes unavailable, the **automatic transfer switch** connects the load to the battery-backed inverter. The transfer requires a small amount of time, so there may be a brief interruption. This setup is simpler than online UPS but offers less continuous conditioning.
+We studied three types:
 
-**Hybrid UPS:** A hybrid resembles standby UPS, but adds a **ferroresonant transformer** for output voltage regulation. The transformer also supplies **momentary ride-through**, helping the load continue receiving power during the brief transition from normal mains supply to battery-backed inverter supply. This is the main additional feature you correctly recalled when I asked you to identify it.
+- **Online UPS**
+- **Offline or standby UPS**
+- **Hybrid UPS**
 
-**What does momentary ride-through mean?** It means **maintaining power to the load for a very short period during a supply interruption or switching transition**. It does not mean a transformer can independently provide unlimited energy during a long outage.
+The simplest way to understand the difference is to ask:
 
-**Three-way comparison:** Online = inverter always feeds the load and battery transfer is essentially instantaneous. Offline = mains normally feeds the load and switching introduces a short delay. Hybrid = standby-style operation with ferroresonant voltage regulation and momentary ride-through.
+**What feeds the load during normal operation, and what changes when mains power fails?**
 
-**For a 5-mark answer:** Draw the original UPS diagram, explain the normal power path, explain how it changes when mains fails, and mention its distinguishing advantage or limitation. The correct original slides are included below.
+### 2. Online UPS
 
+In an online UPS, **the load is always fed through the UPS**.
 
+The incoming AC power is **rectified into DC**, which charges the battery and feeds an **inverter**. The inverter converts DC back to AC and supplies the load.
 
-### What is UPS?
+**Original online UPS diagram:**
 
-An **Uninterruptible Power Supply** keeps sensitive equipment supplied during mains disturbances or failure using backup energy, commonly batteries.
+![Online UPS — original presentation diagram](figures/ups-online.webp)
 
-### Online UPS
+**How it works**
 
-**Diagram:**
+**During normal operation:**
+1. AC mains supply enters the rectifier/charger.
+2. The rectifier converts the AC into DC.
+3. The DC supplies the inverter, which powers the load.
+4. The battery remains charged.
 
+**When mains power fails:**
+1. The battery supplies DC to the **same inverter**.
+2. The inverter continues supplying AC power to the load.
+3. The load does not have to be transferred to a new inverter.
 
-![Online UPS block diagram — Power Quality(2).pptx, slide 71](figures/ups-online.webp)
+This is why an online UPS has **essentially no battery-transfer delay**.
 
+**Important question we discussed:** Does a second inverter start working when power fails?
 
-**Normal:** AC → rectifier (AC to DC) → inverter (DC to AC) → load; battery is kept charged. **Power failure:** battery feeds the **same existing inverter**, so there is essentially **zero battery-transfer time**. A bypass can supply the load during maintenance, but is not the normal operating path.
+**No — it is the existing inverter.** The load was already receiving power from that inverter. Only the **DC energy source** changes.
 
-### Offline / standby UPS
+The **bypass** shown in the lecture diagram is an alternate path used for maintenance or certain operating conditions. It is not the normal route in an online double-conversion UPS.
 
+### 3. Offline UPS or Standby UPS
 
-![Offline UPS block diagram — Power Quality(2).pptx, slide 72](figures/ups-offline.webp)
+An offline UPS works differently.
 
+**During normal operation, the utility line directly supplies the load.**
 
-**Normal:** Mains directly powers the load and charges the battery; inverter stands by. **Failure:** Switch changes to the battery-powered inverter, causing a **small transfer delay**. Simpler and generally cheaper/more efficient, but provides less isolation from mains disturbances.
+The battery is being charged, while the inverter is normally on standby.
 
-### Hybrid UPS
+**Original offline UPS diagram:**
 
+![Offline UPS — original presentation diagram](figures/ups-offline.webp)
 
-![Hybrid UPS block diagram — Power Quality(2).pptx, slide 73](figures/ups-hybrid.webp)
+**How it works**
 
+**During normal operation:**
+- Mains directly feeds the connected equipment.
+- The rectifier/charger charges the battery.
+- The inverter is not normally supplying power to the load.
 
-A hybrid resembles standby UPS but adds a **ferroresonant transformer/voltage regulator** at the output. It stabilises voltage and provides **momentary ride-through** during transfer (bridges a brief interruption).
+**When a disturbance or mains failure occurs:**
+- The automatic transfer switch changes the supply path.
+- The battery-backed inverter begins supplying the load.
 
-| Online | Offline | Hybrid |
+Since a **switch must transfer the load**, there is usually a **small transfer delay**.
+
+**Remember the comparison**
+
+Online UPS: The inverter always powers the load.
+
+Offline UPS: Mains powers the load until a disturbance is detected, after which the switch transfers it to the battery-backed inverter.
+
+### 4. Hybrid UPS
+
+A hybrid UPS is similar to a standby UPS, but it uses a **ferroresonant transformer** for output-voltage regulation and **momentary ride-through** during the transfer.
+
+**Original hybrid UPS diagram:**
+
+![Hybrid UPS — original presentation diagram](figures/ups-hybrid.webp)
+
+**What is the ferroresonant transformer doing here?**
+
+It helps maintain a regulated output voltage when the input fluctuates.
+
+It also helps the equipment ride through the brief interval while the supply switches from normal power to battery-backed inverter power.
+
+**What is momentary ride-through?**
+
+It simply means **continuing to supply power for a short interval during a disturbance or transfer**, so the load does not immediately lose power.
+
+When I asked you about the important additional component of the hybrid UPS, your answer was correct:
+
+**“A ferroresonant transformer for voltage regulation and ride-through during switching.”**
+
+### 5. Comparison for the exam
+
+| Online UPS | Offline UPS | Hybrid UPS |
 | --- | --- | --- |
-| Inverter continuously feeds load | Mains normally feeds load | Mains normally feeds regulated output |
-| Essentially zero battery-transfer time | Small transfer delay | Transformer assists the transition |
-| Double conversion | Standby inverter | Ferroresonant regulation and ride-through |
+| Load always supplied by inverter. | Load normally supplied directly from mains. | Similar to standby, with voltage regulator. |
+| Essentially zero battery-transfer time. | Small transfer delay due to switching. | Ferroresonant transformer helps with regulation and brief ride-through. |
+| Double conversion under normal operation. | Inverter on standby normally. | Output includes ferroresonant conditioning. |
 
-**PYQ:** November 2025 Q5 tests UPS with DSTATCOM and SVC. Draw the relevant flow diagram, then explain normal and outage operation.
+**What to do for 5 marks:** Draw the appropriate original diagram and explain **normal operation** and **mains-failure operation**. Avoid simply memorising three definitions without knowing where power flows.
 
----
+**Relevant PYQ:** 2025 Q5 asks about UPS alongside SVC and DSTATCOM as voltage-sag mitigation techniques.
+
+
 
 ## 5. SVC, TCR, TSC and STATCOM
 
-### Detailed explanation — understanding TCR and TSC in simple terms
+### 1. First, what is an SVC?
 
-An **SVC (Static VAR Compensator)** is a shunt-connected device that regulates voltage by supplying or absorbing reactive power. **When voltage decreases, it increases net capacitive compensation** to help raise it. When voltage rises, it can increase inductive reactive-power absorption to reduce it.
+A **Static VAR Compensator (SVC)** is a **shunt-connected power-electronic compensation system** that adjusts reactive power to help regulate voltage.
 
-Forget the technical jargon for a moment. A **capacitor supplies reactive power**, while an **inductor (reactor) absorbs reactive power**. A **thyristor** is an electronic switch that controls conduction.
+The basic idea is:
 
-**TCR — Thyristor-Controlled Reactor.** Look at Figure 6 from your Unit-3 notes. It has capacitor/filter branches and a separate thyristor-controlled reactor. **Imagine the capacitors always supply 100 units of reactive power.** We don't always need the full 100 units, so the reactor absorbs some of it. If it absorbs 40 units, the net capacitive compensation is **60 units**. The thyristor changes how much current flows through the reactor; more current means greater inductive reactive-power absorption. Voltage too low? Reduce reactor absorption, leaving more capacitive support. Voltage too high? Increase reactor absorption. This offers **smooth or continuous control**.
+- **Voltage falls:** We need more **capacitive reactive-power support** to help raise the voltage.
+- **Voltage rises:** We may need more **inductive reactive-power absorption** to help lower it.
 
-The 3rd, 5th and 7th branches in Figure 6 are tuned capacitor–inductor harmonic filters. They can supply capacitive compensation at the fundamental and filter harmonics produced by thyristor phase-angle control.
+The word **VAR** refers to *volt-ampere reactive*, the unit of reactive power.
 
-**TSC — Thyristor-Switched Capacitor.** Look at Figure 7. Imagine three capacitor banks, each supplying **20 units**. To supply 20 units, switch **one bank ON**; for 40 units, switch **two ON**; for 60 units, switch **all three ON**. The controller switches whole capacitor banks rather than changing their output continuously. So TSC gives **stepwise compensation**, unlike smooth TCR control. Thyristors can switch at suitable points to minimise transients. When asked whether a falling voltage needs more banks ON or OFF, you correctly answered **“more on.”**
+**Important correction from our revision:** One PPT slide titled SVC showed a converter and DC storage, which resembles **STATCOM**, not the conventional TCR/TSC SVC. Do not use that erroneous diagram to explain the conventional SVC.
 
-**TCR versus TSC:** TCR controls the **inductive absorption** of a reactor and can vary smoothly. TSC switches **capacitive supply** on or off in steps. Remember which component each controls and why.
+Your **Unit-3.pdf** has the correct TCR and TSC circuits.
 
-**Which SVC diagram?** The Power Quality PPT slide labelled SVC showed a DC-to-AC converter — a **STATCOM-like diagram**, not the standard TCR/TSC arrangement. We deliberately replaced it with the **correct original Figure 6 and Figure 7 from Unit-3**. There is no need to memorise the enormous five-branch SVC assembly.
+### 2. What is a TCR?
 
-### STATCOM / DSTATCOM — what is actually happening?
+**TCR means Thyristor-Controlled Reactor**.
 
-A **STATCOM** has the same broad goal as SVC: control reactive power to regulate voltage. **DSTATCOM** is the distribution-system version, with the same fundamental operation. Unlike SVC, it uses a **Voltage-Source Converter (VSC/VSI)** connected through a **coupling transformer/reactance**, together with a **DC-link capacitor** and **controller**.
+Let's simplify the terminology first.
 
-Think of the VSC as a device that **creates a controllable AC voltage**. Its voltage difference from the grid across the coupling reactance causes current flow. By controlling the converter's AC voltage, STATCOM controls reactive power.
+A **reactor is simply an inductor**. An inductor absorbs inductive reactive power.
 
-**Case A — voltage drops.** Imagine supply falls to **200 V** from 230 V. The controller makes the converter voltage magnitude **higher than grid voltage** with the appropriate phase relationship. STATCOM then supplies **capacitive reactive power**, helping raise grid voltage.
+A **thyristor** is an electronic switch. In a TCR, thyristors control **how much current flows through the reactor**.
 
-**Case B — voltage rises.** Imagine voltage is **250 V**. The controller reduces converter voltage magnitude **below grid voltage**, causing **inductive reactive-power absorption** and helping lower the bus voltage.
+The fixed capacitor/filter banks provide capacitive reactive power. The reactor **absorbs some of that reactive power**, letting the system control the net compensation.
 
-The **DC-link capacitor** maintains the DC voltage needed by the converter; it is mainly an energy buffer, not a large battery. The controller maintains both **AC bus voltage** and **DC capacitor voltage**.
+**Simple example**
 
-**SVC vs STATCOM:** SVC uses thyristor-controlled reactors and capacitors. STATCOM uses a voltage-source converter. STATCOM usually responds flexibly and gives useful reactive-current support at low voltage, within its current limit. Neither can replace stored-energy **UPS** operation during a long outage.
+Suppose the fixed capacitors supply **100 units** of capacitive reactive power.
 
-**2025 Q5, 10 marks:** Explain SVC, DSTATCOM and UPS separately with their original correct diagrams. SVC/STATCOM provide **reactive-voltage support**; UPS supplies **stored real energy** to keep a sensitive load running.
+If the TCR reactor absorbs **40 units**, the system receives:
 
+$$
+100-40=60\ \text{units of net capacitive compensation}.
+$$
 
+If voltage drops and the system needs more support, the controller **reduces the reactor's absorption**.
 
-### What is an SVC?
+The capacitors still supply 100 units, but less is cancelled by the reactor, so **more capacitive compensation remains**.
 
-A **Static VAR Compensator (SVC)** is a shunt-connected, thyristor-based compensator that adjusts net reactive power to regulate system voltage. **Low voltage → more net capacitive support; high voltage → more net inductive absorption.**
+If the system voltage is too high, the controller can increase reactor absorption.
 
-**Important correction from lecture slides:** The PPT slide labelled SVC showed a DC-to-AC converter, which is characteristic of **STATCOM**, not a conventional SVC. Use **Unit-3 Figures 6 (fixed capacitors + TCR) and 7 (TSC)** instead.
+That is the basic idea of a TCR.
 
-### TCR — Thyristor-Controlled Reactor
+**Why is it called controlled?**
 
+Because changing the thyristor firing angle controls the reactor current. This provides **smooth or continuously variable control** of its inductive reactive-power absorption.
 
-![Original TCR (Fig. 6) and TSC (Fig. 7) — Unit-3.pdf, p. 8](figures/tcr-tsc.webp)
+The capacitors in the original figure may also form harmonic-filter branches. TCR firing control can generate harmonics, which explains the importance of the 3rd, 5th and 7th tuned filters shown in your notes.
 
+### 3. What is a TSC?
 
-Fixed capacitors provide capacitive reactive power. A reactor (inductor) **absorbs** reactive power; the thyristor firing angle continuously changes reactor current and thus how much compensation is left.
+**TSC means Thyristor-Switched Capacitor.**
 
-**Memory example:** Capacitor supplies 100 units; reactor absorbs 40 → net 60 units capacitive. If voltage falls, decrease the reactor absorption to leave more capacitive support.
+This one is even simpler.
 
-Phase control can create harmonics, so capacitor branches may be tuned as filters (3rd/5th/7th in the classroom diagram).
+There are **several capacitor banks**, each connected through thyristor switches.
 
-### TSC — Thyristor-Switched Capacitor
+The capacitors provide **capacitive reactive power**, and the controller chooses how many banks should be connected.
 
-Refer to the original TCR/TSC circuits shown above; the TSC is the switched-capacitor circuit labelled Fig. 7.
+**Simple example**
 
-Each thyristor switch turns a capacitor bank **ON or OFF**. More banks on → more capacitive reactive power supplied. Control is **stepwise**, unlike the continuously varied TCR. Proper switching minimises transients/harmonic generation.
+Imagine three banks, each supplying **20 units**:
+
+- Need 20 units? Turn **one** bank on.
+- Need 40 units? Turn **two** banks on.
+- Need 60 units? Turn **all three** on.
+
+A TSC does not vary one bank smoothly; it **switches capacitor banks ON and OFF**. Its control is **stepwise**.
+
+When we practised this, I asked what the controller should do if more capacitive reactive power is needed.
+
+You answered **“more on.”** Correct: it should turn **more capacitor banks ON**.
+
+Properly timed switching minimises switching transients and avoids the continuous phase-angle chopping used in a TCR.
+
+**Actual TCR and TSC diagrams from Unit-3:**
+
+![Thyristor-controlled reactor and thyristor-switched capacitor — original figures](figures/tcr-tsc.webp)
+
+### 4. Difference between TCR and TSC
 
 | TCR | TSC |
 | --- | --- |
-| Controls reactor current | Switches capacitor banks |
-| Absorbs inductive reactive power | Supplies capacitive reactive power |
-| Smooth variation | Discrete steps |
-| Phase control may create harmonics | Well-timed switching introduces little harmonic distortion |
+| Controls a **reactor**. | Switches **capacitor banks**. |
+| Changes **inductive reactive-power absorption**. | Changes **capacitive reactive-power supply**. |
+| Smooth variation using firing angle. | Stepwise variation using ON/OFF switching. |
+| Phase control can create harmonics. | Appropriate switching minimises transients. |
 
-### STATCOM / DSTATCOM
+**The one thing to understand:** In a typical SVC, the thyristor-controlled reactor and switched/fixed capacitor banks work together to adjust **net reactive power** and regulate bus voltage.
 
-**STATCOM = Static Synchronous Compensator; DSTATCOM = distribution-system version.** It uses a **voltage-source converter (VSC/VSI)** and a **DC-link capacitor**, connected to the AC network via coupling reactance/transformer.
+### 5. What is a STATCOM?
 
+A **STATCOM (Static Synchronous Compensator)** is also used to regulate voltage by supplying or absorbing reactive power.
 
-![Original DSTATCOM converter diagram — Power Quality(2).pptx, slide 85](figures/statcom.webp)
+But instead of controlling capacitor and reactor branches like an SVC, it uses a **Voltage-Source Converter (VSC)**.
 
+**DSTATCOM** means a distribution-level STATCOM. The basic working principle is the same.
 
-The converter generates a controllable AC voltage. A difference between converter and grid voltage across the coupling reactance determines the reactive current. With appropriate phase control:
+**Original DSTATCOM diagram:**
 
-- Converter voltage magnitude **higher than the grid** → supplies capacitive reactive power → helps raise a low bus voltage.
-- Converter voltage magnitude **lower than the grid** → absorbs inductive reactive power → helps lower a high bus voltage.
+![Original DSTATCOM — Voltage Source Converter and DC capacitor](figures/statcom.webp)
 
-The controller regulates **AC bus voltage** and **DC-link voltage**. The DC capacitor provides an energy buffer, not unlimited sustained real power.
+### 6. How does STATCOM work?
+
+The main parts in the diagram are:
+
+- **Voltage-Source Converter (VSC/VSI)**.
+- **DC-link capacitor**.
+- **Coupling transformer or reactor**.
+- **Controller**.
+
+The VSC generates a **controllable AC voltage**.
+
+The AC voltage produced by the converter is connected to the grid through the coupling reactance. The **difference between the two AC voltages** causes reactive current to flow.
+
+**Case A — system voltage is too low**
+
+Imagine the bus voltage falls from 230 V to **200 V**.
+
+The STATCOM controller makes its converter produce an appropriately phased AC voltage of **greater magnitude than the grid voltage**.
+
+Reactive current is supplied into the system. The STATCOM provides **capacitive reactive power**, helping support the bus voltage.
+
+**Case B — system voltage is too high**
+
+Imagine voltage rises to **250 V**.
+
+The STATCOM controller lowers its converter AC voltage magnitude **below the grid voltage**.
+
+The compensator now absorbs **inductive reactive power**, helping reduce the bus voltage.
+
+**What does the capacitor do?**
+
+The DC-link capacitor supports the DC voltage needed for the converter to operate. It acts as an energy buffer.
+
+It is **not the same as a large battery** that can independently supply the load through a long outage.
+
+**Two control objectives**
+
+1. Regulate the **AC voltage** at the bus connected to DSTATCOM.
+2. Control the **DC-link capacitor voltage** inside DSTATCOM.
+
+### 7. SVC versus STATCOM
 
 | SVC | STATCOM |
 | --- | --- |
-| Controlled L/C branches, TCR/TSC | VSC with DC-link capacitor |
-| Adjusts effective shunt susceptance | Controls converter voltage/current |
-| Fast reactive compensation | Fast, often better low-voltage current support |
-| Harmonics possible from TCR firing | Converter switching harmonics managed by control/filtering |
+| Uses thyristor-controlled reactor/capacitor branches. | Uses a voltage-source converter and DC-link capacitor. |
+| Controls net reactive compensation by changing effective reactance/susceptance. | Controls converter AC voltage and reactive current. |
+| TCR can create harmonics. | Power-electronic switching requires appropriate filtering/control. |
+| Voltage support becomes more limited as voltage falls. | Generally provides stronger low-voltage reactive-current support within its limits. |
 
-**Limit:** SVC/STATCOM can support voltage during some sags but cannot independently sustain a load through a long/deep supply outage without another real-energy source. Do not claim they replace a battery UPS.
+**Important for the 2025 10-mark question**
 
-**PYQ:** November 2025 Q5: explain sag mitigation with DSTATCOM, SVC and UPS. For each, draw the simple diagram, explain whether it controls reactive current or provides stored-energy support, and state the limitation.
+SVC and STATCOM help mitigate a **voltage sag by reactive-power support**.
 
----
+A **UPS** is different: it can supply **stored real energy** from a battery to keep a sensitive load operating during a supply failure.
+
+Don't write that an SVC or STATCOM automatically replaces a UPS.
+
+**What to prepare:** Definition, correct labelled diagrams, working principle and a clear comparison. We deliberately avoided memorising the very large multi-branch SVC slide.
+
+
 
 ## 6. Module 1 — Sag, Swell, Transients and Classification
 
