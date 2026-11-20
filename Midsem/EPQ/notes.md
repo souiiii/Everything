@@ -439,6 +439,40 @@ A hybrid resembles standby UPS but adds a **ferroresonant transformer/voltage re
 
 ## 5. SVC, TCR, TSC and STATCOM
 
+### Detailed explanation — understanding TCR and TSC in simple terms
+
+An **SVC (Static VAR Compensator)** is a shunt-connected device that regulates voltage by supplying or absorbing reactive power. **When voltage decreases, it increases net capacitive compensation** to help raise it. When voltage rises, it can increase inductive reactive-power absorption to reduce it.
+
+Forget the technical jargon for a moment. A **capacitor supplies reactive power**, while an **inductor (reactor) absorbs reactive power**. A **thyristor** is an electronic switch that controls conduction.
+
+**TCR — Thyristor-Controlled Reactor.** Look at Figure 6 from your Unit-3 notes. It has capacitor/filter branches and a separate thyristor-controlled reactor. **Imagine the capacitors always supply 100 units of reactive power.** We don't always need the full 100 units, so the reactor absorbs some of it. If it absorbs 40 units, the net capacitive compensation is **60 units**. The thyristor changes how much current flows through the reactor; more current means greater inductive reactive-power absorption. Voltage too low? Reduce reactor absorption, leaving more capacitive support. Voltage too high? Increase reactor absorption. This offers **smooth or continuous control**.
+
+The 3rd, 5th and 7th branches in Figure 6 are tuned capacitor–inductor harmonic filters. They can supply capacitive compensation at the fundamental and filter harmonics produced by thyristor phase-angle control.
+
+**TSC — Thyristor-Switched Capacitor.** Look at Figure 7. Imagine three capacitor banks, each supplying **20 units**. To supply 20 units, switch **one bank ON**; for 40 units, switch **two ON**; for 60 units, switch **all three ON**. The controller switches whole capacitor banks rather than changing their output continuously. So TSC gives **stepwise compensation**, unlike smooth TCR control. Thyristors can switch at suitable points to minimise transients. When asked whether a falling voltage needs more banks ON or OFF, you correctly answered **“more on.”**
+
+**TCR versus TSC:** TCR controls the **inductive absorption** of a reactor and can vary smoothly. TSC switches **capacitive supply** on or off in steps. Remember which component each controls and why.
+
+**Which SVC diagram?** The Power Quality PPT slide labelled SVC showed a DC-to-AC converter — a **STATCOM-like diagram**, not the standard TCR/TSC arrangement. We deliberately replaced it with the **correct original Figure 6 and Figure 7 from Unit-3**. There is no need to memorise the enormous five-branch SVC assembly.
+
+### STATCOM / DSTATCOM — what is actually happening?
+
+A **STATCOM** has the same broad goal as SVC: control reactive power to regulate voltage. **DSTATCOM** is the distribution-system version, with the same fundamental operation. Unlike SVC, it uses a **Voltage-Source Converter (VSC/VSI)** connected through a **coupling transformer/reactance**, together with a **DC-link capacitor** and **controller**.
+
+Think of the VSC as a device that **creates a controllable AC voltage**. Its voltage difference from the grid across the coupling reactance causes current flow. By controlling the converter's AC voltage, STATCOM controls reactive power.
+
+**Case A — voltage drops.** Imagine supply falls to **200 V** from 230 V. The controller makes the converter voltage magnitude **higher than grid voltage** with the appropriate phase relationship. STATCOM then supplies **capacitive reactive power**, helping raise grid voltage.
+
+**Case B — voltage rises.** Imagine voltage is **250 V**. The controller reduces converter voltage magnitude **below grid voltage**, causing **inductive reactive-power absorption** and helping lower the bus voltage.
+
+The **DC-link capacitor** maintains the DC voltage needed by the converter; it is mainly an energy buffer, not a large battery. The controller maintains both **AC bus voltage** and **DC capacitor voltage**.
+
+**SVC vs STATCOM:** SVC uses thyristor-controlled reactors and capacitors. STATCOM uses a voltage-source converter. STATCOM usually responds flexibly and gives useful reactive-current support at low voltage, within its current limit. Neither can replace stored-energy **UPS** operation during a long outage.
+
+**2025 Q5, 10 marks:** Explain SVC, DSTATCOM and UPS separately with their original correct diagrams. SVC/STATCOM provide **reactive-voltage support**; UPS supplies **stored real energy** to keep a sensitive load running.
+
+
+
 ### What is an SVC?
 
 A **Static VAR Compensator (SVC)** is a shunt-connected, thyristor-based compensator that adjusts net reactive power to regulate system voltage. **Low voltage → more net capacitive support; high voltage → more net inductive absorption.**
@@ -499,6 +533,34 @@ The controller regulates **AC bus voltage** and **DC-link voltage**. The DC capa
 ---
 
 ## 6. Module 1 — Sag, Swell, Transients and Classification
+
+### Detailed explanation — Module 1 as we revised it
+
+**Transient:** A transient is a **sudden, short-lived disturbance in voltage or current**. Imagine a normal smooth sine wave. Suddenly lightning strikes or an electrical device switches; for a brief moment its waveform changes.
+
+**Impulsive transient:** Think of it as **one sudden spike**, predominantly positive or negative, rising rapidly and disappearing shortly afterward. **Lightning** is the main example. The high peak can damage electronic equipment, stress insulation or corrupt data.
+
+**Oscillatory transient:** Think of **several fast electrical vibrations that gradually die away**. Switching a capacitor bank can cause energy to move back and forth between inductance and capacitance. The resulting disturbance repeatedly changes polarity and its oscillations decrease in amplitude. Your answer about rapid bipolar ringing that decays over time was correct. **Impulsive = sharp one-direction spike; oscillatory = decaying alternating ringing.**
+
+**Voltage sag:** A sag (dip) is a **temporary RMS voltage reduction to 0.1–0.9 pu**, lasting **0.5 cycle to one minute**. The supply is still present. Imagine a large motor starting: it draws **high starting current**; the network has some **impedance**; higher current causes a larger voltage drop across this impedance; therefore **less voltage reaches the load**. Causes include short-circuit faults, large-motor starting, heavy-load connection and transformer energisation. Effects include contactor drop-out, adjustable-speed drive trips, PLC malfunction and process interruption.
+
+**Sag waveform:** Draw several normal cycles, several cycles of **lower amplitude**, and recovery to normal. If the voltage is nearly zero it suggests an interruption instead.
+
+**Example we practised:** Voltage at **0.65 pu for 20 cycles** is a sag and means a **35% voltage reduction**. You correctly identified increased starting current and network impedance as the cause.
+
+**Voltage swell:** A swell is a **temporary increase in RMS voltage to 1.1–1.8 pu**, lasting **0.5 cycle to one minute**. Think of it as the opposite of a sag. When a **large load disconnects**, less current is drawn, reducing the voltage drop across network impedance, so remaining loads may see a **higher voltage**. Capacitor switching and ground faults affecting unfaulted phases may also cause swell. Effects: insulation stress, overheating, data errors or equipment malfunction.
+
+**Swell waveform:** Normal cycles → **larger amplitude** cycles → normal again. This is not a narrow transient spike.
+
+**Example we practised:** Voltage at **1.3 pu for 15 cycles** is a swell and is **30% above normal**. Your causal explanation about lower current and reduced network voltage drop was correct.
+
+**Magnitude–duration classification:** Two observations identify most RMS voltage events: **how much voltage remains and how long it lasts**. Remember **0.1, 0.9 and 1.1 pu** for magnitude and **0.5 cycle, 3 seconds and 1 minute** for duration. Below 0.1 pu corresponds to an interruption; 0.1–0.9 pu up to a minute is sag; over 1.1 pu up to a minute is swell; a low/high voltage condition lasting **more than one minute** is under-/over-voltage.
+
+Interruption duration: **momentary** 0.5 cycle–3 seconds; **temporary** over 3 seconds–1 minute; **sustained** over one minute. Thus **0.75 pu for 3 minutes** is under-voltage, not sag, and **0.05 pu for 5 seconds** is a temporary interruption.
+
+**For the exam:** Learn definitions, limits, two causes and effects, and reproduce the original sag, swell and transient waveform shapes shown below. Don't reread the unrelated midsem material.
+
+
 
 ### Sag (voltage dip)
 
@@ -568,6 +630,28 @@ For a classification chart: magnitude on vertical axis; duration horizontal; mar
 ---
 
 ## 7. Power Quality Monitoring — Definition, Purpose and Architecture
+
+### Detailed explanation — monitoring basics without memorising every paragraph
+
+**Power quality monitoring is the process of gathering, analysing and interpreting voltage/current measurements to identify disturbances and understand electrical-system performance.**
+
+Suppose a factory machine suddenly shuts down. A monitoring system can record supply voltage and reveal whether a **sag, swell or transient** happened at that moment. It converts raw measurements into useful information: **Measure → Collect → Analyse → Interpret**.
+
+**Why is monitoring useful?** Industrial equipment is sensitive to voltage disturbances: a contactor might drop out, a drive could trip, or a controller might reset, leading to production losses. Monitoring helps **detect problems, identify causes, protect equipment and improve system performance**. You can explain these purposes in your own words.
+
+**What are monitoring considerations?** Think of the decisions before installing a monitor: **Why** monitor (objective)? **What equipment** is needed? **When** should an event trigger recording (triggering threshold)? **Where** should data be stored? **How** will it be analysed? A **triggering threshold** is the preset limit at which an event is detected or recorded.
+
+**Five objectives, low-priority memory aid:** **Performance, Problems, Service, Maintenance, Survey**. These correspond to understanding normal performance, investigating an existing problem, verifying promised service, predicting failures and surveying a facility's wiring/conditions. You understood these even though you didn't want to memorise all five by heart.
+
+**Proactive vs reactive:** Proactive monitoring measures the normal system routinely so it is easier to recognise abnormalities. Reactive monitoring begins after a particular problem to investigate its cause.
+
+**Major monitoring subsystems:** Instrument/sensor measurement → event detection and data acquisition → data storage → communications → analysis, interpretation and reports. The original monitoring-system figure is below. In the **2020 PYQ**, PQ monitoring differs from general data acquisition because it is designed to catch **electrical disturbances of varied frequencies and durations**, not merely log ordinary signals.
+
+**Duration of monitoring:** There is **no fixed universal duration**; it depends on the objective and how often disturbances occur. Frequent recurring problems may suit **short-term monitoring**. Rare, unpredictable sags require **long-term or continuous monitoring** — exactly what you answered in our quick check.
+
+**Online vs offline analysis:** Online means processing measurements promptly for timely warnings; offline means analysing stored records later. We intentionally deprioritised long descriptions, seven-point site surveys and equipment specifications so we could focus on instruments and flickermeter.
+
+
 
 ### What is PQ monitoring?
 
