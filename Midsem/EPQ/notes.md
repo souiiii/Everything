@@ -926,100 +926,186 @@ Don't write that an SVC or STATCOM automatically replaces a UPS.
 
 ## 6. Module 1 — Sag, Swell, Transients and Classification
 
-### Detailed explanation — Module 1 as we revised it
+You already studied Module 1 for your midsem, so we don't need to learn every detail again. We'll focus on the disturbances your teacher explicitly mentioned, their waveforms, important causes and the magnitude–duration classification.
 
-**Transient:** A transient is a **sudden, short-lived disturbance in voltage or current**. Imagine a normal smooth sine wave. Suddenly lightning strikes or an electrical device switches; for a brief moment its waveform changes.
+### 1. What is a transient?
 
-**Impulsive transient:** Think of it as **one sudden spike**, predominantly positive or negative, rising rapidly and disappearing shortly afterward. **Lightning** is the main example. The high peak can damage electronic equipment, stress insulation or corrupt data.
+A **transient** is a sudden, short-lived disturbance superimposed on the normal voltage or current waveform.
 
-**Oscillatory transient:** Think of **several fast electrical vibrations that gradually die away**. Switching a capacitor bank can cause energy to move back and forth between inductance and capacitance. The resulting disturbance repeatedly changes polarity and its oscillations decrease in amplitude. Your answer about rapid bipolar ringing that decays over time was correct. **Impulsive = sharp one-direction spike; oscillatory = decaying alternating ringing.**
+Imagine the supply voltage following a normal sine wave. Suddenly lightning strikes, a capacitor is switched, or equipment is disconnected. For a brief period, the voltage or current behaves differently.
 
-**Voltage sag:** A sag (dip) is a **temporary RMS voltage reduction to 0.1–0.9 pu**, lasting **0.5 cycle to one minute**. The supply is still present. Imagine a large motor starting: it draws **high starting current**; the network has some **impedance**; higher current causes a larger voltage drop across this impedance; therefore **less voltage reaches the load**. Causes include short-circuit faults, large-motor starting, heavy-load connection and transformer energisation. Effects include contactor drop-out, adjustable-speed drive trips, PLC malfunction and process interruption.
+There are two important types.
 
-**Sag waveform:** Draw several normal cycles, several cycles of **lower amplitude**, and recovery to normal. If the voltage is nearly zero it suggests an interruption instead.
+### 2. Impulsive versus oscillatory transients
 
-**Example we practised:** Voltage at **0.65 pu for 20 cycles** is a sag and means a **35% voltage reduction**. You correctly identified increased starting current and network impedance as the cause.
+**Impulsive transient**
 
-**Voltage swell:** A swell is a **temporary increase in RMS voltage to 1.1–1.8 pu**, lasting **0.5 cycle to one minute**. Think of it as the opposite of a sag. When a **large load disconnects**, less current is drawn, reducing the voltage drop across network impedance, so remaining loads may see a **higher voltage**. Capacitor switching and ground faults affecting unfaulted phases may also cause swell. Effects: insulation stress, overheating, data errors or equipment malfunction.
+An impulsive transient has **one predominant polarity**. Think of a **sharp spike** that rises very quickly and then disappears.
 
-**Swell waveform:** Normal cycles → **larger amplitude** cycles → normal again. This is not a narrow transient spike.
+**Lightning** is a representative cause. Other possible causes include switching of inductive loads and electrostatic discharge.
 
-**Example we practised:** Voltage at **1.3 pu for 15 cycles** is a swell and is **30% above normal**. Your causal explanation about lower current and reduced network voltage drop was correct.
+The very high peak may damage electronics, stress insulation or corrupt stored data.
 
-**Magnitude–duration classification:** Two observations identify most RMS voltage events: **how much voltage remains and how long it lasts**. Remember **0.1, 0.9 and 1.1 pu** for magnitude and **0.5 cycle, 3 seconds and 1 minute** for duration. Below 0.1 pu corresponds to an interruption; 0.1–0.9 pu up to a minute is sag; over 1.1 pu up to a minute is swell; a low/high voltage condition lasting **more than one minute** is under-/over-voltage.
+**Oscillatory transient**
 
-Interruption duration: **momentary** 0.5 cycle–3 seconds; **temporary** over 3 seconds–1 minute; **sustained** over one minute. Thus **0.75 pu for 3 minutes** is under-voltage, not sag, and **0.05 pu for 5 seconds** is a temporary interruption.
+An oscillatory transient **alternates between positive and negative directions**. Think of rapid electrical **ringing**, with oscillations that gradually become smaller.
 
-**For the exam:** Learn definitions, limits, two causes and effects, and reproduce the original sag, swell and transient waveform shapes shown below. Don't reread the unrelated midsem material.
+For example, capacitor-bank or line switching can cause energy to exchange between circuit inductance and capacitance, producing repeated oscillations with a decaying envelope.
 
+This is why your answer to our question about **rapid ringing and bipolar oscillations that gradually decay** was **oscillatory transient**.
 
-
-### Sag (voltage dip)
-
-A **voltage sag** is a reduction of RMS voltage to **0.1–0.9 pu** for **0.5 cycle to 1 minute**. Supply remains present.
-
-**Why:** Motor starting, heavy load connection or short-circuit fault → higher line current → larger voltage drop across system impedance → lower voltage at the load. **Effects:** Contactor drop-out, ASD trips, PLC/control malfunction. **Mitigation:** DVR/series voltage injection, UPS for sensitive loads, suitable transfer or system fault improvement.
-
-**Waveform:** Normal sine cycles → smaller-amplitude cycles for a defined interval → normal again. Not zero.
-
-![Original voltage sag waveform — Power Quality(2).pptx, slide 6](figures/sag.webp)
-
-### Swell
-
-A **voltage swell** is an increase in RMS voltage to **1.1–1.8 pu** (the upper bound depends on duration subclass) for **0.5 cycle to 1 minute**.
-
-**Why:** Sudden disconnection of a large load reduces network current/voltage drop, or capacitor switching; a single-line-to-ground fault may raise voltage on the unfaulted phases. **Effects:** Insulation stress, overheating, control errors and component damage.
-
-**Waveform:** Normal cycles → larger-amplitude cycles → normal.
-
-![Original voltage swell waveform — Power Quality(2).pptx, slide 8](figures/swell.webp)
-
-### Impulsive vs oscillatory transients
-
-A **transient** is a sudden short-lived departure from the steady-state waveform.
+**The basic difference is the shape and polarity of the added disturbance.**
 
 | Impulsive transient | Oscillatory transient |
 | --- | --- |
-| One predominant polarity, sharp spike | Polarity alternates rapidly, decaying ringing |
-| Lightning is the main example | Capacitor-bank or line switching is typical |
-| High peak stresses electronics/insulation | Rapid oscillations can stress equipment |
-| Sketch a single narrow spike | Sketch several shrinking oscillations around the waveform |
+| Predominantly unidirectional. | Alternates positive and negative. |
+| Sharp spike with rapid rise and short duration. | Rapid ringing with gradually decreasing amplitude. |
+| Lightning is a common example. | Capacitor or line switching is a common example. |
 
-**Simple exam sketch cues:**
+**Simple waveform sketches**
 
+~~~text
+Impulsive disturbance:             Oscillatory disturbance:
 
-![Original impulsive and oscillatory transient waveforms — Power Quality(2).pptx, slide 4](figures/impulsive-oscillatory.webp)
+        /\                           /\ /\ 
+_______/  \_______              ___/  V  \_/\____
+  Sharp single spike              Decaying ringing
+~~~
 
+**Original lecture waveforms:**
 
-### Magnitude–duration classification (memorise boundaries)
+![Original impulsive and oscillatory transient waveforms](figures/impulsive-oscillatory.webp)
 
-$
-V_{\rm pu}=\frac{V_{\rm rms}}{V_{\rm nominal}}.
-$
+**Exam sketch:** Draw voltage against time. For an impulse, superimpose one narrow, tall spike on the normal waveform. For oscillatory transient, superimpose several rapid oscillations that reduce in amplitude.
 
-| Event | RMS voltage | Duration |
+### 3. What is a voltage sag?
+
+A **voltage sag**, also called a **voltage dip**, is a temporary reduction in RMS voltage to **0.1–0.9 pu**, lasting from **0.5 cycle to 1 minute**.
+
+The supply is still present, but its voltage drops below the normal operating level.
+
+**Why does sag occur?**
+
+Suppose a large motor starts.
+
+The motor draws a **large starting current**. But the power system has some impedance. When more current flows through that impedance, a **larger voltage drop** occurs across the supply network.
+
+As a result, the voltage reaching the load **decreases**.
+
+Remember the sequence:
+
+**Fault or large starting current → greater network voltage drop → lower load voltage.**
+
+Other causes include short-circuit faults, sudden connection of heavy loads and transformer energisation.
+
+**What happens to equipment?**
+
+Contactors may drop out, adjustable-speed drives may trip, PLCs or process controllers may malfunction. The production loss can last longer than the sag itself.
+
+**Waveform**
+
+Draw several normal sine-wave cycles, then several cycles with **smaller amplitude**, then recovery to normal. Keep the sine wave visible during the sag: a nearly flat zero-voltage interval suggests an interruption.
+
+![Original voltage sag waveform](figures/sag.webp)
+
+**Example we practised**
+
+If voltage drops to **0.65 pu** for 20 cycles:
+- It is a **sag** because 0.65 pu is in the 0.1–0.9 pu range.
+- The percentage voltage reduction is $(1-0.65)\times100=\boxed{35\%}$.
+
+When asked **why starting a motor can cause a sag**, you answered that it draws a large current, and the transmission line has impedance, so the voltage drop increases. That's exactly the correct reasoning.
+
+### 4. What is a voltage swell?
+
+A **voltage swell** is a temporary increase in RMS voltage to about **1.1–1.8 pu**, lasting from **0.5 cycle to 1 minute**. Its upper magnitude limit depends on the duration subclass.
+
+**Why does swell occur?**
+
+Suppose a large load is disconnected.
+
+The supply now carries **less current**. Because there is impedance in the supply network, a smaller current causes a **smaller voltage drop** across that impedance.
+
+The voltage available at the remaining loads can therefore **rise**.
+
+**Large load disconnects → lower current → smaller network voltage drop → higher load voltage.**
+
+Other causes include capacitor switching and certain ground faults that cause the healthy phases to experience higher voltage.
+
+**What happens to equipment?**
+
+Increased voltage can stress insulation, overheat components and cause control-system malfunctions or shutdowns.
+
+**Waveform**
+
+Draw several normal sine-wave cycles, several cycles of **increased amplitude**, then recovery to normal.
+
+![Original voltage swell waveform](figures/swell.webp)
+
+**Example we practised**
+
+If voltage rises to **1.3 pu** for 15 cycles:
+- It is a **swell**.
+- The increase over normal is $(1.3-1)\times100=\boxed{30\%}$.
+
+When asked why disconnecting a large load causes swell, you correctly explained that the reduced current leads to less voltage drop across transmission impedance.
+
+### 5. Magnitude–duration classification
+
+Two observations identify most RMS-voltage events:
+
+**How much voltage remains, and how long does the event last?**
+
+Magnitude separates lower voltage, higher voltage and interruption. Duration distinguishes brief events from sustained conditions.
+
+$$
+\boxed{V_{\mathrm{pu}}=\frac{V_{\mathrm{rms}}}{V_{\mathrm{nominal}}}}
+$$
+
+| Event | Magnitude / shape | Duration |
 | --- | --- | --- |
-| Sag | 0.1–0.9 pu | 0.5 cycle–1 min |
-| Swell | 1.1–1.8 pu (duration-specific upper limits) | 0.5 cycle–1 min |
-| Under-voltage | Below 0.9 pu, above interruption range | More than 1 min |
-| Over-voltage | Above 1.1 pu | More than 1 min |
-| Momentary interruption | Below 0.1 pu | 0.5 cycle–3 s |
-| Temporary interruption | Below 0.1 pu | >3 s–1 min |
-| Sustained interruption | Nearly zero | More than 1 min |
+| Transient | Impulsive or oscillatory change in waveform. | Very brief; identify by shape. |
+| Sag | 0.1–0.9 pu RMS. | 0.5 cycle–1 min. |
+| Swell | 1.1–1.8 pu overall, with duration-specific subclasses. | 0.5 cycle–1 min. |
+| Undervoltage | Below 0.9 pu, above interruption region. | More than 1 min. |
+| Overvoltage | Above 1.1 pu. | More than 1 min. |
+| Momentary interruption | Below 0.1 pu. | 0.5 cycle–3 s. |
+| Temporary interruption | Below 0.1 pu. | Above 3 s–1 min. |
+| Sustained interruption | Nearly zero voltage. | More than 1 min. |
 
-For a classification chart: magnitude on vertical axis; duration horizontal; mark **0.1, 0.9 and 1.1 pu**, plus **0.5 cycle, 3 s and 1 min**.
+**A very important distinction**
 
-**Examples:** 0.65 pu for 20 cycles → **sag**; 35% voltage lost. 1.3 pu for 15 cycles → **swell**; 30% above normal. 0.75 pu for 3 min → **under-voltage**, not sag. 0.05 pu for 5 s → **temporary interruption**.
+A voltage of **0.75 pu for 3 minutes** is **undervoltage**, not a sag, because it lasts more than one minute.
 
-### Sag mitigation recap
+A voltage of **0.05 pu for 5 seconds** is a **temporary interruption**, because it is below 0.1 pu and lasts more than 3 seconds but less than one minute.
 
-- **DVR / active series compensator:** Injects missing voltage in series; $\mathbf V_{\rm load}=\mathbf V_{\rm source}+\mathbf V_{\rm injected}$.
-- **Static/fast transfer switch:** Transfers to a healthy second source; requires that source.
-- **Online/offline UPS:** Uses stored energy to continue supplying load.
-- **SVC/STATCOM:** Reactive compensation supports bus voltage.
-- **Ferroresonant constant-voltage transformer:** Conditions voltage using saturated core and resonant capacitor.
+For the magnitude–duration chart, draw:
+- **Magnitude on the vertical axis.**
+- **Duration on the horizontal axis.**
+- Magnitude lines at **0.1 pu, 0.9 pu and 1.1 pu**.
+- Duration boundaries at **0.5 cycle, 3 s and 1 minute**.
 
----
+Place sag below the normal-voltage band, swell above it, and interruptions in the near-zero region.
+
+### 6. Voltage-sag mitigation — what we covered
+
+The exam may ask which device helps the load withstand a sag.
+
+- **UPS:** Provides stored energy so sensitive equipment can continue operating during a disturbance or failure.
+- **DVR / series active compensator:** Injects the missing voltage in series with the supply so the load receives a suitable voltage.
+- **SVC:** Uses thyristor-controlled reactors and capacitors for reactive-power compensation to support the bus voltage.
+- **STATCOM / DSTATCOM:** Uses a voltage-source converter to inject reactive current quickly and support voltage.
+- **Ferroresonant transformer:** Uses saturated-core and resonant-capacitor voltage regulation within its operating range.
+
+For a DVR or series compensator:
+
+$$
+\boxed{\mathbf V_{\mathrm{load}}=\mathbf V_{\mathrm{source}}+\mathbf V_{\mathrm{injected}}}
+$$
+
+**Do not confuse what each device provides:** UPS can supply backup energy; SVC and STATCOM principally supply or absorb reactive power.
+
+**What to revise before the exam:** Definitions, causes, important effects, waveform shapes, magnitude/duration limits and the basic sag-mitigation mechanisms. You already know the core physical reasoning from our midsem notes.
 
 ## 7. Power Quality Monitoring — Definition, Purpose and Architecture
 
