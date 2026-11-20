@@ -23,6 +23,8 @@ A balanced three-phase set has **equal RMS magnitudes** and **phase angles separ
 
 **Phasor sketch to reproduce:** Choose phase A as 0°. For positive sequence, draw B at −120° and C at +120°; for negative sequence, swap B and C; for zero sequence, draw A, B and C coincident. Label all three.
 
+![Sequence-component phasors — class_7(1).pdf, p. 7](Midsem/EPQ/figures/seq.webp)
+
 ### Formula sheet
 
 Let $a=1\angle120^\circ$, $a^2=1\angle240^\circ=1\angle(-120^\circ)$ and $1+a+a^2=0$.
@@ -111,16 +113,9 @@ $
 
 A passive filter uses **inductors, capacitors and sometimes resistors**. The standard shunt single-tuned filter is a **series L–C branch connected across the supply**, in parallel with the load.
 
-~~~text
-   Supply bus ────────+──────── Load
-                      |
-                      L
-                      |
-                      C
-                      |
-              Return / other phase
-       (shunt L-C branch: series L and C)
-~~~
+
+![Original tuned passive-filter schematic and impedance response — UNIT-4.pdf, p. 25](Midsem/EPQ/figures/passive-filter.webp)
+
 
 At the tuned frequency the inductive and capacitive reactances cancel, making the branch **low impedance**. It diverts the selected harmonic current away from the upstream network.
 
@@ -141,6 +136,8 @@ $
 
 **Series passive filter:** A **parallel L–C resonant circuit placed in series with the line/load** can present high impedance at its tuned harmonic to block it. Do not confuse its topology with the shunt single-tuned filter.
 
+![Original series passive-filter L/C circuit — UNIT-4.pdf, p. 26](Midsem/EPQ/figures/series-filter.webp)
+
 **High-pass passive filter:** Gives unwanted higher-order harmonic currents a low-impedance route over a wider frequency band. Detailed first-/second-/third-order circuits are not needed for our announced scope.
 
 **Limitations of passive filters:** Bulky; compensation is relatively fixed; performance depends on system impedance; possible resonance/overload.
@@ -151,24 +148,17 @@ An active filter uses power electronics, normally a **voltage-source inverter/co
 
 **Shunt active filter — cancels harmonic current:**
 
-~~~text
-     AC supply ───────+──────── Nonlinear load
-                      |
-                   Coupling L
-                      |
-                VSI + DC link
-                (shunt APF)
-~~~
+
+![Original shunt active-filter circuit — UNIT-4.pdf, p. 31](Midsem/EPQ/figures/active-shunt.webp)
+
 
 The shunt APF injects harmonic current **opposite to the load's harmonic current**, so the source current becomes closer to sinusoidal. It can also compensate reactive current. Example: a 5 A fifth-harmonic load component is counteracted by approximately 5 A in opposite phase.
 
 **Series active filter — corrects supply/load voltage:**
 
-~~~text
-   Supply ──[ Series injection transformer ]── Load
-                       ^
-                     VSI / controller
-~~~
+
+![Original series active-filter circuit — UNIT-4.pdf, p. 31](Midsem/EPQ/figures/active-series.webp)
+
 
 It injects a controlled voltage to compensate voltage harmonics, sags or swells:
 
@@ -289,16 +279,7 @@ An inductive motor draws **real power** $P$ (kW) plus **reactive power** $Q$ (kV
 
 **Power triangle:**
 
-~~~text
-                    Q (kVAr)
-                    |
-                    |\
-                    | \ S (kVA)
-                    |  \
-                    |___\ 
-                   P (kW)
-            angle φ at P–S corner
-~~~
+The power triangle is defined by the adjacent formulas: horizontal real power P, vertical reactive power Q, and hypotenuse apparent power S.
 
 $
 \boxed{S^2=P^2+Q^2},\qquad PF=\cos\phi=P/S,\qquad Q=P\tan\phi.
@@ -336,34 +317,25 @@ An **Uninterruptible Power Supply** keeps sensitive equipment supplied during ma
 
 **Diagram:**
 
-~~~text
- AC mains ──> Rectifier/charger ── DC link ──> Inverter ──> Load
-                                   |
-                               Battery bank
 
- Maintenance bypass: mains ───────────────> Load (only when selected)
-~~~
+![Online UPS block diagram — Power Quality(2).pptx, slide 71](Midsem/EPQ/figures/ups-online.webp)
+
 
 **Normal:** AC → rectifier (AC to DC) → inverter (DC to AC) → load; battery is kept charged. **Power failure:** battery feeds the **same existing inverter**, so there is essentially **zero battery-transfer time**. A bypass can supply the load during maintenance, but is not the normal operating path.
 
 ### Offline / standby UPS
 
-~~~text
- AC mains ───────────────> Automatic transfer switch ──> Load
-    |
-    +──> Charger ──> Battery ──> Inverter ──────────────^
-~~~
+
+![Offline UPS block diagram — Power Quality(2).pptx, slide 72](Midsem/EPQ/figures/ups-offline.webp)
+
 
 **Normal:** Mains directly powers the load and charges the battery; inverter stands by. **Failure:** Switch changes to the battery-powered inverter, causing a **small transfer delay**. Simpler and generally cheaper/more efficient, but provides less isolation from mains disturbances.
 
 ### Hybrid UPS
 
-~~~text
- Mains ───────────────────────────────┐
-                                     v
- Charger ── Battery ── Inverter ──> Ferroresonant
-                                    transformer ──> Load
-~~~
+
+![Hybrid UPS block diagram — Power Quality(2).pptx, slide 73](Midsem/EPQ/figures/ups-hybrid.webp)
+
 
 A hybrid resembles standby UPS but adds a **ferroresonant transformer/voltage regulator** at the output. It stabilises voltage and provides **momentary ride-through** during transfer (bridges a brief interruption).
 
@@ -387,14 +359,9 @@ A **Static VAR Compensator (SVC)** is a shunt-connected, thyristor-based compens
 
 ### TCR — Thyristor-Controlled Reactor
 
-~~~text
-                  Supply bus ──────────── Load
-                      |        |
-               Fixed capacitor  Thyristor-controlled
-                / tuned filter  reactor (L)
-                      |        |
-                   return / other phases
-~~~
+
+![Original TCR (Fig. 6) and TSC (Fig. 7) — Unit-3.pdf, p. 8](Midsem/EPQ/figures/tcr-tsc.webp)
+
 
 Fixed capacitors provide capacitive reactive power. A reactor (inductor) **absorbs** reactive power; the thyristor firing angle continuously changes reactor current and thus how much compensation is left.
 
@@ -404,15 +371,7 @@ Phase control can create harmonics, so capacitor branches may be tuned as filter
 
 ### TSC — Thyristor-Switched Capacitor
 
-~~~text
-     Bus ────────────+────────+──────── Load
-                     |        |
-                 Switch 1  Switch 2      (more banks possible)
-                     |        |
-                    C1       C2
-                     |        |
-                   return / other phases
-~~~
+Refer to the original TCR/TSC circuits shown above; the TSC is the switched-capacitor circuit labelled Fig. 7.
 
 Each thyristor switch turns a capacitor bank **ON or OFF**. More banks on → more capacitive reactive power supplied. Control is **stepwise**, unlike the continuously varied TCR. Proper switching minimises transients/harmonic generation.
 
@@ -427,15 +386,9 @@ Each thyristor switch turns a capacitor bank **ON or OFF**. More banks on → mo
 
 **STATCOM = Static Synchronous Compensator; DSTATCOM = distribution-system version.** It uses a **voltage-source converter (VSC/VSI)** and a **DC-link capacitor**, connected to the AC network via coupling reactance/transformer.
 
-~~~text
- AC grid / bus ─────────────── Load
-        |
- Coupling transformer / reactor
-        |
-      VSC / VSI <──── Controller
-        |
-    DC-link capacitor
-~~~
+
+![Original DSTATCOM converter diagram — Power Quality(2).pptx, slide 85](Midsem/EPQ/figures/statcom.webp)
+
 
 The converter generates a controllable AC voltage. A difference between converter and grid voltage across the coupling reactance determines the reactive current. With appropriate phase control:
 
@@ -467,6 +420,8 @@ A **voltage sag** is a reduction of RMS voltage to **0.1–0.9 pu** for **0.5 cy
 
 **Waveform:** Normal sine cycles → smaller-amplitude cycles for a defined interval → normal again. Not zero.
 
+![Original voltage sag waveform — Power Quality(2).pptx, slide 6](Midsem/EPQ/figures/sag.webp)
+
 ### Swell
 
 A **voltage swell** is an increase in RMS voltage to **1.1–1.8 pu** (the upper bound depends on duration subclass) for **0.5 cycle to 1 minute**.
@@ -474,6 +429,8 @@ A **voltage swell** is an increase in RMS voltage to **1.1–1.8 pu** (the upper
 **Why:** Sudden disconnection of a large load reduces network current/voltage drop, or capacitor switching; a single-line-to-ground fault may raise voltage on the unfaulted phases. **Effects:** Insulation stress, overheating, control errors and component damage.
 
 **Waveform:** Normal cycles → larger-amplitude cycles → normal.
+
+![Original voltage swell waveform — Power Quality(2).pptx, slide 8](Midsem/EPQ/figures/swell.webp)
 
 ### Impulsive vs oscillatory transients
 
@@ -488,12 +445,9 @@ A **transient** is a sudden short-lived departure from the steady-state waveform
 
 **Simple exam sketch cues:**
 
-~~~text
-Impulsive component:          Oscillatory component:
-        /\                    /\  /\ 
-_______/  \_______       ____/  \/  \_/\____
- one sharp pulse             rapid decaying ringing
-~~~
+
+![Original impulsive and oscillatory transient waveforms — Power Quality(2).pptx, slide 4](Midsem/EPQ/figures/impulsive-oscillatory.webp)
+
 
 ### Magnitude–duration classification (memorise boundaries)
 
@@ -539,21 +493,9 @@ For a classification chart: magnitude on vertical axis; duration horizontal; mar
 
 ### Major subsystems — 2020 PYQ Q3(a)
 
-~~~text
- Voltage/current sensors
-          |
-    Data acquisition
-    + event detection
-    (trigger thresholds)
-          |
-       Storage
-          |
- Communications / transfer
-          |
- Analysis + interpretation
-          |
- Reports / corrective action
-~~~
+
+![Original power-quality monitoring system diagram — UNIT-6.pdf, p. 4](Midsem/EPQ/figures/monitoring-architecture.webp)
+
 
 1. **Measurement** observes voltage and current through suitable sensors/instruments.
 2. **Acquisition/triggering** samples the signal and identifies events that cross configured thresholds.
@@ -613,21 +555,9 @@ A **flickermeter** measures the severity of **voltage flicker** — perceived va
 
 ### Exam-ready diagram
 
-~~~text
-  Input voltage
-       |
-[1. Input voltage adapter]
-       |
-[2. Squaring demodulator]
-       |
-[3. Weighting filters]
-       |
-[4. Squaring and smoothing]
-       |
-[5. Statistical analysis]
-       |
- Flicker severity output
-~~~
+
+![Original IEC five-block flickermeter — UNIT-6.pdf, p. 15](Midsem/EPQ/figures/flickermeter.webp)
+
 
 ### Working principle — two meaningful sentences per block
 
@@ -664,13 +594,9 @@ A **ferroresonant / constant-voltage transformer (CVT)** is a passive voltage-co
 
 **Simplified conceptual diagram:**
 
-~~~text
-   AC source ── [ Saturated-core transformer ] ── Regulated load
-                            |
-                    Resonant winding
-                            |
-                         Capacitor
-~~~
+
+![Original ferroresonant transformer winding diagram — Unit-3.pdf, p. 4](Midsem/EPQ/figures/cvt.webp)
+
 
 **Distinction:** Unwanted **ferroresonance** in a power network can produce dangerous voltages and currents. A **ferroresonant transformer** deliberately uses a controlled version of the effect for regulation. No series-RLC derivation is needed for the 2025 short theory question.
 
