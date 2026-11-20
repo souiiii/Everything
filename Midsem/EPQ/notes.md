@@ -1,5 +1,731 @@
 # EPQ Notes
 
+# Electrical Power Quality — End-Sem Final Revision (21 November 2026)
+
+**Purpose:** One exam-ready set of notes from our revision sessions, with clear explanations, formulas, simplified diagrams and solved PYQs. **Teacher's stated priority:** active/passive filters and numericals; balanced/unbalanced three-phase systems and symmetrical components; UPS, SVC and STATCOM; sag, swell and impulsive transients; power-quality monitoring, especially the flickermeter. Unit 5 is excluded. The November 2025 paper closely matches this scope.
+
+**How to use tonight:** For each heading, learn *what it is*, *how it works*, *what diagram to draw*, and *what numerical/formula applies*. Attempt the worked questions again without looking at the answers. Detailed equipment designs, IEC filter transfer functions and long lists of monitor specifications are intentionally excluded.
+
+---
+
+## 1. Balanced, Unbalanced and Symmetrical Components
+
+### What is a balanced three-phase system?
+
+A balanced three-phase set has **equal RMS magnitudes** and **phase angles separated by exactly 120°**, in the expected phase order. Equal magnitudes alone do not guarantee balance. Unequal loading, faults or unequal impedances can make the voltage set unbalanced, causing negative-sequence currents and motor heating.
+
+### Important things to know: phase sequence
+
+- **Positive sequence (ABC):** Three equal phasors, 120° apart, in the normal A–B–C order.
+- **Negative sequence (ACB):** Three equal phasors, 120° apart, in reverse A–C–B order.
+- **Zero sequence:** Three equal phasors pointing in the *same* direction.
+- A normally balanced, positive-sequence set contains only its positive-sequence component. An unbalanced set may have negative- and zero-sequence components.
+
+**Phasor sketch to reproduce:** Choose phase A as 0°. For positive sequence, draw B at −120° and C at +120°; for negative sequence, swap B and C; for zero sequence, draw A, B and C coincident. Label all three.
+
+### Formula sheet
+
+Let $a=1\angle120^\circ$, $a^2=1\angle240^\circ=1\angle(-120^\circ)$ and $1+a+a^2=0$.
+
+**Components → actual phase voltages:**
+
+$
+V_A=V_0+V_1+V_2,\qquad
+V_B=V_0+a^2V_1+aV_2,\qquad
+V_C=V_0+aV_1+a^2V_2.
+$
+
+**Actual phases → components:**
+
+$
+V_0=\frac{V_A+V_B+V_C}{3},\quad
+V_1=\frac{V_A+aV_B+a^2V_C}{3},\quad
+V_2=\frac{V_A+a^2V_B+aV_C}{3}.
+$
+
+For current problems, replace $V$ by $I$ throughout. **Memorise the order**: $V_1$ uses $a$ on phase B and $a^2$ on phase C; $V_2$ swaps them.
+
+### Worked PYQ — 2020, Q1(b): reconstruct phase voltages
+
+Given $V_0=0.6\angle90^\circ$, $V_1=1\angle30^\circ$, $V_2=0.8\angle(-30^\circ)$:
+
+$
+V_A=V_0+V_1+V_2=\boxed{1.7088\angle24.18^\circ}
+$
+
+$
+V_B=V_0+a^2V_1+aV_2=\boxed{0.4000\angle90^\circ}
+$
+
+$
+V_C=V_0+aV_1+a^2V_2=\boxed{1.7088\angle155.82^\circ}
+$
+
+**Method:** Substitute the phasors, perform complex additions (preferably in rectangular form), then give polar answers. Do not add magnitudes or angles separately.
+
+### Worked PYQ — November 2025, Q3: find symmetrical currents
+
+Given $I_A=100\angle30^\circ$, $I_B=50\angle300^\circ$, $I_C=30\angle180^\circ$ A:
+
+$
+I_0=(I_A+I_B+I_C)/3=\boxed{27.29\angle4.69^\circ\ \text{A}}
+$
+
+$
+I_1=(I_A+aI_B+a^2I_C)/3=\boxed{57.98\angle43.29^\circ\ \text{A}}
+$
+
+$
+I_2=(I_A+a^2I_B+aI_C)/3=\boxed{18.97\angle24.96^\circ\ \text{A}}
+$
+
+Intermediate rectangular results, useful for checking calculator entry: $I_0=27.2009+j2.2329$, $I_1=42.2009+j39.7607$, $I_2=17.2009+j8.0064$ A.
+
+**Calculator:** Casio fx-991ES PLUS → CMPLX mode, DEG, use $\angle$ for polar entries. Verify the setting before using $120^\circ$. A final 10-mark answer should show the component formulas and substitution, not just the three values.
+
+---
+
+## 2. Harmonics, Voltage Distortion and Filters
+
+### What are harmonics?
+
+A harmonic is a sinusoidal component whose frequency is an integer multiple of the fundamental:
+
+$
+f_h=h f_1.
+$
+
+For a 50 Hz supply, the 3rd, 5th and 7th harmonics are 150, 250 and 350 Hz. **Nonlinear loads** such as rectifiers, drives and switched-mode supplies draw nonsinusoidal currents.
+
+### Why does current distortion produce voltage distortion?
+
+A nonlinear load acts approximately as a **harmonic-current source**. Harmonic current flowing through the supply-network impedance causes harmonic voltage drops:
+
+$
+\boxed{V_h=I_h Z_h}.
+$
+
+**Current distortion** originates mainly in nonlinear load current; **voltage distortion** arises when those currents pass through system impedance. Consequences include transformer heating/derating, malfunction of controls that sense voltage and distortion at neighbouring loads.
+
+### Passive filters — shunt single-tuned filter
+
+A passive filter uses **inductors, capacitors and sometimes resistors**. The standard shunt single-tuned filter is a **series L–C branch connected across the supply**, in parallel with the load.
+
+~~~text
+   Supply bus ────────+──────── Load
+                      |
+                      L
+                      |
+                      C
+                      |
+              Return / other phase
+       (shunt L-C branch: series L and C)
+~~~
+
+At the tuned frequency the inductive and capacitive reactances cancel, making the branch **low impedance**. It diverts the selected harmonic current away from the upstream network.
+
+$
+\boxed{f_r=\frac{1}{2\pi\sqrt{LC}}}.
+$
+
+- **At the fundamental:** The filter's operating impedance and capacitive effect may also improve power factor.
+- **At the target harmonic:** Low branch impedance diverts harmonic current.
+- **Why slightly detune below the target (e.g. below the 5th)?** To allow for tolerances, drift and changes in network conditions.
+- **Risk:** The filter and system impedance may create a **parallel-resonance peak** at another frequency, amplifying harmonic voltage. The filter is not universally low impedance at all frequencies.
+
+**Graph you may need:** Horizontal axis = harmonic order; vertical axis = equivalent harmonic impedance. A capacitor-only system can show a very tall resonance peak. A tuned L–C filter produces a sharp **notch near the target harmonic**, with a possible smaller peak just below it.
+
+**Three-phase, three-wire PYQ sketch (2020 Q2(b)):** Draw three line conductors A, B and C, show the passive filter as a shunt assembly, and label the **filter inductors** and **delta-connected capacitor bank**. For the particular delta-capacitor model used in the lecture figure, the notch order is $h_n=\sqrt{X_C/(3X_f)}$; the factor 3 arises from converting the delta capacitor bank to an equivalent star. Use this only for that circuit and definitions of $X_C$, $X_f$.
+
+### Other passive arrangements
+
+**Series passive filter:** A **parallel L–C resonant circuit placed in series with the line/load** can present high impedance at its tuned harmonic to block it. Do not confuse its topology with the shunt single-tuned filter.
+
+**High-pass passive filter:** Gives unwanted higher-order harmonic currents a low-impedance route over a wider frequency band. Detailed first-/second-/third-order circuits are not needed for our announced scope.
+
+**Limitations of passive filters:** Bulky; compensation is relatively fixed; performance depends on system impedance; possible resonance/overload.
+
+### Active power filters
+
+An active filter uses power electronics, normally a **voltage-source inverter/converter (VSI/VSC)**, to generate compensating electrical quantities dynamically.
+
+**Shunt active filter — cancels harmonic current:**
+
+~~~text
+     AC supply ───────+──────── Nonlinear load
+                      |
+                   Coupling L
+                      |
+                VSI + DC link
+                (shunt APF)
+~~~
+
+The shunt APF injects harmonic current **opposite to the load's harmonic current**, so the source current becomes closer to sinusoidal. It can also compensate reactive current. Example: a 5 A fifth-harmonic load component is counteracted by approximately 5 A in opposite phase.
+
+**Series active filter — corrects supply/load voltage:**
+
+~~~text
+   Supply ──[ Series injection transformer ]── Load
+                       ^
+                     VSI / controller
+~~~
+
+It injects a controlled voltage to compensate voltage harmonics, sags or swells:
+
+$
+\boxed{\mathbf V_{\rm load}=\mathbf V_{\rm supply}+\mathbf V_{\rm injected}}.
+$
+
+Example in the same phase: to maintain 230 V when the supply is 190 V, inject 40 V. In general these are **phasors**, so direction and phase matter.
+
+| Passive filter | Active filter |
+| --- | --- |
+| Fixed R, L and C elements | Electronic converter and controller |
+| Economical but bulkier | Flexible, dynamic, more expensive |
+| Tuned to selected frequencies | Can compensate multiple changing harmonic components |
+| May cause resonance | Does not rely on the same tuned passive resonance |
+| Shunt tuned type diverts harmonic current | Shunt APF injects compensating current; series APF injects voltage |
+
+**PYQ anchors:** 2020 Q2(b) asks for a tuned passive filter in a three-phase three-wire system; 2024 Q5(a) tests active filtering; November 2025 Q1(b) asks active versus passive filters with examples.
+
+---
+
+## 3. Harmonic Numericals, Distortion Factor and Power Factor
+
+### Core formulas and the RMS distinction
+
+If a current is $i(t)=I_{\rm DC}+\sum I_{h,\rm peak}\cos(h\omega t+\phi_h)$, each sinusoidal component has $I_{h,\rm rms}=I_{h,\rm peak}/\sqrt2$, while **DC RMS equals the DC magnitude**.
+
+$
+\boxed{\mathrm{THD}_I=\frac{\sqrt{\sum_{h\ge2}I_{h,\rm rms}^2}}{I_{1,\rm rms}}\times100\%}.
+$
+
+**THD excludes DC** and its numerator excludes the fundamental. Harmonic phase angles do not affect the result.
+
+$
+I_{\rm AC,rms}=\sqrt{I_{1,\rm rms}^2+\sum_{h\ge2}I_{h,\rm rms}^2}
+$
+
+$
+I_{\rm total,rms}=\sqrt{I_{\rm DC}^2+I_{\rm AC,rms}^2}.
+$
+
+**Conventional AC current distortion factor:**
+
+$
+\boxed{DF=\frac{I_{1,\rm rms}}{I_{\rm AC,rms}}
+=\frac{1}{\sqrt{1+(\mathrm{THD}_I/100)^2}}}.
+$
+
+Some material defines a ratio using **total** RMS (including DC); read the question's definition. These ratios differ when DC exists.
+
+**Power definitions:** $S=V_{\rm rms}I_{\rm rms}$ (VA), $P$ is mean real power (W), $PF=P/S$, and for the *fundamental* $DPF=\cos\phi_1$. If voltage is a pure sinusoid, only the fundamental current contributes to average real power:
+
+$
+P=V_{1,\rm rms}I_{1,\rm rms}\cos\phi_1.
+$
+
+### Worked PYQ — 2020 Q4(a)
+
+$
+v(t)=100\cos377t
+$
+
+$
+i(t)=8+15\cos(377t+30^\circ)+6\cos(754t+45^\circ)+2\cos(1131t+60^\circ).
+$
+
+Current components: DC = 8 A; fundamental RMS $=15/\sqrt2$ A; second-harmonic RMS $=6/\sqrt2$ A; third-harmonic RMS $=2/\sqrt2$ A.
+
+**THD:**
+
+$
+\mathrm{THD}=\frac{\sqrt{6^2+2^2}}{15}\times100
+=\boxed{42.16\%}.
+$
+
+**Real power absorbed:** The voltage contains only the fundamental, so the DC and harmonic currents contribute no average real power:
+
+$
+P=\frac{100\times15}{2}\cos30^\circ=\boxed{649.52\ \mathrm W}.
+$
+
+**Conventional distortion factor:**
+
+$
+DF=\frac{15/\sqrt2}{\sqrt{(15^2+6^2+2^2)/2}}
+=\frac{15}{\sqrt{265}}=\boxed{0.9214}.
+$
+
+**True power factor including DC:**
+
+$
+I_{\rm total,rms}=\sqrt{8^2+\frac{15^2+6^2+2^2}{2}}
+=\sqrt{196.5}=14.018\ \mathrm A.
+$
+
+$
+PF_{\rm true}=\frac{649.52}{(100/\sqrt2)(14.018)}
+=\boxed{0.6553}.
+$
+
+Compare: displacement PF $=\cos30^\circ=0.8660$; ratio of fundamental RMS to **total** RMS including DC $=(15/\sqrt2)/14.018=0.7567$. These are **not** the conventional AC distortion factor.
+
+### Worked PYQ — November 2025 Q2(a): voltage THD
+
+Given fundamental $V_1=120$ V and harmonics $V_3=6$ V, $V_5=4$ V, $V_7=1.5$ V, $V_9=5.5$ V (consistent RMS magnitudes):
+
+$
+\mathrm{THD}_V=
+\frac{\sqrt{6^2+4^2+1.5^2+5.5^2}}{120}\times100
+=\boxed{7.66\%}.
+$
+
+**Exam method:** Square only higher-harmonic magnitudes, add, take square root, divide by fundamental, multiply by 100.
+
+### Power-factor correction — theory and 2024 PYQ
+
+An inductive motor draws **real power** $P$ (kW) plus **reactive power** $Q$ (kVAr); the supply handles **apparent power** $S$ (kVA).
+
+**Power triangle:**
+
+~~~text
+                    Q (kVAr)
+                    |
+                    |\
+                    | \ S (kVA)
+                    |  \
+                    |___\ 
+                   P (kW)
+            angle φ at P–S corner
+~~~
+
+$
+\boxed{S^2=P^2+Q^2},\qquad PF=\cos\phi=P/S,\qquad Q=P\tan\phi.
+$
+
+A shunt capacitor supplies capacitive reactive power locally, reducing the inductive reactive power drawn from the source. Real power remains approximately constant.
+
+$
+\boxed{Q_c=P(\tan\phi_1-\tan\phi_2)},\quad
+\phi_i=\cos^{-1}(PF_i).
+$
+
+**2024 PYQ:** Initial apparent power 120 kVA, PF improves from 0.65 lagging to 0.95.
+
+$
+P=120(0.65)=78\ \mathrm{kW}.
+$
+
+$
+Q_c=78\left[\tan(\cos^{-1}0.65)-\tan(\cos^{-1}0.95)\right]
+=\boxed{65.55\ \mathrm{kVAr}}.
+$
+
+Here **kVAr means kilovolt-ampere reactive**, a unit of reactive power. This standard correction calculation assumes the usual approximately sinusoidal power-triangle model.
+
+---
+
+## 4. UPS — Online, Offline and Hybrid
+
+### What is UPS?
+
+An **Uninterruptible Power Supply** keeps sensitive equipment supplied during mains disturbances or failure using backup energy, commonly batteries.
+
+### Online UPS
+
+**Diagram:**
+
+~~~text
+ AC mains ──> Rectifier/charger ── DC link ──> Inverter ──> Load
+                                   |
+                               Battery bank
+
+ Maintenance bypass: mains ───────────────> Load (only when selected)
+~~~
+
+**Normal:** AC → rectifier (AC to DC) → inverter (DC to AC) → load; battery is kept charged. **Power failure:** battery feeds the **same existing inverter**, so there is essentially **zero battery-transfer time**. A bypass can supply the load during maintenance, but is not the normal operating path.
+
+### Offline / standby UPS
+
+~~~text
+ AC mains ───────────────> Automatic transfer switch ──> Load
+    |
+    +──> Charger ──> Battery ──> Inverter ──────────────^
+~~~
+
+**Normal:** Mains directly powers the load and charges the battery; inverter stands by. **Failure:** Switch changes to the battery-powered inverter, causing a **small transfer delay**. Simpler and generally cheaper/more efficient, but provides less isolation from mains disturbances.
+
+### Hybrid UPS
+
+~~~text
+ Mains ───────────────────────────────┐
+                                     v
+ Charger ── Battery ── Inverter ──> Ferroresonant
+                                    transformer ──> Load
+~~~
+
+A hybrid resembles standby UPS but adds a **ferroresonant transformer/voltage regulator** at the output. It stabilises voltage and provides **momentary ride-through** during transfer (bridges a brief interruption).
+
+| Online | Offline | Hybrid |
+| --- | --- | --- |
+| Inverter continuously feeds load | Mains normally feeds load | Mains normally feeds regulated output |
+| Essentially zero battery-transfer time | Small transfer delay | Transformer assists the transition |
+| Double conversion | Standby inverter | Ferroresonant regulation and ride-through |
+
+**PYQ:** November 2025 Q5 tests UPS with DSTATCOM and SVC. Draw the relevant flow diagram, then explain normal and outage operation.
+
+---
+
+## 5. SVC, TCR, TSC and STATCOM
+
+### What is an SVC?
+
+A **Static VAR Compensator (SVC)** is a shunt-connected, thyristor-based compensator that adjusts net reactive power to regulate system voltage. **Low voltage → more net capacitive support; high voltage → more net inductive absorption.**
+
+**Important correction from lecture slides:** The PPT slide labelled SVC showed a DC-to-AC converter, which is characteristic of **STATCOM**, not a conventional SVC. Use **Unit-3 Figures 6 (fixed capacitors + TCR) and 7 (TSC)** instead.
+
+### TCR — Thyristor-Controlled Reactor
+
+~~~text
+                  Supply bus ──────────── Load
+                      |        |
+               Fixed capacitor  Thyristor-controlled
+                / tuned filter  reactor (L)
+                      |        |
+                   return / other phases
+~~~
+
+Fixed capacitors provide capacitive reactive power. A reactor (inductor) **absorbs** reactive power; the thyristor firing angle continuously changes reactor current and thus how much compensation is left.
+
+**Memory example:** Capacitor supplies 100 units; reactor absorbs 40 → net 60 units capacitive. If voltage falls, decrease the reactor absorption to leave more capacitive support.
+
+Phase control can create harmonics, so capacitor branches may be tuned as filters (3rd/5th/7th in the classroom diagram).
+
+### TSC — Thyristor-Switched Capacitor
+
+~~~text
+     Bus ────────────+────────+──────── Load
+                     |        |
+                 Switch 1  Switch 2      (more banks possible)
+                     |        |
+                    C1       C2
+                     |        |
+                   return / other phases
+~~~
+
+Each thyristor switch turns a capacitor bank **ON or OFF**. More banks on → more capacitive reactive power supplied. Control is **stepwise**, unlike the continuously varied TCR. Proper switching minimises transients/harmonic generation.
+
+| TCR | TSC |
+| --- | --- |
+| Controls reactor current | Switches capacitor banks |
+| Absorbs inductive reactive power | Supplies capacitive reactive power |
+| Smooth variation | Discrete steps |
+| Phase control may create harmonics | Well-timed switching introduces little harmonic distortion |
+
+### STATCOM / DSTATCOM
+
+**STATCOM = Static Synchronous Compensator; DSTATCOM = distribution-system version.** It uses a **voltage-source converter (VSC/VSI)** and a **DC-link capacitor**, connected to the AC network via coupling reactance/transformer.
+
+~~~text
+ AC grid / bus ─────────────── Load
+        |
+ Coupling transformer / reactor
+        |
+      VSC / VSI <──── Controller
+        |
+    DC-link capacitor
+~~~
+
+The converter generates a controllable AC voltage. A difference between converter and grid voltage across the coupling reactance determines the reactive current. With appropriate phase control:
+
+- Converter voltage magnitude **higher than the grid** → supplies capacitive reactive power → helps raise a low bus voltage.
+- Converter voltage magnitude **lower than the grid** → absorbs inductive reactive power → helps lower a high bus voltage.
+
+The controller regulates **AC bus voltage** and **DC-link voltage**. The DC capacitor provides an energy buffer, not unlimited sustained real power.
+
+| SVC | STATCOM |
+| --- | --- |
+| Controlled L/C branches, TCR/TSC | VSC with DC-link capacitor |
+| Adjusts effective shunt susceptance | Controls converter voltage/current |
+| Fast reactive compensation | Fast, often better low-voltage current support |
+| Harmonics possible from TCR firing | Converter switching harmonics managed by control/filtering |
+
+**Limit:** SVC/STATCOM can support voltage during some sags but cannot independently sustain a load through a long/deep supply outage without another real-energy source. Do not claim they replace a battery UPS.
+
+**PYQ:** November 2025 Q5: explain sag mitigation with DSTATCOM, SVC and UPS. For each, draw the simple diagram, explain whether it controls reactive current or provides stored-energy support, and state the limitation.
+
+---
+
+## 6. Module 1 — Sag, Swell, Transients and Classification
+
+### Sag (voltage dip)
+
+A **voltage sag** is a reduction of RMS voltage to **0.1–0.9 pu** for **0.5 cycle to 1 minute**. Supply remains present.
+
+**Why:** Motor starting, heavy load connection or short-circuit fault → higher line current → larger voltage drop across system impedance → lower voltage at the load. **Effects:** Contactor drop-out, ASD trips, PLC/control malfunction. **Mitigation:** DVR/series voltage injection, UPS for sensitive loads, suitable transfer or system fault improvement.
+
+**Waveform:** Normal sine cycles → smaller-amplitude cycles for a defined interval → normal again. Not zero.
+
+### Swell
+
+A **voltage swell** is an increase in RMS voltage to **1.1–1.8 pu** (the upper bound depends on duration subclass) for **0.5 cycle to 1 minute**.
+
+**Why:** Sudden disconnection of a large load reduces network current/voltage drop, or capacitor switching; a single-line-to-ground fault may raise voltage on the unfaulted phases. **Effects:** Insulation stress, overheating, control errors and component damage.
+
+**Waveform:** Normal cycles → larger-amplitude cycles → normal.
+
+### Impulsive vs oscillatory transients
+
+A **transient** is a sudden short-lived departure from the steady-state waveform.
+
+| Impulsive transient | Oscillatory transient |
+| --- | --- |
+| One predominant polarity, sharp spike | Polarity alternates rapidly, decaying ringing |
+| Lightning is the main example | Capacitor-bank or line switching is typical |
+| High peak stresses electronics/insulation | Rapid oscillations can stress equipment |
+| Sketch a single narrow spike | Sketch several shrinking oscillations around the waveform |
+
+**Simple exam sketch cues:**
+
+~~~text
+Impulsive component:          Oscillatory component:
+        /\                    /\  /\ 
+_______/  \_______       ____/  \/  \_/\____
+ one sharp pulse             rapid decaying ringing
+~~~
+
+### Magnitude–duration classification (memorise boundaries)
+
+$
+V_{\rm pu}=\frac{V_{\rm rms}}{V_{\rm nominal}}.
+$
+
+| Event | RMS voltage | Duration |
+| --- | --- | --- |
+| Sag | 0.1–0.9 pu | 0.5 cycle–1 min |
+| Swell | 1.1–1.8 pu (duration-specific upper limits) | 0.5 cycle–1 min |
+| Under-voltage | Below 0.9 pu, above interruption range | More than 1 min |
+| Over-voltage | Above 1.1 pu | More than 1 min |
+| Momentary interruption | Below 0.1 pu | 0.5 cycle–3 s |
+| Temporary interruption | Below 0.1 pu | >3 s–1 min |
+| Sustained interruption | Nearly zero | More than 1 min |
+
+For a classification chart: magnitude on vertical axis; duration horizontal; mark **0.1, 0.9 and 1.1 pu**, plus **0.5 cycle, 3 s and 1 min**.
+
+**Examples:** 0.65 pu for 20 cycles → **sag**; 35% voltage lost. 1.3 pu for 15 cycles → **swell**; 30% above normal. 0.75 pu for 3 min → **under-voltage**, not sag. 0.05 pu for 5 s → **temporary interruption**.
+
+### Sag mitigation recap
+
+- **DVR / active series compensator:** Injects missing voltage in series; $\mathbf V_{\rm load}=\mathbf V_{\rm source}+\mathbf V_{\rm injected}$.
+- **Static/fast transfer switch:** Transfers to a healthy second source; requires that source.
+- **Online/offline UPS:** Uses stored energy to continue supplying load.
+- **SVC/STATCOM:** Reactive compensation supports bus voltage.
+- **Ferroresonant constant-voltage transformer:** Conditions voltage using saturated core and resonant capacitor.
+
+---
+
+## 7. Power Quality Monitoring — Definition, Purpose and Architecture
+
+### What is PQ monitoring?
+
+**Power-quality monitoring is continuous or periodic measurement, collection, analysis and interpretation of voltage/current data to identify power-quality disturbances and assess system performance.**
+
+**Why industries care:** Voltage events can trip drives, reset PLCs, damage equipment, corrupt data and cause production stoppages far longer than the actual disturbance. Monitoring lets them diagnose causes, protect sensitive processes and verify improvements.
+
+**Monitoring considerations (explain in your own words):** Why to monitor (objective), what to use (instrument), what triggers an event (threshold), where to store the data and how to analyse it. There is no need to memorise lengthy site-survey checklists.
+
+**Monitoring objectives, backup list:** Characterise normal performance; investigate specific problems; verify service quality; support predictive maintenance; survey a facility. Proactive = routine characterisation; reactive = investigate after a problem.
+
+### Major subsystems — 2020 PYQ Q3(a)
+
+~~~text
+ Voltage/current sensors
+          |
+    Data acquisition
+    + event detection
+    (trigger thresholds)
+          |
+       Storage
+          |
+ Communications / transfer
+          |
+ Analysis + interpretation
+          |
+ Reports / corrective action
+~~~
+
+1. **Measurement** observes voltage and current through suitable sensors/instruments.
+2. **Acquisition/triggering** samples the signal and identifies events that cross configured thresholds.
+3. **Storage** keeps event magnitude, duration and optionally waveforms.
+4. **Communications** moves records to a database or central monitoring system.
+5. **Analysis/reporting** identifies the disturbance and helps determine remedies.
+
+**How PQ monitoring differs from general data acquisition:** PQ monitoring is specialised for electrical disturbances of very different durations and frequencies; it includes disturbance/event detection, relevant waveforms, harmonic analysis and power-quality reporting, beyond simply logging ordinary signals.
+
+### Duration of monitoring — November 2025 Q1(e), 2 marks
+
+There is **no universal fixed duration**. It depends on purpose, disturbance frequency and whether monitoring covers representative operating conditions. Short-term monitoring may diagnose a frequent recurring problem; long-term or continuous monitoring suits rare unpredictable events, trends and permanent performance assessment.
+
+**Online vs offline analysis — low priority:** Online = data processed promptly for timely alerts; offline = data stored and examined later for historical patterns. No further details needed.
+
+---
+
+## 8. PQ Measurement Instruments — 2025 Q4(a), 5 marks
+
+**The exam strategy:** Write six to eight names, each with one accurate function. Six carefully described instruments are better than copying unrelated technical specifications.
+
+| Instrument | What to write |
+| --- | --- |
+| **Wiring and grounding tester** | Finds open/wrong neutral or ground connections, reversals and grounding faults/impedance issues. |
+| **Multimeter** | Measures voltage, current, resistance; helps check phase–phase, phase–neutral, phase–ground, neutral–ground voltages and phase/neutral currents. |
+| **Oscilloscope** | Displays voltage/current waveforms against time, revealing spikes and distortions; digital versions can store traces. |
+| **Disturbance analyzer** | Detects and records sags, swells, over/under-voltage, transients and interruptions, often using thresholds. |
+| **Harmonic or spectrum analyzer** | Measures harmonic component magnitudes/frequencies, frequency spectrum, THD and often PF. |
+| **Flickermeter** | Measures severity of light flicker resulting from voltage fluctuations, taking human perception into account. |
+| **Combination disturbance/harmonic analyzer** | Combines event monitoring and harmonic/THD analysis in one instrument. |
+| **Energy monitor** | Records energy consumption and related electrical measurements. |
+
+**Multimeter caveat:** Peak ÷ $\sqrt2$ and average-responding RMS-calibrated methods assume a sinusoid; **true RMS** measurement is preferred for distorted currents because it measures effective heating value within meter limits.
+
+### Disturbance analyzer — November 2025 Q6(c), 5 marks
+
+A disturbance analyzer continuously measures electrical quantities and records disturbances when preset **triggering thresholds** are crossed. It stores magnitude and duration and may record waveforms.
+
+**Two types:**
+
+- **Conventional:** Records summary details — sag/swell magnitude, duration, surge peak, interruption time.
+- **Graphics-based:** Records the **actual waveform**, revealing an impulsive spike or the alternating, decaying ringing of an oscillatory transient. This is important because a peak and duration alone cannot show transient shape.
+
+**For a 5-mark short note:** Definition, working in 3 steps (monitor → threshold/event → store/analyse), two types and one reason graphical recording is valuable.
+
+### Harmonic analyzers — important but brief
+
+They measure individual harmonics and THD, often using FFT/spectrum analysis; simple meters make quick checks, general-purpose spectrum analyzers analyse frequency content, special-purpose power-system analyzers are designed for detailed electrical harmonics. No need to memorise K-factor/TIF or sampling-rate specifications.
+
+---
+
+## 9. IEC Flickermeter — Five-Block Answer (2025 Q6(b))
+
+### What is a flickermeter?
+
+A **flickermeter** measures the severity of **voltage flicker** — perceived variations in lamp brightness caused by voltage fluctuations. Its weighting considers how an incandescent lamp and human eye–brain system respond to different fluctuation frequencies.
+
+### Exam-ready diagram
+
+~~~text
+  Input voltage
+       |
+[1. Input voltage adapter]
+       |
+[2. Squaring demodulator]
+       |
+[3. Weighting filters]
+       |
+[4. Squaring and smoothing]
+       |
+[5. Statistical analysis]
+       |
+ Flicker severity output
+~~~
+
+### Working principle — two meaningful sentences per block
+
+**Block 1 — Input voltage adapter.** Adjusts/scales the input to a suitable internal reference so the instrument can evaluate **percentage fluctuations**, rather than being controlled by the nominal carrier-voltage level. It also supports input conditioning.
+
+**Block 2 — Squaring demodulator.** Squares the input waveform to extract the lower-frequency voltage fluctuation (modulating signal) from the normal power-frequency voltage. This imitates the way lamp brightness depends on voltage.
+
+**Block 3 — Weighting filters.** Removes unwanted frequency terms from the demodulation stage and weights the remaining signal. The weighting reflects different sensitivities of the incandescent lamp and eye–brain system to different flicker frequencies.
+
+**Block 4 — Squaring and smoothing.** Squares the weighted signal to model nonlinear flicker perception. A smoothing/sliding-mean filter produces an **instantaneous flicker-level indication**.
+
+**Block 5 — Statistical analysis.** Analyses the instantaneous flicker-level values over time, using their statistical distribution. This provides an assessment of overall flicker severity.
+
+**Memory sequence:** **Adapt → Extract → Weight → Smooth → Analyse.**
+
+**Diagram decision:** For the 5-mark *short note*, the clearly labelled five-block diagram plus the functions above is an efficient answer. The lecture's complex IEC figure includes internal filters, calibration and multiple outputs; reproduce those only if explicitly required and you have spare time. If the examiner specifically demands a *detailed* IEC diagram, the simplified version may lose diagram-specific marks.
+
+**Skip for our scope:** IEEE flicker curves, FFT-based flicker measurement comparison, transfer functions and detailed statistical equations.
+
+---
+
+## 10. Ferroresonance Transformer — 2025 Q4(b), 5 marks
+
+### What it is
+
+A **ferroresonant / constant-voltage transformer (CVT)** is a passive voltage-conditioning transformer that uses a **deliberately saturated magnetic core** and a **resonant capacitor/winding arrangement** to keep output voltage nearly constant as input varies within its operating limits.
+
+### Working
+
+1. Transformer iron core is designed to operate in saturation, making its magnetic behaviour nonlinear.
+2. A capacitor interacts with a designated winding to form a resonant arrangement.
+3. The saturated-core and capacitor system stabilises the voltage delivered to the load.
+4. It helps protect sensitive equipment from moderate supply variations and some sags, subject to its rating and operating range.
+
+**Simplified conceptual diagram:**
+
+~~~text
+   AC source ── [ Saturated-core transformer ] ── Regulated load
+                            |
+                    Resonant winding
+                            |
+                         Capacitor
+~~~
+
+**Distinction:** Unwanted **ferroresonance** in a power network can produce dangerous voltages and currents. A **ferroresonant transformer** deliberately uses a controlled version of the effect for regulation. No series-RLC derivation is needed for the 2025 short theory question.
+
+---
+
+## 11. Exact PYQ Targets and Last-Minute Checklist
+
+### November 2025 end-sem paper — direct mapping
+
+| Question | What you should reproduce |
+| --- | --- |
+| Q1(a) PQ monitoring and industrial concern (2) | Section 7 definition + why failures matter |
+| Q1(b) active vs passive filters (2) | Section 2 comparison + shunt examples |
+| Q1(c) sources of sags and interruptions (2) | Faults/motor starting for sag; faults, protective switching or supply failure for interruption |
+| Q1(d) motor starting methods (2) | **Low-priority backup:** direct-on-line, star–delta, autotransformer, soft starter, VFD |
+| Q1(e) duration of monitoring (2) | Section 7: depends on objective and event frequency |
+| Q2(a) harmonic THD numerical (5) | Section 3: **7.66%** |
+| Q2(b) increased voltage and its causes (5) | Section 6: swell vs over-voltage; load disconnection/capacitors/fault |
+| Q3 unbalance and symmetrical components (10) | Section 1: **27.29∠4.69°, 57.98∠43.29°, 18.97∠24.96° A** |
+| Q4(a) PQ instruments (5) | Section 8: six names + what each measures |
+| Q4(b) ferroresonance transformer (5) | Section 10: saturated core + resonant capacitor |
+| Q5 DSTATCOM, SVC and UPS (10) | Sections 4–5: diagrams, operation and comparisons |
+| Q6(a) transient overvoltage (5) | Section 6: impulsive/oscillatory, causes, effects, sketch |
+| Q6(b) flickermeter (5) | Section 9: five-block answer |
+| Q6(c) disturbance analyzer (5) | Section 8: conventional vs graphics-based |
+
+**Earlier repeated PYQs:** 2020 Q1(b) sequence reconstruction; 2020 Q2(b) tuned passive filter (3-phase 3-wire); 2020 Q3(a) PQ monitoring subsystems versus ordinary data acquisition; 2020 Q4(a) DC + harmonic current calculation; 2024 Q2(a) 120 kVA power-factor correction; 2024 Q5(a) active filter theory; 2024 instrument list. These are covered above.
+
+### Exam answer templates
+
+- **5-mark theory:** Definition (1–2 sentences) → working in short numbered points → relevant **simple labelled diagram** → important effect/advantage/limitation.
+- **10-mark comparison:** Define both devices → separate correct circuits → operation under normal and disturbed conditions → a comparison table.
+- **Numerical:** Given → formula → substitution → calculation → **boxed result with units**. For polar problems show your $a$ operator and component equations.
+
+### Final self-test — answer without notes
+
+- [ ] Distinguish positive, negative and zero sequences; write all six component formulas.
+- [ ] Solve the **2025 Q3** current-component numerical once on your calculator.
+- [ ] Draw and explain shunt tuned passive filter, shunt APF and series APF.
+- [ ] Explain why nonlinear current distorts voltage and why an impedance notch suppresses harmonics.
+- [ ] Compute THD for **2025 Q2(a)** and THD, DF, true PF for **2020 Q4(a)**.
+- [ ] Derive $Q_c=P(\tan\phi_1-\tan\phi_2)$ and get **65.55 kVAr**.
+- [ ] Draw online, offline and hybrid UPS power paths.
+- [ ] Explain TCR vs TSC and SVC vs STATCOM without confusing their diagrams.
+- [ ] State sag/swell voltage and duration limits, and draw transient sketches.
+- [ ] Name six monitoring instruments with one function each.
+- [ ] Write the **five IEC flickermeter blocks in order** and explain each in two sentences.
+- [ ] Give a 5-mark disturbance-analyzer answer and explain the CVT's saturated-core/capacitor principle.
+
+**Priority if time is short:** 2025 Q3 numerical → 2020 harmonic/DF numerical → filter and compensator diagrams → flickermeter → instruments → UPS → Module 1 quick classification. No need to reread the unrelated parts of the old midsem document.
+
+
+
+---
+
 # Electrical Power Quality — Midsem Notes
 
 Study **Priority 0 first**, followed by the reliability numerical and the remaining **Priority 1** theory. Then prepare the repeated **Priority 2** applications and remedy table. **Priority 3** is kept short for the older-paper questions.
