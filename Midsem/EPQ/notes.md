@@ -10,6 +10,26 @@
 
 ## 1. Balanced, Unbalanced and Symmetrical Components
 
+### Detailed explanation — balanced, unbalanced, and phase sequence
+
+A **balanced three-phase system** has three voltage/current phasors of **equal magnitude**, with angular separation of **120°**. If the magnitudes differ or the phase angles no longer have the proper separation, the system is **unbalanced**.
+
+A complicated unbalanced system can be resolved into **three balanced sets** called symmetrical components.
+
+**Positive sequence (ABC):** Three equal phasors separated by 120°, in the normal A–B–C order. Taking phase A at 0°, draw B at −120° and C at +120°.
+
+**Negative sequence (ACB):** The same phasor magnitudes and separation, but the reverse order. Taking A at 0°, draw B at +120° and C at −120°.
+
+**Zero sequence:** All three phasors have equal magnitude and **the same angle**. Draw the arrows on top of one another.
+
+**How to approach the numerical:** First check whether the question provides the actual three phase values or the sequence values. If actual phases are given, extract $V_0,V_1,V_2$ or $I_0,I_1,I_2$. If the components are given, reconstruct the actual phases. Use $a=1\angle120^\circ$, $a^2=1\angle-120^\circ$ and the formulas in the next subsection. You cannot add complex magnitudes or angles separately.
+
+**Calculator method:** On your Casio fx-991ES PLUS, use CMPLX mode and degree setting. Enter each phasor in polar form, use the complex arithmetic functions, and convert the result to polar form. In the exam show the formula and substitution, not only the calculator's final number.
+
+**What you should be able to draw:** The original phasor diagrams immediately below show all three component sets. Label A, B and C and their angles. The subsequent two worked PYQs cover both directions of transformation.
+
+
+
 ### What is a balanced three-phase system?
 
 A balanced three-phase set has **equal RMS magnitudes** and **phase angles separated by exactly 120°**, in the expected phase order. Equal magnitudes alone do not guarantee balance. Unequal loading, faults or unequal impedances can make the voltage set unbalanced, causing negative-sequence currents and motor heating.
@@ -88,6 +108,28 @@ Intermediate rectangular results, useful for checking calculator entry: $I_0=27.
 ---
 
 ## 2. Harmonics, Voltage Distortion and Filters
+
+### Detailed explanation — what actually happens in a filter
+
+**What are harmonics?** In an ideal system, voltage and current are sinusoidal. Nonlinear loads, such as rectifiers, adjustable-speed drives and electronic power supplies, draw **distorted current** containing sinusoidal components whose frequencies are integer multiples of the fundamental. If the fundamental is 50 Hz, the 3rd, 5th and 7th components are 150, 250 and 350 Hz.
+
+**Voltage distortion versus current distortion:** A nonlinear load appears approximately as a **source of harmonic currents** injected into the system. The supply network has some impedance. The harmonic currents flowing through that impedance produce harmonic voltage drops. Therefore, distorted current can cause **distorted voltage at the load**. That's the physical meaning of $V_h=I_hZ_h$.
+
+**Passive shunt filter:** A passive filter uses components such as **resistors, inductors and capacitors**. The most important type for us is the **shunt single-tuned filter**. Its inductor and capacitor are **in series with each other**, but that whole L–C branch is connected **in parallel with the load**. At its tuned harmonic frequency, the inductor and capacitor reactances cancel, leaving **low impedance**. The unwanted harmonic current then finds it easier to flow into that branch instead of passing through the rest of the supply.
+
+**Why is the notch in the graph useful?** In a graph of harmonic impedance against harmonic order, a **notch** means very low impedance at the selected harmonic. This helps suppress its effect. But a capacitor connected alone can interact with supply inductance and create a **parallel resonance peak** of very high impedance. Then even a moderate harmonic current may create a large harmonic voltage. A tuned filter can also create a smaller parallel resonance peak near its tuning frequency. That's why a practical filter is often tuned slightly **below** the target harmonic to allow for changes and tolerances.
+
+**Series passive filter:** Do not confuse this with the shunt filter. A **parallel LC combination inserted in series with the load** can present high impedance to a chosen harmonic, **blocking** it. The shunt single-tuned filter provides an easy route to divert harmonic current; the series filter prevents it from passing.
+
+**Shunt active filter:** Instead of depending on fixed L and C values, an active filter uses a **voltage-source converter/inverter** and control electronics. It injects compensating harmonic current in the **opposite direction** to the load's harmonic current. Imagine the load producing 5 A of fifth-harmonic current: the shunt APF produces approximately 5 A of opposing fifth-harmonic current, so the source current becomes much closer to a clean sine wave. It can also compensate reactive current.
+
+**Series active filter:** A series APF is mainly concerned with **the voltage delivered to the load**. A converter and coupling transformer inject the missing or compensating voltage. For example, if the input is 190 V and the load needs 230 V, adding 40 V in phase restores 230 V. In a general AC calculation, these are phasors.
+
+**Comparison for the exam:** Passive filters are relatively inexpensive and simple, but bulky, fixed in compensation and may cause resonance. Active filters are more expensive but respond dynamically to multiple harmonic components. Remember **shunt APF = current compensation** and **series APF = voltage compensation**.
+
+**Diagrams:** Use the original lecture figures included alongside these topics. For the 2020 three-phase three-wire filter PYQ, draw the labelled three-phase tuned filter with its filter inductors and delta capacitor bank rather than an unlabeled generic box. Avoid memorising every high-pass design that was outside our announced scope.
+
+
 
 ### What are harmonics?
 
@@ -181,6 +223,34 @@ Example in the same phase: to maintain 230 V when the supply is 190 V, inject 40
 ---
 
 ## 3. Harmonic Numericals, Distortion Factor and Power Factor
+
+### Detailed explanation — why the RMS currents are different
+
+This was one of the concepts that needed extra explanation during our revision, because **fundamental RMS**, **AC RMS** and **total RMS** are different quantities.
+
+Suppose a current is given as $i(t)=8+15\cos(377t+30^\circ)+6\cos(754t+45^\circ)+2\cos(1131t+60^\circ)$. The numbers 15, 6 and 2 are the **peak amplitudes** of sinusoidal components, so their individual RMS currents are $15/\sqrt2$, $6/\sqrt2$ and $2/\sqrt2$. The constant term **8 A DC** has RMS value **8 A**; you must **not** divide DC by $\sqrt2$.
+
+**Fundamental RMS current:** $15/\sqrt2$ in this example. This includes only the fundamental.
+
+**Harmonic RMS current:** Combine just the 2nd and 3rd harmonic currents in root-sum-of-squares: $\sqrt{(6^2+2^2)/2}$. It does not include the fundamental or DC.
+
+**Total AC RMS current:** Add the fundamental and higher harmonics by root-sum-of-squares: $\sqrt{(15^2+6^2+2^2)/2}$. It **does not include the DC term**.
+
+**Overall RMS current:** Now include the DC contribution too: $\sqrt{8^2+(15^2+6^2+2^2)/2}$. This is the current to use in apparent power when finding **true power factor** for the supplied full waveform.
+
+**What is THD?** Total Harmonic Distortion compares the **combined higher-harmonic RMS current** with the **fundamental RMS current**. DC is excluded. Here the common $\sqrt2$ factors cancel, giving $\sqrt{6^2+2^2}/15=42.16\%$. The phase angles of those harmonic components do not affect THD.
+
+**What is distortion factor (DF)?** The conventional AC distortion factor is **fundamental RMS current divided by total AC RMS current**. So the result here is $15/\sqrt{15^2+6^2+2^2}=0.9214$. If you include DC in the denominator, you obtain a different ratio. That does **not** mean our AC DF was calculated incorrectly; it means the denominator now represents a different total RMS quantity.
+
+**Real power versus apparent power:** Real power $P$ is measured in **watts**. Apparent power is $S=V_{\rm rms}I_{\rm rms}$ in **VA**. Power factor is $P/S$. Displacement power factor $\cos\phi_1$ is the cosine of the phase angle between the fundamental voltage and current, not the true PF when significant distortion exists.
+
+In our 2020 problem, voltage contains only the fundamental. Harmonic currents and the DC current make **zero net contribution to average real power** when multiplied by the pure sine voltage over a complete cycle. So $P=(100\times15/2)\cos30^\circ=649.52$ W. But **true PF** uses the entire RMS current, including DC and harmonics, which gives about **0.6553**, not $\cos30^\circ=0.8660$.
+
+**Power-factor correction:** Remember the power triangle: real power **P in kW**, reactive power **Q in kVAr**, apparent power **S in kVA**. A capacitor bank supplies capacitive reactive power, reducing the reactive power drawn from the source while real power remains approximately constant. In the 2024 problem, the initial apparent power was **120 kVA**, power factor was **0.65**, and the required new PF was **0.95**. First find $P=120(0.65)=78$ kW. Then compute $Q_c=P(\tan\phi_1-\tan\phi_2)=65.55$ kVAr. **kVAr means kilovolt-ampere reactive**, a unit of reactive power.
+
+**Exam numerical method:** Given → identify peak/RMS quantities → formula → substitution → boxed result with units. The calculations and formulas below are retained in full so you can practise the same 2020, 2024 and 2025 questions again.
+
+
 
 ### Core formulas and the RMS distinction
 
@@ -308,6 +378,24 @@ Here **kVAr means kilovolt-ampere reactive**, a unit of reactive power. This sta
 ---
 
 ## 4. UPS — Online, Offline and Hybrid
+
+### Detailed explanation — follow the power supply path
+
+**What is a UPS?** An Uninterruptible Power Supply maintains power to sensitive equipment when ordinary mains power fails or becomes unacceptable, usually using a battery for backup energy.
+
+**Online UPS:** In normal operation, the load is **always supplied through the inverter**. Incoming AC power goes through the **rectifier/charger** to become DC. The DC feeds the inverter, which produces AC for the load, and the battery is kept charged. When mains power fails, the **battery supplies the existing inverter**, and the inverter continues feeding the load. We do **not** need a second inverter. This is why online UPS has essentially **zero battery-transfer delay**. The bypass line in the lecture figure is an alternate or maintenance route, not the normal power path.
+
+**Offline/standby UPS:** Under normal conditions, **the mains directly supplies the load**. The charger keeps the battery charged, while the inverter normally stands by. If the mains becomes unavailable, the **automatic transfer switch** connects the load to the battery-backed inverter. The transfer requires a small amount of time, so there may be a brief interruption. This setup is simpler than online UPS but offers less continuous conditioning.
+
+**Hybrid UPS:** A hybrid resembles standby UPS, but adds a **ferroresonant transformer** for output voltage regulation. The transformer also supplies **momentary ride-through**, helping the load continue receiving power during the brief transition from normal mains supply to battery-backed inverter supply. This is the main additional feature you correctly recalled when I asked you to identify it.
+
+**What does momentary ride-through mean?** It means **maintaining power to the load for a very short period during a supply interruption or switching transition**. It does not mean a transformer can independently provide unlimited energy during a long outage.
+
+**Three-way comparison:** Online = inverter always feeds the load and battery transfer is essentially instantaneous. Offline = mains normally feeds the load and switching introduces a short delay. Hybrid = standby-style operation with ferroresonant voltage regulation and momentary ride-through.
+
+**For a 5-mark answer:** Draw the original UPS diagram, explain the normal power path, explain how it changes when mains fails, and mention its distinguishing advantage or limitation. The correct original slides are included below.
+
+
 
 ### What is UPS?
 
